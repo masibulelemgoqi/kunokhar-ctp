@@ -139,7 +139,7 @@ if($u_details['w_type'] != "Admin")
   <div class="container">
 
   		<?php
-  			if(sizeof($work->get_clients()) > 0)
+  			if(count($work->get_clients()) > 0)
   			{
 
   		?>
@@ -178,7 +178,7 @@ if($u_details['w_type'] != "Admin")
   					<?php print($client['client_fname']);?> <?php print("  ".$client['client_lname']);?>
   						<?php
   							$juristic = $work->get_juristic($client['client_id']);
-  							if(count($juristic) > 0)
+  							if($juristic !== null)
   							{
   						?>
   							<div class="font-italic h6">
