@@ -2,6 +2,7 @@
 @import url('../fonts/FrontPageNeue.woff');
 @import url('../fonts/junegull.ttf');
 @import url('../fonts/Timeline.ttf');
+@import url('https://fonts.googleapis.com/css?family=Cabin&display=swap');
 
 @font-face {
     font-family: 'prataregular';
@@ -30,7 +31,7 @@ div.upload input {
 .form-control::placeholder {
   font-size: 0.95rem;
   color: #aaa;
-  font-style: italic;
+  font-style: normal;
 }
 
 
@@ -50,10 +51,16 @@ div.upload input {
 .login input {
     background-color: transparent;
     color: white;
+    padding: 0.6em;
+    width: 100%;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
 }
 
 .login input:focus {
     background-color: transparent;
+    color: #fff;
+    outline: none;
 }
 
 page {
@@ -211,14 +218,49 @@ textarea
     background: #ffffcc;
 }
 
-.edit_btn
-{
-  background-color: tomato;
-  color: white;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  transition: 0.6s ease;
+label {
+	font-family: 'Cabin', sans-serif;
+	font-weight: bold;
+}
+
+.card-title {
+	background-color: #28a745;
+	font-family: 'Cabin', sans-serif;
+	font-weight: 550;
+	padding: 0.5em;
+	color: #fff;
+}
+
+.card-text {
+	padding: 1em;
+}
+
+.edit_btn {
+	background-color: #e6e6e6;
+	color: #222;
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	transition: 0.6s ease;
+}
+
+.edit_btn:hover {
+	background-color: #fff !important;
+	color: #222 !important;
+}
+
+.add-btn {
+	background-color: #e6e6e6;
+	color: #222;
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	transition: 0.6s ease;
+}
+
+.add-btn:hover {
+	background-color: #fff !important;
+	color: #222 !important;
 }
 
 .text-tomato

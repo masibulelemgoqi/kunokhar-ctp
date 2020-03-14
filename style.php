@@ -29,6 +29,25 @@ page[size="A4"][layout="landscape"] {
     }
 }
 
+label {
+    font-family: 'Cabin', sans-serif;
+    font-weight: bold;
+}
+
+.add-btn {
+    background-color: #e6e6e6;
+    color: #222;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    transition: 0.6s ease;
+}
+
+.add-btn:hover {
+    background-color: #fff !important;
+    color: #222 !important;
+}
+
 #landscapePage .content {
     padding: 6em 2em 4em 3em;
 }

@@ -30,93 +30,76 @@ if($u_details['w_type'] != "Admin")
 
 ?>
 <div class="work-content">
-  <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+  	<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <form method="POST" action="">
-  	      <div class="modal-header text-center">
-  	        <h4 class="modal-title w-100 font-weight-bold">Client information</h4>
-  	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-  	          <span aria-hidden="true">&times;</span>
-  	        </button>
-  	      </div>
-  	      <div id="status" class="ml-4 mr-4 mt-2 mb-2">
+  	      	<div class="modal-header">
+  	        	<h4 class="font-weight-bold" style="text-align: center; margin: 0;">Client Basic Information</h4>
+  	        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  	          		<span aria-hidden="true">&times;</span>
+  	        	</button>
+  	      	</div>
 
-  	      </div>
+  	      	<div id="status" class="ml-4 mr-4 mt-2 mb-2">
+
+  	      	</div>
 
   	      <div class="modal-body mx-3">
-  	        <div class="md-form mb-3 row">
+  	        <div class="md-form mb-2 row">
+  	        	<div class="col-sm-12 mb-2">
+	  		        <select class="form-control" id="person">
+	  		        	<option selected disabled>- Select Registrar -</option>
+	  		        	<option value="Juristic">Juristic</option>
+	  		          	<option value="Natural">Natural</option>
+	  		        </select>
+	  	        </div>
   				<div class="col-sm-6">
-  					<i class="fa fa-circle-thin prefix grey-text"></i>
   					<select class="form-control" id="title">
-  						<option value="">Title</option>
+  						<option disabled selected>- Select Title -</option>
   						<option value="Mr">Mr</option>
   						<option value="Mrs">Mrs</option>
   						<option value="Dr.">Dr.</option>
   						<option value="Prof.">Prof.</option>
   					</select>
-  					<label data-error="wrong" data-success="right" for="title">Title</label>
   	      		</div>
   	      		<div class="col-sm-6">
-  					<i class="fa fa-user prefix grey-text"></i>
-  					<input type="name" id="initials" class="form-control validate">
-  					<label data-error="wrong" data-success="right" for="initials">Initials</label>
+  					<input type="name" id="initials" class="form-control validate" placeholder="Initial(s)">
   	      		</div>
   	        </div>
-  	        <div class="md-form mb-3 row">
-  	          <div class="col-sm-6">
-  	         	 <i class="fa fa-user prefix grey-text"></i>
-  	          	<input type="name" id="fname" class="form-control validate">
-  	          	<label data-error="wrong" data-success="right" for="fname">First name</label>
-  	          </div>
-  	          <div class="col-sm-6">
-  		          <i class="fa fa-user prefix grey-text"></i>
-  		          <input type="name" id="lname" class="form-control validate">
-  		          <label data-error="wrong" data-success="right" for="lname">Last name</label>
-  	          </div>
+
+  	        <div class="md-form mb-2 row">
+  	          	<div class="col-sm-6">
+  	          		<input type="name" id="fname" class="form-control validate" placeholder="First Name">
+  	          	</div>
+  	          	<div class="col-sm-6">
+  		          	<input type="name" id="lname" class="form-control validate" placeholder="Last Name">
+  	          	</div>
   	        </div>
 
-  	        <div class="md-form mb-3 row">
+  	        <div class="md-form mb-2 row">
   	        	<div class="col-sm-6">
-  					<i class="fa fa-at prefix grey-text"></i>
-  					<input type="email" id="email" class="form-control validate">
-  					<label data-error="wrong" data-success="right" for="email">email address</label>
+  					<input type="email" id="email" class="form-control validate" placeholder="Email">
   				</div>
   				<div class="col-sm-6">
-  					<i class="fa fa-phone-square prefix grey-text"></i>
-  					<input type="number" id="cell_number" class="form-control validate">
-  					<label data-error="wrong" data-success="right" for="cell_number">cell Number</label>
+  					<input type="number" id="cell_number" class="form-control validate" placeholder="Cell Number">
   				</div>
   	        </div>
 
+  	        <h3 style="font-size: 18px; font-weight: 700;">Residential Address</h3>
   	        <div class="md-form mb-3 row">
-  	          <div class="col-sm-6">
-  		          <i class="fa fa-home prefix grey-text"></i>
-  		          <input type="name" id="home_address" class="form-control validate">
-  		          <label data-error="wrong" data-success="right" for="home_address">Home/postal address</label>
-  		      </div>
-  		      <div class="col-sm-6">
-  		          <i class="fa fa-map-pin prefix grey-text"></i>
-  		          <input type="name" id="city" class="form-control validate">
-  		          <label data-error="wrong" data-success="right" for="city">City</label>
-  		      </div>
-  	        </div>
-  	        <div class="md-form mb-3 row">
-  	          <div class="col-sm-6">
-  	          	  <i class="fa fa-info prefix grey-text"></i>
-  		          <input type="number" id="zip_code" class="form-control validate">
-  		          <label data-error="wrong" data-success="right" for="zip_code">Zip code</label>
-  	          </div>
-  	          <div class="col-sm-6">
-  		          <i class="fa fa-gavel prefix grey-text"></i>
-  		          <select class="form-control" id="person">
-  		          	<option value="Juristic">Juristic</option>
-  		          	<option value="Natural">Natural</option>
-  		          </select>
-  		          <label data-error="wrong" data-success="right" for="person">Person</label>
-  	          </div>
-
+  	          	<div class="col-sm-12 mb-2">
+  		          	<input type="name" id="home_address" class="form-control validate" placeholder="Line 1">
+  		      	</div>
+  		      	<div class="col-sm-12 mb-2">
+  		          	<input type="name" id="home_address" class="form-control validate" placeholder="Line 2">
+  		      	</div>
+  		      	<div class="col-sm-12 mb-2">
+  		          	<input type="name" id="city" class="form-control validate" placeholder="Line 3">
+  		      	</div>
+  		      	<div class="col-sm-12 mb-2">
+  		          	<input type="number" id="zip_code" class="form-control validate" placeholder="Zip Code">
+  	          	</div>
   	        </div>
 
   	      </div>
