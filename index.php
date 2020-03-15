@@ -22,46 +22,38 @@ if(isset($_SESSION['id']))
 
 <div class="container" style="margin-top: 10%;">
 	<div class="row d-flex justify-content-center">
-<!--             <div class="col-sm-6 py-5 bg-login text-white text-center">
-                    <div class="card-body">
-                    	<div class="mb-5 ml-1 row d-flex justify-content-center">
-                    		<img src="public/img/Logo/kunokharK.png" style="width:70px; height: 70px;">
-                    		&nbsp;<p class="font-weight-bold">ctp</p>
-                    	</div>
-                    </div>
-            </div> -->
-            <div class="col-sm-6 py-5 border">
-              <div class="row">
-                    <span class="row" style="margin-left: 10%;">
-                        <img src="public/img/Logo/kunokharK.png" style="width:70px; height: 70px;">&nbsp;<p class="font-weight-bold text-white">ctp</p>
-                    </span>
+        <div class="col-sm-6 py-5" style="background-color: rgb(0,0,0,0.3); border-radius: 5px;">
+          	<div class="row">
+                <span class="row" style="margin-left: 10%;">
+                    <img src="public/img/Logo/kunokharK.png" style="width:60px; height: 60px;">&nbsp;<p class="font-weight-bold text-white">ctp</p>
+                </span>
 
-                    <h3 class="mb-2 text-center text-danger font-weight-bold" style="margin-left: 17%;">Log in here</h3>
-              </div>
+                <h3 class="mb-2 text-center text-danger font-weight-bold" style="margin-left: 17%;">Login here</h3>
+          	</div>
 
 
-               <div class="row">
-                    <div class="form-group col-md-10">
-                      <div id="status"></div>
+           	<div class="row">
+                <div class="form-group col-md-12">
+                  <div id="status"></div>
+                </div>
+            </div>
+            <form method="POST" action="">
+               <div class="row justify-content-center">
+                    <div class="form-group col-md-10 login">
+                      <input type="email" id="email" placeholder="Email">
                     </div>
                 </div>
-                <form method="POST" action="">
-                   <div class="row justify-content-center">
-                        <div class="form-group col-md-10 login">
-                          <input type="email" class="form-control" id="email" placeholder="Email">
-                        </div>
+                <div class="row justify-content-center">
+                    <div class="form-group col-md-10 login">
+                        <input id="password" name="password" placeholder="Password" type="password">
                     </div>
-                    <div class="row justify-content-center">
-                        <div class="form-group col-md-10 login">
-                            <input id="password" name="password" placeholder="password" class="form-control" type="password">
-                        </div>
-                    </div>
+                </div>
 
-                    <div class="row justify-content-center">
-                        <button type="button" class="btn btn-danger" id="log_in">Sign in <i class="fa fa-sign-in"></i></button>
-                    </div>
-                </form>
-            </div>
+                <div class="row justify-content-center">
+                    <button type="button" class="btn btn-danger" id="log_in">Sign in <i class="fa fa-sign-in"></i></button>
+                </div>
+            </form>
+        </div>
 	</div>
 </div>
 

@@ -1,6 +1,6 @@
 <div class="card ml-5 border border-success" style="width: 18rem;">
-  <div class="card-body">
-    <h4 class="card-title m-0" style="font-family: 'prataregular', Serif; font-style: italic; ">Person <button class="btn edit_btn" id="edit_juristic" style="margin-left: 50%;">edit</button></h4><hr class="border-success">
+  <div class="card-body p-0">
+    <h4 class="card-title m-0">Company Details <button class="btn edit_btn" id="edit_juristic" style="margin-left: 50%;">Edit</button></h4>
     <div class="card-text" id="juristic_view">
  	  <div class="row ml-0 badge badge-success">
  	  	<?php print($client_identification['client_person']." :");?>
@@ -36,28 +36,28 @@
  	  <div class="row ml-0 badge badge-success">
  	  	<?php print($client_identification['client_person']." :");?>
  	  </div>
-	 	  <div class="row ml-0 mt-2">
+	 	  <div class="row mt-2">
 	 	  	<div id="j_status"></div>
      	  	<form method="POST" action="">
-     	  		<input type="hidden" class="form-control mb-3" id="j_id" value="<?php print($juristic['j_id']);?>">
-     	  		<div class="row">
+     	  		<input type="hidden" class="form-control" id="j_id" value="<?php print($juristic['j_id']);?>">
+     	  		<div class="row m-2">
 	     	  		<label>Company name</label>
-	     	  		<input type="name" class="form-control mb-3 mr-4" id="company_name_" value="<?php print($juristic['j_company_name']);?>">
+	     	  		<input type="name" class="form-control" id="company_name_" value="<?php print($juristic['j_company_name']);?>">
      	  		</div>
-
-                <br>
-                <div class="row">
+                <div class="row m-2">
 	                <label>Registration date</label>
-	     	  		<input type="date" class="form-control mb-3 mr-4" id="registration_date_" value="<?php print(date('Y-m-d', strtotime($juristic['j_registration_date'])));?>">
+	     	  		<input type="date" class="form-control" id="registration_date_" value="<?php print(date('Y-m-d', strtotime($juristic['j_registration_date'])));?>">
                 </div>
 
-                <div class="row">
+                <div class="row m-2">
                 	<label>Registration number</label>
-     	  			<input type="name" class="form-control mb-3 mr-4" id="registration_number_" value="<?php print($juristic['j_registration_number']);?>">
+     	  			<input type="name" class="form-control" id="registration_number_" value="<?php print($juristic['j_registration_number']);?>">
                 </div>
 
-                <button class="btn btn-danger" id="cancel_edit_juristic">Cancel</button>
-     	  		<button class="btn btn-success" id="edit_juristic_save">Save <i class="fa fa-save"></i></button>
+                <div class="m-2">
+                    <button class="btn btn-danger" id="cancel_edit_juristic">Cancel</button>
+                    <button class="btn btn-success" id="edit_juristic_save">Save <i class="fa fa-save"></i></button>
+                </div>
      	  	</form>
  	  </div>
 

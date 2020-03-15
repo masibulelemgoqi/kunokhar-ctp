@@ -65,24 +65,23 @@ textarea, input {
 
     <div class="card ml-5" style="width: 18rem;">
         <div class="card-body">
-            <h5 class="card-title font-weight-bold">Person </button></h5><hr>
+            <h5 class="card-title font-weight-bold">Person</h5><hr>
             <p class="card-text">
                 <div id="j_status" class="ml-0"></div>
                 <div class="row ml-0 badge badge-success">
-                <?php print($client_identification['client_person']." :");?>
+                    <?php print($client_identification['client_person']." :");?>
                 </div>
 
                 <div class="m-1">
-
-                <form method="POST" action="">
-                    <input type="hidden" class="form-control mb-3" id="client_id" value="<?php print($_GET['client_id'])?>">
-                    <input type="name" class="form-control mb-3" id="company_name" placeholder="company name">
-                    <br>
-                    <label>Registration date</label>
-                    <input type="date" class="form-control mb-3" id="registration_date" placeholder="registration date">
-                    <input type="name" class="form-control mb-3" id="registration_number" placeholder="registration number">
-                    <button class="btn btn-success float-right" id="add_juristic">Save</button>
-                </form>
+                    <form method="POST" action="">
+                        <input type="hidden" class="form-control mb-3" id="client_id" value="<?php print($_GET['client_id'])?>">
+                        <input type="name" class="form-control mb-3" id="company_name" placeholder="company name">
+                        <br>
+                        <label>Registration date</label>
+                        <input type="date" class="form-control mb-3" id="registration_date" placeholder="registration date">
+                        <input type="name" class="form-control mb-3" id="registration_number" placeholder="registration number">
+                        <button class="btn btn-success float-right" id="add_juristic">Save</button>
+                    </form>
                 </div>
             </p>
         </div>
