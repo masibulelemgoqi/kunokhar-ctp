@@ -412,7 +412,7 @@ class Work
     {
         try
         {
-            $sql = "UPDATE `civil_tb` SET `c_spouse_fname`= :spouse_fname , `c_spouse_lname`=:spouse_fname, `c_id_number` =:spouse_id_number, `c_detail_of_marriage` =:detail_of_marriage, `c_certificate_number` =:certificate_no, `c_date_of_issue` =:date_of_issue, `c_marriage_terms` =:marriage_terms WHERE c_id =:c_id";
+            $sql = "UPDATE `civil_tb` SET `c_spouse_fname`= :spouse_fname , `c_spouse_lname`=:spouse_lname, `c_id_number` =:spouse_id_number, `c_detail_of_marriage` =:detail_of_marriage, `c_certificate_number` =:certificate_no, `c_date_of_issue` =:date_of_issue, `c_marriage_terms` =:marriage_terms WHERE c_id =:c_id";
 
             $stmt = $this->con->prepare($sql);
 
@@ -738,14 +738,10 @@ class Work
 
     ///====================   view   methods ============================
 
-    public function get_clients()
-    {
+    public function get_clients() {
     	$stmt = $this->con->query("SELECT * FROM clients_tb ORDER BY client_dateCreated DESC");
-
     	$clients = array();
-
-    	while($row = $stmt->fetch(PDO::FETCH_ASSOC))
-    	{
+    	while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     		$clients[] = $row;
     	}
     	return $clients;

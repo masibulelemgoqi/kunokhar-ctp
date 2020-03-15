@@ -1,6 +1,5 @@
 <div class="card border border-success" style="width: 18rem;">
 	<div class="card-body p-0">
-
 		<h4 class="card-title m-0">Basic Information
 			<button class="btn edit_btn" onclick="update_identification(<?php echo $_GET['client_id'];?>);">Edit</button>
 		</h4>
@@ -66,7 +65,6 @@
 		</div>
 
 		<div class="card-text" id="hidden_ident">
-			<button class="btn btn-tomato" onclick="cancel_edit_client();">Cancel</button>
 			<div id="status"></div>
 			<form method="POST" action="">
 				<input type="hidden" class="form-control m-2" id="client_id" value="<?php print($client_identification['client_id']);?>">

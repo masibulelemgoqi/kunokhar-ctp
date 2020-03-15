@@ -3,49 +3,6 @@
 <script src="../public/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script src="../public/js/bootstrap.min.js"></script>
-<script src="../public/js/ajax.js"></script>
 <script src="../public/js/main.js"></script>
-<script src="../public/js/somefunctions.js"></script>
-<script src="../public/js/validate.js"></script>
-<script type="text/javascript">
-    function timeChecker()
-    {
-        setInterval(function()
-        {
-            var storedTimeStamp = sessionStorage.getItem("lastTimeStamp");
-            timeCompare(storedTimeStamp);
-        },3000);
-    }
-
-
-    function timeCompare(timeString)
-    {
-        var maxMinutes  = 10;  //GREATER THAN 10 MIN.
-        var currentTime = new Date();
-        var pastTime    = new Date(timeString);
-        var timeDiff    = currentTime - pastTime;
-        var minPast     = Math.floor( (timeDiff/60000) );
-
-        if( minPast > maxMinutes)
-        {
-            sessionStorage.removeItem("lastTimeStamp");
-            window.location = "./session_timeout.php";
-            return false;
-        }
-    }
-
-    if(typeof(Storage) !== "undefined")
-    {
-        $(document).mousemove(function()
-        {
-            var timeStamp = new Date();
-            sessionStorage.setItem("lastTimeStamp",timeStamp);
-        });
-
-        timeChecker();
-    }
-
-
-</script>
 </body>
 </html>

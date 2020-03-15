@@ -92,9 +92,6 @@ if($u_details['w_type'] != "Admin")
   		          	<input type="name" id="home_address" class="form-control validate" placeholder="Line 1">
   		      	</div>
   		      	<div class="col-sm-12 mb-2">
-  		          	<input type="name" id="home_address" class="form-control validate" placeholder="Line 2">
-  		      	</div>
-  		      	<div class="col-sm-12 mb-2">
   		          	<input type="name" id="city" class="form-control validate" placeholder="Line 3">
   		      	</div>
   		      	<div class="col-sm-12 mb-2">
@@ -118,148 +115,134 @@ if($u_details['w_type'] != "Admin")
   <?php
   }
   ?>
-
-  <div class="container">
-
+	<div class="container">
   		<?php
-  			if(count($work->get_clients()) > 0)
-  			{
-
-  		?>
+  			if(count($work->get_clients()) > 0){
+		?>
   		<div class="row mb-0 ml-4 mr-4">
-  			<div class="col-lg-6 mx-auto">
+			<div class="col-lg-6">
+				<div class="pl-5 py-5">
+					<form action="">
+					<div class="input-group mb-1">
+						<input type="search" placeholder="Search person or company here..." aria-describedby="button-addon5" class="form-control border-tomato">
+						<div class="input-group-append">
+						<button id="button-addon5" type="submit" class="btn btn-tomato-o"><i class="fa fa-search"></i></button>
+						</div>
+					</div>
+					</form>
+					<!-- End -->
 
-  			</div>
-  		<div class="col-lg-6">
-  		  <div class="pl-5 py-5">
-
-  		    <!-- Default search bars with input group -->
-  		    <form action="">
-  		      <div class="input-group mb-1">
-  		        <input type="search" placeholder="Search person or company here..." aria-describedby="button-addon5" class="form-control border-tomato">
-  		        <div class="input-group-append">
-  		          <button id="button-addon5" type="submit" class="btn btn-tomato-o"><i class="fa fa-search"></i></button>
-  		        </div>
-  		      </div>
-  		    </form>
-  		    <!-- End -->
-
-  		  </div>
+				</div>
+			</div>
   		</div>
-  		</div>
-  			<div class="row">
+		<div class="row">
   		<?php
-  				foreach($work->get_clients() as $client)
-  				{
+			foreach($work->get_clients() as $client){
   		?>
 
-  				<div class="col-2 m-3 folders">
-            <a href="work_on_client.php?client_id=<?php print($client['client_id']);?>">
-  					<div class="row d-flex justify-content-center">
-  						<i class="fa fa-folder-open fa-5x " style="color: #D0BB96;" aria-hidden="true"></i>
-  					</div>
-  					<?php print($client['client_fname']);?> <?php print("  ".$client['client_lname']);?>
-  						<?php
-  							$juristic = $work->get_juristic($client['client_id']);
-  							if($juristic !== null)
-  							{
-  						?>
-  							<div class="font-italic h6">
-  								<?php print($juristic['j_company_name']);?>
-  							</div>
-  						<?php
-  							}
-  						?>
-  					<div><?php print($work->time_elapsed_string($client['client_dateCreated']));?>
-  							<?php
-  							$ideas = $work->get_ideas($client['client_id']);
-  							$docs = $work->getDocuments($client['client_id']);
+			<div class="col-2 m-3 folders">
+            <a href="work_on_client.php?client_id=<?php print($client['client_id']);?>" class="">
+				<div class="row d-flex justify-content-center">
+					<i class="fa fa-folder-open fa-5x " style="color: #D0BB96;" aria-hidden="true"></i>
+				</div>
+					<?php 
+					  	print($client['client_fname']);?> <?php print("  ".$client['client_lname']);
+						$juristic = $work->get_juristic($client['client_id']);
+						if($juristic !== null){
+					?>
+						<div class="font-italic h6">
+							<?php print($juristic['j_company_name']);?>
+						</div>
+					<?php
+						}
+					?>
+						<div>
+							<?php 
+								print($work->time_elapsed_string($client['client_dateCreated']));
+								$ideas = $work->get_ideas($client['client_id']);
+								$docs = $work->getDocuments($client['client_id']);
 
-  							if($client['client_person'] == "Juristic")
-  							{
-  								if(count($docs) < 7)
-  								{
-  								?>
-  								<span class="jumbotron rounded-sm py-1 px-2">
-  									<i class="fa fa-file-pdf-o text-danger" aria-hidden="true" style="font-size: 100%;"></i> <span class="ml-0 text-white badge badge-danger"><?php print(7- count($docs)); ?></span>
-  								</span>
+								if($client['client_person'] == "Juristic") {
+									if(count($docs) < 7) {
+							?>
+									<span class="jumbotron rounded-sm py-1 px-2">
+										<i class="fa fa-file-pdf-o text-danger" aria-hidden="true" style="font-size: 100%;"></i> <span class="ml-0 text-white badge badge-danger"><?php print(7- count($docs)); ?></span>
+									</span>
 
-  								<?php
-  								}else
-  								{
-  									if(count($ideas) > 0)
-  									{
-  									?>
-  										<i class="fa fa-check-square-o text-success" aria-hidden="true" style="font-size: 120%;"></i>
-  									<?php
-  									}else
-  									{
-  									?>
-  										<i class="fa fa-minus-circle text-danger" aria-hidden="true" style="font-size: 120%;"></i>
-  									<?php
-  									}
-  								}
-  							}
+									<?php
+									}else {
+										if(count($ideas) > 0) {
+									?>
+											<i class="fa fa-check-square-o text-success" aria-hidden="true" style="font-size: 120%;"></i>
+										<?php
+										}else
+										{
+										?>
+											<i class="fa fa-minus-circle text-danger" aria-hidden="true" style="font-size: 120%;"></i>
+										<?php
+										}
+									}
+								}
 
-  							if($client['client_person'] == "Natural")
-  							{
-  								$natural = $work->get_natural($client['client_id']);
-  								if($natural['n_marital_status'] == "Married")
-  								{
-  									if(count($docs) < 2)
-  									{
-  									?>
-  										<span class="jumbotron rounded-sm py-1 px-2">
-  											<i class="fa fa-file-pdf-o text-danger" aria-hidden="true" style="font-size: 100%;"></i> <span class="ml-0 text-white badge badge-danger"><?php print(2- count($docs)); ?></span>
-  										</span>
-  									<?php
-  									}else
-  									{
-  										if(count($ideas) > 0)
-  										{
-  									?>
-  											<i class="fa fa-check-square-o text-success" aria-hidden="true" style="font-size: 120%;"></i>
-  									<?php
-  										}else
-  										{
-  									?>
-  											<i class="fa fa-minus-circle text-danger" aria-hidden="true" style="font-size: 120%;"></i>
-  									<?php
-  										}
+								if($client['client_person'] == "Natural")
+								{
+									$natural = $work->get_natural($client['client_id']);
+									if($natural['n_marital_status'] == "Married")
+									{
+										if(count($docs) < 2)
+										{
+										?>
+											<span class="jumbotron rounded-sm py-1 px-2">
+												<i class="fa fa-file-pdf-o text-danger" aria-hidden="true" style="font-size: 100%;"></i> <span class="ml-0 text-white badge badge-danger"><?php print(2- count($docs)); ?></span>
+											</span>
+										<?php
+										}else
+										{
+											if(count($ideas) > 0)
+											{
+										?>
+												<i class="fa fa-check-square-o text-success" aria-hidden="true" style="font-size: 120%;"></i>
+										<?php
+											}else
+											{
+										?>
+												<i class="fa fa-minus-circle text-danger" aria-hidden="true" style="font-size: 120%;"></i>
+										<?php
+											}
 
-  								}
-  								}
+									}
+									}
 
-  								if($natural['n_marital_status'] == "Single")
-  								{
+									if($natural['n_marital_status'] == "Single")
+									{
 
-  									if(count($docs) < 2)
-  									{
-  									?>
-  										<span class="jumbotron rounded-sm py-1 px-2">
-  											<i class="fa fa-file-pdf-o text-danger" aria-hidden="true" style="font-size: 100%;"></i> <span class="ml-0 text-white badge badge-danger"><?php print(2- count($docs)); ?></span>
-  										</span>
-  									<?php
-  									}else
-  									{
-  										if(count($ideas) > 0)
-  										{
-  									?>
-  											<i class="fa fa-check-square-o text-success" aria-hidden="true" style="font-size: 120%;"></i>
-  									<?php
-  										}else
-  										{
-  									?>
-  											<i class="fa fa-minus-circle text-danger" aria-hidden="true" style="font-size: 120%;"></i>
-  									<?php
-  										}
-  									}
-  								}
-  							}
-  						?>
+										if(count($docs) < 2)
+										{
+										?>
+											<span class="jumbotron rounded-sm py-1 px-2">
+												<i class="fa fa-file-pdf-o text-danger" aria-hidden="true" style="font-size: 100%;"></i> <span class="ml-0 text-white badge badge-danger"><?php print(2- count($docs)); ?></span>
+											</span>
+										<?php
+										}else
+										{
+											if(count($ideas) > 0)
+											{
+										?>
+												<i class="fa fa-check-square-o text-success" aria-hidden="true" style="font-size: 120%;"></i>
+										<?php
+											}else
+											{
+										?>
+												<i class="fa fa-minus-circle text-danger" aria-hidden="true" style="font-size: 120%;"></i>
+										<?php
+											}
+										}
+									}
+								}
+							?>
 
-  					</div>
-          </a>
+						</div>
+          			</a>
   				</div>
 
 

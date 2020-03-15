@@ -1,7 +1,8 @@
 
 <div class="card ml-5 border-success" style="width: 18rem;">
   <div class="card-body p-0">
-    <h4 class="card-title m-0">Person <button class="btn edit_btn" id="edit_natural" style="margin-left: 50%;">Edit</h4>
+    <h4 class="card-title m-0">Person <button class="btn edit_btn" id="edit_natural" style="margin-left: 50%;">Edit</button></h4>
+
     <div class="card-text" id="natural_view">
  	  <div class="row ml-0 badge badge-success">
  	  	<?php print($client_identification['client_person']." :");?>
@@ -62,10 +63,20 @@
 	 	  			<option value="Customary">Customary</option>
 	 	  		</select>
 	 	  	</div>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9d2b03d475d9f1e5961d7b245107863cb43f627b
 	 	  	<div class="m-2">
 	 	  		<button class="btn btn-danger" id="cancel_edit_natural"> Cancel</button>
 	 	  		<button class="btn btn-success" id="edit_natural_save">Save <i class="fa fa-save"></i></button>
 	 	  	</div>
+<<<<<<< HEAD
+=======
+=======
+	 	  	<button class="btn btn-success" id="edit_natural_save">Save <i class="fa fa-save"></i></button>
+>>>>>>> f90380ae94e8851013b239e31b41dfaa593fc006
+>>>>>>> 9d2b03d475d9f1e5961d7b245107863cb43f627b
  	  	</form>
  	  </div>
  	</div>
@@ -135,9 +146,7 @@
    	  			<option value="Out-of-community">Out-of-community</option>
    	  		</select>
    	  		<label class="label mt-2 "><i>Detail of marriage: </i></label>
-   	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;">
-            <?php print($civil['c_detail_of_marriage']);?>
-   	  		</textarea>
+   	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;"><?php print($civil['c_detail_of_marriage']);?></textarea>
    	  		<div class="d-flex justify-content-center">
             <button class="btn btn-tomato" id="cancel_edit_civil"> Cancel</button>&nbsp;
    	  			<button class="btn btn-success" id="edit_civil"> Save</button>
@@ -189,9 +198,7 @@
    	  			<option value="Out-of-community">Out-of-community</option>
    	  		</select>
    	  		<label class="label mt-2 "><i>Detail of marriage: </i></label>
-   	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;">
-
-   	  		</textarea>
+   	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;"></textarea>
    	  		<div class="d-flex justify-content-center">
    	  			<button class="btn btn-success" id="add_civil"> Save</button>
    	  		</div>
@@ -207,7 +214,7 @@
 </div>
 
 <?php
-		if(count($civil) > 0)
+		if($civil !== null)
 		{
 			include 'documents.php';
             if(count($docs) >= 2)
@@ -345,32 +352,33 @@
 							          <span aria-hidden="true">&times;</span>
 							        </button>
 							      </div>
-							      <div id="d_status_<?php print($spouse['cs_id']); ?>" class="ml-4 mr-4 mt-2 mb-2">
+							      <div class="ml-4 mr-4 mt-2 mb-2 d_status">
 
 							      </div>
 							      <div class="modal-body mx-3">
 							        <div class="md-form mb-3">
 							          <i class="fa fa-user prefix grey-text"></i>
-							          <input type="name" id="d_fname_<?php print($spouse['cs_id']); ?>" class="form-control validate">
-							          <label data-error="wrong" data-success="right" for="d_fname_<?php print($spouse['cs_id']); ?>">First name</label>
+							          <input type="name" class="form-control d_fname">
+							          <label data-error="wrong" data-success="right" for="d_fname">First name</label>
 							        </div>
 
 							        <div class="md-form mb-3">
 							          <i class="fa fa-user prefix grey-text"></i>
-							          <input type="name" id="d_lname_<?php print($spouse['cs_id']); ?>" class="form-control validate">
-							          <label data-error="wrong" data-success="right" for="d_lname_<?php print($spouse['cs_id']); ?>">Last name</label>
+							          <input type="name" class="form-control d_lname">
+							          <label data-error="wrong" data-success="right" for="d_lname">Last name</label>
 							        </div>
 
 							        <div class="md-form mb-3">
 							          <i class="fa fa-id-badge prefix grey-text"></i>
-							          <input type="number" id="d_id_number_<?php print($spouse['cs_id']); ?>" class="form-control validate">
-							          <label data-error="wrong" data-success="right" for="d_id_number_<?php print($spouse['cs_id']); ?>">Id number</label>
+							          <input type="number" id="" class="form-control d_id_number">
+							          <label data-error="wrong" data-success="right" for="d_id_number">Id number</label>
 							        </div>
 
 							      </div>
 							    </form>
 							      <div class="modal-footer d-flex justify-content-center">
-							        <a class="btn btn-success" onclick="add_deligation(<?php print($spouse['cs_id']); ?>)">Save</a>
+									<p  hidden><?php print($spouse['cs_id']); ?></p>
+							        <a class="btn btn-success add_deligation">Save</a>
 							      </div>
 						    </div>
 						  </div>
