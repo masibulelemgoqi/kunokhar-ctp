@@ -1,7 +1,7 @@
 <div class="card border border-success" style="width: 18rem;">
 	<div class="card-body p-0">
 		<h4 class="card-title m-0">Basic Information
-			<button class="btn edit_btn" onclick="update_identification(<?php echo $_GET['client_id'];?>);">Edit</button>
+			<button class="btn edit_btn edit-identification">Edit</button>
 		</h4>
 		<div class="card-text" id="view_ident">
 			<?php

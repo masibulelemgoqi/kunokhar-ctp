@@ -33,19 +33,6 @@ $(()=> {
     $('.m_type').hide();
 	$('#civil_edit_container').hide();
 
-
-	$('#view_edit_civil').click(function(e) {
-		e.preventDefault();
-		$('#civil_edit_container').show();
-		$('#civil_view_container').hide();
-	});
-
-	$('#cancel_edit_civil').click(function(e) {
-		e.preventDefault();
-		$('#civil_edit_container').hide();
-		$('#civil_view_container').show();
-	});
-	
 	$('#idea_edit').click(function(e) {
 		e.preventDefault();
 		$('.idea_show_first').hide();
@@ -115,17 +102,6 @@ $(()=> {
 		$('.hide_first').hide();
 	});
 
-	$('#edit_juristic').click(function(e) {
-		$('#juristic_view').hide();
-		$('#juristic_edit').show();
-	});
-
-	$('#cancel_edit_juristic').click(function(e) {
-		e.preventDefault();
-		$('#juristic_view').show();
-		$('#juristic_edit').hide();
-	});
-
 	$('#edit_natural').click(function(e) {
 		$('#natural_view').hide();
 		$('#natural_edit').show();
@@ -160,38 +136,57 @@ $(()=> {
 	// SECTION Trigger
 	$('.edit-identification').click(function(e) {
 		
-		if($(this).text() == "edit") {
-			$(this).text('cancel');
+		if($(this).text() == "Edit") {
+			$(this).text('Cancel');
 			$('#view_ident').hide();
 			$('#hidden_ident').show();
 		}else {
-			$(this).text('edit');
+			$(this).text('Edit');
 			$('#view_ident').show();
 			$('#hidden_ident').hide();
 		}
 	});
 
 	$('.edit-natural-class').click(function(e) {
-		console.log($(this).text());
 		
-		if($(this).text() == "edit") {
-			$(this).text('cancel');
+		if($(this).text() == "Edit") {
+			$(this).text('Cancel');
 			$('#natural_view').hide();
 			$('#natural_edit').show();
 		}else {
-			$(this).text('edit');
+			$(this).text('Edit');
 			$('#natural_view').show();
 			$('#natural_edit').hide();
 		}
 	});
 
-	$('#clients-container').on('click', function(e) {
+	$('#view_edit_civil').click(function(e) {
 		e.stopPropagation();
+		if($(this).text() == "Edit") {
+			$(this).text('Cancel');
+			$('#juristic_view').hide();
+			$('#juristic_edit').show();
+		}else {
+			$(this).text('Edit');
+			$('#juristic_view').show();
+			$('#juristic_edit').hide();
+		}
+	});
+
+	$('#edit_juristic').click(function(e) {
 		e.preventDefault();
 
-		
-	})
-
+		if($(this).text() == "Edit") {
+			$(this).text('Cancel');
+			$('#juristic_view').hide();
+			$('#juristic_edit').show();
+			
+		}else {
+			$(this).text('Edit');
+			$('#juristic_edit').hide();
+			$('#juristic_view').show();
+		}
+	});
 
 	// SECTION add events
 	$('#add_user').click(function(e) {
@@ -779,19 +774,20 @@ $(()=> {
 		var fname = $('#fname').val();
 		var lname = $('#lname').val();
 		var email = $('#email').val();
-		var cell_number = $('#cell_number').val();
+		var cellNumber = $('#cell_number').val();
 		var home_address = $('#client_address').val();
 		var city = $('#client_city').val();
 		var zip_code = $('#client_zip_code').val();
 		var title = $('#client_title').val();
 		var initials = $('#client_initials').val();
+		console.log(cellNumber);
 
-		if(client_id == "" || fname == "" || lname == "" || email == "" || cell_number =="" || home_address == "" || zip_code == "" || city == "" || title == "" || initials == "") {
+		if(client_id == "" || fname == "" || lname == "" || email == "" || cellNumber =="" || home_address == "" || zip_code == "" || city == "" || title == "" || initials == "") {
 			$('#status').html("<div class='alert alert-danger'>All fields are required</div>");	
 			return;
 		}
 
-		if(!cell_number(cell_number)) {
+		if(!cell_number(cellNumber)) {
 			$('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
 			return;	
 		}
@@ -813,8 +809,10 @@ $(()=> {
 		$.ajax({
 			method: 'POST',
 			url: '../controller/controller.php',
-			data: {client_id: client_id, fname: fname, lname: lname, email: email, cell_number: cell_number, home_address: home_address, zip_code: zip_code, city: city, title: title, initials: initials, action: 'edit_client'}
+			data: {client_id: client_id, fname: fname, lname: lname, email: email, cell_number: cellNumber, home_address: home_address, zip_code: zip_code, city: city, title: title, initials: initials, action: 'edit_client'}
 		}).then(function(data) {
+			console.log(data);
+			
 			$('#status').html(data);
 		}).catch(function(error) {
 			console.error(error);
@@ -1023,43 +1021,48 @@ function cancel_edit_client()
 }
 
 //SECTION  edit
-function edit_company_member(id)
-{
+function edit_company_member(id) {
 	var cm_id = id;
 	var fname = $('#fname-'+id).val();
 	var lname = $('#lname-'+id).val();
 	var title = $('#title-'+id).val();
 	var id_number = $('#id_number-'+id).val();
 	var date_of_appointment = $('#date_of_appointment-'+id).val();
-	alert(fname+"  "+lname+"  "+title+"  "+id_number+"  "+date_of_appointment);
 
-	if(fname != "" && lname != "" && title != "" && id_number != "" && date_of_appointment != "")
-	{
-		$.ajax(
-		{
-			method: 'POST',
-			url: '../controller/controller.php',
-			data: {cm_id: cm_id, fname: fname, lname: lname, title: title, id_number: id_number, date_of_appointment: date_of_appointment, action: 'edit_company_member'},
-			success: function(data)
-			{
-				if(data == "1")
-				{
-					$('#member_status-'+id).html('<div class="alert alert-success">Company member updated successfully</div>');
-				}else
-				{
-					$('#member_status-'+id).html(data);
-				}
-				
-			},
-			error: function(data)
-			{
-				$('#member_status-'+id).html(data);
-			}
-		});
-	}else
-	{
+	if(fname == "" || lname == "" || title == "" || id_number == "" || date_of_appointment == "") {
 		$('#member_status-'+id).html('<div class="alert alert-danger">All fields are required</div>');
+		return;
 	}
+	if(!isName(fname)) {
+		$('#member_status-'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;	
+	}
+	if(!isName(fname)) {
+		$('#member_status-'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;	
+	}
+	if(!valid_idnumber(id_number)) {
+		$('#member_status-'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;	
+	}
+	if(!isCorrectDate(date_of_appointment)) {
+		$('#member_status-'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;	
+	}
+
+	$.ajax({
+		method: 'POST',
+		url: '../controller/controller.php',
+		data: {cm_id: cm_id, fname: fname, lname: lname, title: title, id_number: id_number, date_of_appointment: date_of_appointment, action: 'edit_company_member'}
+	}).then(function(data) {
+		if(data == "1") {
+			$('#member_status-'+id).html('<div class="alert alert-success">Company member updated successfully</div>');
+		}else {
+			$('#member_status-'+id).html(data);
+		}
+	}).catch(function(error) {
+		$('#member_status-'+id).html(error);
+	});
 
 }
 
@@ -1411,13 +1414,11 @@ function cell_number(cell_number) {
 		error = "Cell number should consist of numbers only";
 	}else if(cell_number.length != 10) {
 		error = "Cell number should be 10 digits";
-	}else if(cell_number.slice(0,1) !== 0) {
-		error = "Cell number should start with 0";
 	}else {
 		error = null;
 	}
 
-	if(error != null) {
+	if(error !== null) {
 		return false;
 	}else {
 		return true;
@@ -1456,10 +1457,18 @@ function isDob(dob) {
 }
 
 function isZipCode(zip_code) {
-	if(isNan(zip_code)) {
+	if(isNaN(zip_code)) {
 		error = "Zip code should be numbers";
 	}else if(zip_code.length !== 4) {
 		error = "Zip code should be 4 digits";
+	}else {
+		error = null;
+	}
+
+	if(error !== null) {
+		return false;
+	}else {
+		return true;
 	}
 }
 

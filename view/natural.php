@@ -1,8 +1,7 @@
 
 <div class="card ml-5 border-success" style="width: 18rem;">
   <div class="card-body p-0">
-    <h4 class="card-title m-0">Person <button class="btn edit_btn" id="edit_natural" style="margin-left: 50%;">Edit</button></h4>
-
+    <h4 class="card-title m-0">Person <button class="btn edit_btn edit-natural-class" style="margin-left: 50%;">Edit</button></h4>
     <div class="card-text" id="natural_view">
  	  <div class="row ml-0 badge badge-success">
  	  	<?php print($client_identification['client_person']." :");?>
@@ -63,20 +62,9 @@
 	 	  			<option value="Customary">Customary</option>
 	 	  		</select>
 	 	  	</div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 9d2b03d475d9f1e5961d7b245107863cb43f627b
 	 	  	<div class="m-2">
-	 	  		<button class="btn btn-danger" id="cancel_edit_natural"> Cancel</button>
 	 	  		<button class="btn btn-success" id="edit_natural_save">Save <i class="fa fa-save"></i></button>
 	 	  	</div>
-<<<<<<< HEAD
-=======
-=======
-	 	  	<button class="btn btn-success" id="edit_natural_save">Save <i class="fa fa-save"></i></button>
->>>>>>> f90380ae94e8851013b239e31b41dfaa593fc006
->>>>>>> 9d2b03d475d9f1e5961d7b245107863cb43f627b
  	  	</form>
  	  </div>
  	</div>
@@ -100,7 +88,7 @@
      ?>
 <div class="card ml-5 border-success" style="width: 30rem;">
   <div class="card-body p-0">
-    <h4 class="card-title" style="font-family: 'prataregular', Serif; font-style: italic; "> Civil Marriage <button class="btn edit_btn " id="view_edit_civil">edit</button> </h4>
+    <h4 class="card-title m-0"> Civil Marriage <button class="btn edit_btn " id="view_edit_civil">Edit</button> </h4>
     <div class="card-text">
       <div class="row m-0" id="civil_view_container">
         <div class="ml-3">
@@ -148,7 +136,6 @@
    	  		<label class="label mt-2 "><i>Detail of marriage: </i></label>
    	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;"><?php print($civil['c_detail_of_marriage']);?></textarea>
    	  		<div class="d-flex justify-content-center">
-            <button class="btn btn-tomato" id="cancel_edit_civil"> Cancel</button>&nbsp;
    	  			<button class="btn btn-success" id="edit_civil"> Save</button>
    	  		</div>
 

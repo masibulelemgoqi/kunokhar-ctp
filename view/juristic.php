@@ -55,7 +55,6 @@
                 </div>
 
                 <div class="m-2">
-                    <button class="btn btn-danger" id="cancel_edit_juristic">Cancel</button>
                     <button class="btn btn-success" id="edit_juristic_save">Save <i class="fa fa-save"></i></button>
                 </div>
      	  	</form>

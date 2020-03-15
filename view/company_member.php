@@ -52,15 +52,15 @@
 
 
 															        <div class="md-form mb-3">
-															          <input type="name" id="fname-<?php print($member['cm_id']);?>" class="form-control" value="<?php print($member['cm_fname']);?>">
+															          <input type="name" id="fname-<?php print($member['cm_id']);?>" class="form-control" value="<?php print($member['cm_fname']);?>" placeholder="firstname">
 															        </div>
 
 															        <div class="md-form mb-3">
-															          <input type="name" id="lname-<?php print($member['cm_id']);?>" class="form-control" value="<?php print($member['cm_lname']);?>">
+															          <input type="name" id="lname-<?php print($member['cm_id']);?>" class="form-control" value="<?php print($member['cm_lname']);?>" placeholder="lastname">
 															        </div>
 
 															        <div class="md-form mb-3">
-															          <input type="number" id="id_number-<?php print($member['cm_id']);?>" class="form-control" value="<?php print($member['cm_id_number']);?>">
+															          <input type="number" id="id_number-<?php print($member['cm_id']);?>" class="form-control" value="<?php print($member['cm_id_number']);?>" placeholder="id number">
 															        </div>
 
 															        <div class="md-form mb-3">
@@ -78,7 +78,7 @@
 															    	<div class="row">First name: <?php print($member['cm_fname']);?></div>
 															    	<div class="row">Last name: <?php print($member['cm_lname']);?></div>
 															    	<div class="row">Id Number: <?php print($member['cm_id_number']);?></div>
-															    	<div class="row mb-2">Date of appointment: <?php print($member['cm_date_of_appointment']);?></div>
+															    	<div class="row mb-2">Date of appointment: <?php print(date("d-m-Y", strtotime($member['cm_date_of_appointment'])));?></div>
 																      <div class="modal-footer p-1">
 																        <button onclick="edit_member_view(<?php print($member['cm_id']);?>);" class="btn btn-info" id="edit_cm">Edit</button>
 																      </div>
