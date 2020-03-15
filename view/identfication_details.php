@@ -2,7 +2,7 @@
 	<div class="card-body">
 
 		<h4 class="card-title m-0" style="font-family: 'prataregular', Serif; font-style: italic; ">Identification details
-		<button class="btn edit_btn" onclick="update_identification(<?php echo $_GET['client_id'];?>);">edit</button>
+		<button class="btn edit_btn edit-identification" onclick="update_identification(<?php echo $_GET['client_id'];?>);">edit</button>
 		</h4><hr class="border-success">
 		<div class="card-text" id="view_ident">
 			<?php
@@ -66,7 +66,6 @@
 		</div>
 
 		<div class="card-text" id="hidden_ident">
-			<button class="btn btn-tomato" onclick="cancel_edit_client();">Cancel</button>
 			<div id="status"></div>
 			<form method="POST" action="">
 				<input type="hidden" class="form-control m-2" id="client_id" value="<?php print($client_identification['client_id']);?>">

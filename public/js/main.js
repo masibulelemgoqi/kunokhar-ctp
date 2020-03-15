@@ -1,5 +1,23 @@
+
+// ANCHOR  Load pages
+
+window.onload = function() {
+	var url = window.location.href.split("/");
+	page = url[url.length - 1].trim();
+
+	switch(page) {
+		case 'main.php':
+			loadMain();
+		break;
+	}
+}
 // ANCHOR  variables
 var error = null;
+var companyName = null;
+var companyRegNumber = null;
+var companyRegDate = null;
+var documentsCount = 0;
+var ideasCount = 0;
 
 // ANCHOR  All events
 $(()=> {
@@ -113,13 +131,7 @@ $(()=> {
 		$('#natural_edit').show();
 	});
 
-	$('#cancel_edit_natural').click(function(e) {
-		e.preventDefault();
-		$('#natural_view').show();
-		$('#natural_edit').hide();
-	});
-
-	// ANCHOR Authentification
+	// SECTION  Authentification
 	$('#log_in').click(function(e) {
 		e.preventDefault();
 		var email = $('#email').val();
@@ -144,6 +156,41 @@ $(()=> {
 			$('#status').html(error);
 		});
 	});
+
+	// SECTION Trigger
+	$('.edit-identification').click(function(e) {
+		
+		if($(this).text() == "edit") {
+			$(this).text('cancel');
+			$('#view_ident').hide();
+			$('#hidden_ident').show();
+		}else {
+			$(this).text('edit');
+			$('#view_ident').show();
+			$('#hidden_ident').hide();
+		}
+	});
+
+	$('.edit-natural-class').click(function(e) {
+		console.log($(this).text());
+		
+		if($(this).text() == "edit") {
+			$(this).text('cancel');
+			$('#natural_view').hide();
+			$('#natural_edit').show();
+		}else {
+			$(this).text('edit');
+			$('#natural_view').show();
+			$('#natural_edit').hide();
+		}
+	});
+
+	$('#clients-container').on('click', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+
+		
+	})
 
 
 	// SECTION add events
@@ -675,6 +722,8 @@ $(()=> {
 	$('.add_deligation').click(function(e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log("hi");
+		
 		var id = $(this).closest('.modal-footer').find('p').text();
 		var fname = $('.d_fname').val();
 		var lname = $('.d_lname').val();
@@ -927,222 +976,215 @@ $(()=> {
 // ANCHOR functions
 
 
-	//verify documents
-	function verify_doc(document_id)
+//verify documents
+function verify_doc(document_id)
+{
+	$.ajax(
+	{
+		method: 'POST',
+		url: '../controller/controller.php',
+		data: {document_id: document_id, action: "verify_doc"},
+		success: function(data)
+		{
+			if(data == "1")
+			{
+				$('#verify-'.document_id).html('<div class="alert alert-success">Document verified</div>');
+				location.reload(6000);
+			}else
+			{
+				$('#verify-'.document_id).html(data);
+			}
+		}
+	});
+}
+//company member functions
+function view_member(id)
+{
+	$('#edit_member'+id).hide();
+	$('#view_member'+id).show();
+}	
+
+function edit_member_view(id)
+{
+	$('#edit_member'+id).show();
+	$('#view_member'+id).hide();		
+} 
+
+function cancel_cm(id)
+{
+	$('#edit_member'+id).hide();
+	$('#view_member'+id).show();		
+}
+
+function cancel_edit_client()
+{
+	$('#view_ident').show();
+	$('#hidden_ident').hide();		
+}
+
+//SECTION  edit
+function edit_company_member(id)
+{
+	var cm_id = id;
+	var fname = $('#fname-'+id).val();
+	var lname = $('#lname-'+id).val();
+	var title = $('#title-'+id).val();
+	var id_number = $('#id_number-'+id).val();
+	var date_of_appointment = $('#date_of_appointment-'+id).val();
+	alert(fname+"  "+lname+"  "+title+"  "+id_number+"  "+date_of_appointment);
+
+	if(fname != "" && lname != "" && title != "" && id_number != "" && date_of_appointment != "")
 	{
 		$.ajax(
 		{
 			method: 'POST',
 			url: '../controller/controller.php',
-			data: {document_id: document_id, action: "verify_doc"},
+			data: {cm_id: cm_id, fname: fname, lname: lname, title: title, id_number: id_number, date_of_appointment: date_of_appointment, action: 'edit_company_member'},
 			success: function(data)
 			{
 				if(data == "1")
 				{
-					$('#verify-'.document_id).html('<div class="alert alert-success">Document verified</div>');
-					location.reload(6000);
+					$('#member_status-'+id).html('<div class="alert alert-success">Company member updated successfully</div>');
 				}else
-				{
-					$('#verify-'.document_id).html(data);
-				}
-			}
-		});
-	}
-	//company member functions
-	function view_member(id)
-	{
-		$('#edit_member'+id).hide();
-		$('#view_member'+id).show();
-	}	
-
-	function edit_member_view(id)
-	{
-		$('#edit_member'+id).show();
-		$('#view_member'+id).hide();		
-	} 
-
-	function cancel_cm(id)
-	{
-		$('#edit_member'+id).hide();
-		$('#view_member'+id).show();		
-	}
-
-	function update_identification(id)
-	{
-		$('#view_ident').hide();
-		$('#hidden_ident').show();
-
-	} 
-
-	function cancel_edit_client()
-	{
-		$('#view_ident').show();
-		$('#hidden_ident').hide();		
-	}
-
-	//edit
-	function edit_company_member(id)
-	{
-		var cm_id = id;
-		var fname = $('#fname-'+id).val();
-		var lname = $('#lname-'+id).val();
-		var title = $('#title-'+id).val();
-		var id_number = $('#id_number-'+id).val();
-		var date_of_appointment = $('#date_of_appointment-'+id).val();
-		alert(fname+"  "+lname+"  "+title+"  "+id_number+"  "+date_of_appointment);
-
-		if(fname != "" && lname != "" && title != "" && id_number != "" && date_of_appointment != "")
-		{
-			$.ajax(
-			{
-				method: 'POST',
-				url: '../controller/controller.php',
-				data: {cm_id: cm_id, fname: fname, lname: lname, title: title, id_number: id_number, date_of_appointment: date_of_appointment, action: 'edit_company_member'},
-				success: function(data)
-				{
-					if(data == "1")
-					{
-						$('#member_status-'+id).html('<div class="alert alert-success">Company member updated successfully</div>');
-					}else
-					{
-						$('#member_status-'+id).html(data);
-					}
-					
-				},
-				error: function(data)
 				{
 					$('#member_status-'+id).html(data);
 				}
-			});
-		}else
-		{
-			$('#member_status-'+id).html('<div class="alert alert-danger">All fields are required</div>');
-		}
-
+				
+			},
+			error: function(data)
+			{
+				$('#member_status-'+id).html(data);
+			}
+		});
+	}else
+	{
+		$('#member_status-'+id).html('<div class="alert alert-danger">All fields are required</div>');
 	}
 
-	function edit_share_holder(id)
+}
+
+function edit_share_holder(id)
+{
+	var sh_id = id;
+	var fname = $('#fname_'+id).val();
+	var lname = $('#lname_'+id).val();
+	var j_id = $('#j_id_'+id).val();
+	var title = $('#title_'+id).val();
+	var id_number = $('#id_number_'+id).val();
+	var amount_contributed = $('#amount_contributed_'+id).val();
+
+	if(fname != "" && lname != "" && sh_id != "" && title != "" && id_number != "" && amount_contributed != "")
 	{
-		var sh_id = id;
-		var fname = $('#fname_'+id).val();
-		var lname = $('#lname_'+id).val();
-		var j_id = $('#j_id_'+id).val();
-		var title = $('#title_'+id).val();
-		var id_number = $('#id_number_'+id).val();
-		var amount_contributed = $('#amount_contributed_'+id).val();
-
-		if(fname != "" && lname != "" && sh_id != "" && title != "" && id_number != "" && amount_contributed != "")
+		$.ajax(
 		{
-			$.ajax(
+			method: 'POST',
+			url: '../controller/controller.php',
+			data: {sh_id: sh_id, fname: fname, lname: lname, title: title, id_number: id_number, amount_contributed: amount_contributed , action: 'edit_share_holder'},
+			success: function(data)
 			{
-				method: 'POST',
-				url: '../controller/controller.php',
-				data: {sh_id: sh_id, fname: fname, lname: lname, title: title, id_number: id_number, amount_contributed: amount_contributed , action: 'edit_share_holder'},
-				success: function(data)
+				if(data == "1")
 				{
-					if(data == "1")
-					{
 
-						$('#holder_status_'+id).html('<div class="alert alert-success">Share holder Updated successfully</div>');
-					}else
-					{
-						$('#holder_status_'+id).html(data);
-					}
-				},
-				error: function(data)
+					$('#holder_status_'+id).html('<div class="alert alert-success">Share holder Updated successfully</div>');
+				}else
 				{
 					$('#holder_status_'+id).html(data);
 				}
-			});
-		}else
+			},
+			error: function(data)
+			{
+				$('#holder_status_'+id).html(data);
+			}
+		});
+	}else
+	{
+		$('#holder_status_'+id).html('<div class="alert alert-danger">All fields are required</div>');
+	}
+}
+
+//stake holder functions
+function view_holder(id)
+{
+	$('#edit_holder_view_'+id).hide();
+	$('#view_holder'+id).show();
+}	
+
+function edit_holder_view(id){
+	$('#edit_holder_view_'+id).show();
+	$('#view_holder'+id).hide();		
+} 
+
+function cancel_sh(id)
+{
+	$('#edit_holder_view_'+id).hide();
+	$('#view_holder'+id).show();
+}
+
+function delete_member(str) 
+{
+
+	var cm_id = str;
+	var r = confirm("Are you sure you want to delete a company member? press okay if yes");
+	if (r == true) 
+	{
+		$.ajax(
 		{
-			$('#holder_status_'+id).html('<div class="alert alert-danger">All fields are required</div>');
-		}
-	}
-
-	//stake holder functions
-	function view_holder(id)
-	{
-		$('#edit_holder_view_'+id).hide();
-		$('#view_holder'+id).show();
-	}	
-
-	function edit_holder_view(id){
-		$('#edit_holder_view_'+id).show();
-		$('#view_holder'+id).hide();		
-	} 
-	function cancel_sh(id)
-	{
-		$('#edit_holder_view_'+id).hide();
-		$('#view_holder'+id).show();
-	}
-
-
-	function delete_member(str) 
-	{
-
-		var cm_id = str;
-		var r = confirm("Are you sure you want to delete a company member? press okay if yes");
-		if (r == true) 
+		method: 'POST',
+		url: '../controller/controller.php',
+		data: {cm_id: cm_id, action: 'delete_member'},
+		success: (data) =>
 		{
-		  $.ajax(
-		  {
-		  	method: 'POST',
-		  	url: '../controller/controller.php',
-		  	data: {cm_id: cm_id, action: 'delete_member'},
-		  	success: (data) =>
-		  	{
-		  		
-		  		if(data == "1")
-		  		{
-		  			$('#member_del_status').html("<div class='alert alert-success'>member Deleted</div>");
-		  			location.reload(6000);
-		  		}else
-		  		{
-		  			$('#member_del_status').html(data);
-		  		}
-		  	},
-		  	error: (data) =>
-		  	{
-		  		$('#member_del_status').html(data);
-		  	}
-		  });		  
-		}
-
-
-	}
-
-	function delete_holder(str)
-	{
-
-		var r = confirm("Are you sure you want to delete a Share holder? press okay if yes");
-		if (r == true) 
+			
+			if(data == "1")
+			{
+				$('#member_del_status').html("<div class='alert alert-success'>member Deleted</div>");
+				location.reload(6000);
+			}else
+			{
+				$('#member_del_status').html(data);
+			}
+		},
+		error: (data) =>
 		{
-		  var sh_id = str;
-		  $.ajax(
-		  {
-		  	method: 'POST',
-		  	url: '../controller/controller.php',
-		  	data: {sh_id: sh_id, action: 'delete_holder'},
-		  	success: (data) =>
-		  	{
-		  		
-		  		if(data == "1")
-		  		{
-		  			$('#holder_del_status').html("<div class='alert alert-success'>holder deleted</div>");
-		  			location.reload(6000);
-		  		}else
-		  		{
-		  			$('#holder_del_status').html(data);
-		  		}
-		  	},
-		  	error: (data) =>
-		  	{
-		  		$('#holder_del_status').html(data);
-		  	}
-		  });
+			$('#member_del_status').html(data);
 		}
+		});		  
 	}
+
+
+}
+
+function delete_holder(str)
+{
+
+	var r = confirm("Are you sure you want to delete a Share holder? press okay if yes");
+	if (r == true) 
+	{
+		var sh_id = str;
+		$.ajax(
+		{
+		method: 'POST',
+		url: '../controller/controller.php',
+		data: {sh_id: sh_id, action: 'delete_holder'},
+		success: (data) =>
+		{
+			
+			if(data == "1")
+			{
+				$('#holder_del_status').html("<div class='alert alert-success'>holder deleted</div>");
+				location.reload(6000);
+			}else
+			{
+				$('#holder_del_status').html(data);
+			}
+		},
+		error: (data) =>
+		{
+			$('#holder_del_status').html(data);
+		}
+		});
+	}
+}
 
 ///beneficiary functions
 
@@ -1396,9 +1438,9 @@ function isName(name) {
 }
 
 function isDob(dob) {
-	var your_year = parseInt(dob.slice(2,4));
+	var your_year = parseInt(dob.slice(0,4));
 	var dateNow = new Date();
-	var current_year = parseInt(dateNow.getFullYear().toString().slice(2,4));
+	var current_year = parseInt(dateNow.getFullYear().toString().slice(0,4));
 
 	if(your_year >= current_year) {
 		error = "Your date of birth can't be a future year";
@@ -1459,9 +1501,10 @@ function isSameIdNumber(compare_id_number) {
 
 function isCorrectDate(date) {
 	var current_year = parseInt((((new Date).getFullYear()).toString()).slice(0, 4));
-	var current_month = parseInt(( ((new Date).getMonth()).toString()));
+	var current_month = parseInt(( ((new Date).getMonth()).toString()).slice(0,2));
 	var your_year = parseInt(date.slice(0, 4));
 	var your_month = parseInt(date.slice(5, 7));
+	
 	if(your_year > current_year) {
 		error = "This is the future date, use a correct year";
 	}else if(your_year == current_year && your_month > current_month){
