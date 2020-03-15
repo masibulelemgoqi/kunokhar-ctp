@@ -1,9 +1,9 @@
 <div class="card border border-success" style="width: 18rem;">
-	<div class="card-body">
+	<div class="card-body p-0">
 
-		<h4 class="card-title m-0" style="font-family: 'prataregular', Serif; font-style: italic; ">Identification details
-		<button class="btn edit_btn edit-identification" onclick="update_identification(<?php echo $_GET['client_id'];?>);">edit</button>
-		</h4><hr class="border-success">
+		<h4 class="card-title m-0">Basic Information
+			<button class="btn edit_btn edit-identification" onclick="update_identification(<?php echo $_GET['client_id'];?>);">Edit</button>
+		</h4>
 		<div class="card-text" id="view_ident">
 			<?php
 				$client_identification = $work->get_client($_GET['client_id']);
@@ -20,7 +20,7 @@
 			</div>
 
 			<div class="row mb-2">
-				<div class="col-sm-2">
+				<div class="col-sm-2 text-center">
 						<i class="fa fa-user text-success" style="font-size: 150%;"></i>
 				</div>
 
@@ -30,7 +30,7 @@
 
 			</div>
 			<div class="row mb-2">
-				<div class="col-sm-2">
+				<div class="col-sm-2 w3-center">
 						<i class="fa fa-map-marker text-success" style="font-size: 150%;"></i>
 				</div>
 

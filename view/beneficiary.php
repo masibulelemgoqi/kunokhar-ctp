@@ -1,12 +1,12 @@
 <div class="card ml-5 border-success" style="width: 20rem;">
-  <div class="card-body">
-    <h5 class="card-title">Beneficiaries </h5><hr class="border-success">
-    <p class="card-text">
+  <div class="card-body p-0">
+    <h4 class="card-title m-0">Beneficiaries <button data-toggle="modal" class="btn add-btn" data-target="#addBeneficiary"><i class="fa fa-plus"></i></button></h4>
+    <div class="card-text">
 
  	  <div class="row ml-0">
 	  <div class="row ml-0">
  	  	<div class="text-center d-flex justify-content-center">
- 			<a href="" class="btn btn-success btn-rounded mb-4" data-toggle="modal" data-target="#addBeneficiary">Add beneficiary</a>
+ 			
 		</div>
 			<div class="modal fade" id="addBeneficiary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			  aria-hidden="true">
@@ -14,7 +14,7 @@
 			    <div class="modal-content">
 			      <form method="POST" action="">
 				      <div class="modal-header text-center">
-				        <h4 class="modal-title">Beneficiary information</h4>
+				        <h4 class="modal-title font-weight-bold">Beneficiary Information</h4>
 				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				          <span aria-hidden="true">&times;</span>
 				        </button>
@@ -27,21 +27,15 @@
 				          <input type="hidden" id="client_id" value="<?php print($_GET['client_id']);?>" class="form-control validate">
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="b_fname" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="fname">First name</label>
+				          <input type="name" id="b_fname" class="form-control validate" placeholder="First Name">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="b_lname" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="lname">Last name</label>
+				          <input type="name" id="b_lname" class="form-control validate" placeholder="Last Name">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="b_id_number" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="id_number">ID number</label>
+				          <input type="name" id="b_id_number" class="form-control validate" placeholder="ID Number">
 				        </div>
 
 				      </div>
@@ -105,7 +99,7 @@
 			    <div class="modal-content">
 			      <form method="POST" action="">
 				      <div class="modal-header text-center">
-				        <h4 class="modal-title w-100 font-weight-bold">Beneficiary information</h4>
+				        <h4 class="modal-title font-weight-bold">Beneficiary Information</h4>
 				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				          <span aria-hidden="true">&times;</span>
 				        </button>
@@ -117,21 +111,15 @@
 
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="b_fname<?php print($beneficiary['b_id']);?>" class="form-control validate" value="<?php print($beneficiary['b_fname']);?>">
-				          <label data-error="wrong" data-success="right" for="fname">First name</label>
+				          <input type="name" placeholder="First Name" id="b_fname<?php print($beneficiary['b_id']);?>" class="form-control validate" value="<?php print($beneficiary['b_fname']);?>">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="b_lname<?php print($beneficiary['b_id']);?>" class="form-control validate" value="<?php print($beneficiary['b_lname']);?>">
-				          <label data-error="wrong" data-success="right" for="lname">Last name</label>
+				          <input type="name" placeholder="Last Name" id="b_lname<?php print($beneficiary['b_id']);?>" class="form-control validate" value="<?php print($beneficiary['b_lname']);?>">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="b_id_number<?php print($beneficiary['b_id']);?>" class="form-control validate" value="<?php print($beneficiary['b_id_number']);?>">
-				          <label data-error="wrong" data-success="right" for="id_number">ID number</label>
+				          <input type="name" placeholder="ID Number" id="b_id_number<?php print($beneficiary['b_id']);?>" class="form-control validate" value="<?php print($beneficiary['b_id_number']);?>">
 				        </div>
 
 				      </div>
@@ -149,6 +137,6 @@
  	  	?>
 
  	  </div>
- 	</p>
+ 	</div>
 </div>
 </div>

@@ -1,16 +1,16 @@
 
 <div class="card ml-5 border-success" style="width: 18rem;">
-  <div class="card-body">
-    <h4 class="card-title m-0" style="font-family: 'prataregular', Serif; font-style: italic; ">Person <button class="btn edit_btn edit-natural-class" style="margin-left: 50%;">edit</h4><hr class="border-success">
+  <div class="card-body p-0">
+    <h4 class="card-title m-0">Person <button class="btn edit_btn edit-natural-class" id="edit_natural" style="margin-left: 50%;">Edit</h4>
     <div class="card-text" id="natural_view">
  	  <div class="row ml-0 badge badge-success">
  	  	<?php print($client_identification['client_person']." :");?>
  	  </div>
  	  <div class="row ml-0">
- 	  	<div>Middle name: <?php print(" ".$natural['n_middle_name']);?></div><br><br>
- 	  	<div>DOB: <?php print(" ".$natural['n_dob']);?></div><br><br>
- 	  	<div>ID number: <?php print(" ".$natural['n_id_number']);?></div><br><br>
- 	  	<div>Marital status: <?php print(" ".$natural['n_marital_status']);?></div><br><br>
+ 	  	<div>Middle name: <?php print(" ".$natural['n_middle_name']);?></div><br>
+ 	  	<div>DOB: <?php print(" ".$natural['n_dob']);?></div><br>
+ 	  	<div>ID number: <?php print(" ".$natural['n_id_number']);?></div><br>
+ 	  	<div>Marital status: <?php print(" ".$natural['n_marital_status']);?></div><br>
  	  	<?php
  	  		if($natural['n_marital_status'] == "Married")
  	  		{
@@ -25,25 +25,25 @@
  	  <div class="row ml-0 badge badge-success">
  	  	<?php print($client_identification['client_person']." :");?>
  	  </div>
- 	  <div class="row ml-0">
+ 	  <div class="row">
  	  	<div id="ne_status"></div>
  	  	<form action="" method="POST">
  	  		<input type="hidden" id="ne_id" value="<?php print($natural['n_id']);?>">
-	 	  	<div class="row mr-1">
+	 	  	<div class="row m-2">
 	 	  		<label>Middle name:</label>
-	 	  		<input type="name" id="ne_middle_name" value="<?php print($natural['n_middle_name']);?>" class="form-control mb-3 border-success" placeholder="middle name">
+	 	  		<input type="name" id="ne_middle_name" value="<?php print($natural['n_middle_name']);?>" class="form-control mb-2 border-success" placeholder="middle name">
 	 	  	</div>
-	 	  	<div class="row">
+	 	  	<div class="row m-2">
 	 	  		<label>DOB:</label>
-	 	  		<input type="date" id="ne_dob" value="<?php print($natural['n_dob']);?>" class="form-control mb-3 mr-4 border-success" >
+	 	  		<input type="date" id="ne_dob" value="<?php print($natural['n_dob']);?>" class="form-control mb-2 border-success" >
 	 	  	</div>
-	 	  	<div class="row mr-1">
+	 	  	<div class="row m-2">
 	 	  		<label>ID number:</label>
-	 	  		<input type="number" id="ne_id_number" value="<?php print($natural['n_id_number']);?>" class="form-control mb-3 mr-4 border-success">
+	 	  		<input type="number" id="ne_id_number" value="<?php print($natural['n_id_number']);?>" class="form-control mb-2 border-success">
 	 	  	</div>
-	 	  	<div class="row">
+	 	  	<div class="row m-2">
 	 	  		<label>Marital status:</label>
-	 	  		<select id="ne_marital_status" class="form-control mb-3 mr-4 border-success">
+	 	  		<select id="ne_marital_status" class="form-control mb-2 border-success">
 	 	  			<option class="text-disabled" value="<?php print($natural['n_marital_status']);?>"><?php print($natural['n_marital_status']);?>
 	 	  			(currently selected)
 	 	  			</option>
@@ -52,9 +52,9 @@
 	 	  		</select>
 	 	  	</div>
 
-	 	  	<div class="row m_type">
+	 	  	<div class="row m-2 m_type">
 	 	  		<label>Marriage type:</label>
-	 	  		<select id="ne_marriage_type" class="form-control mb-3 mr-4 border-success">
+	 	  		<select id="ne_marriage_type" class="form-control mb-2 border-success">
 	 	  			<option class="text-disabled" value="<?php print($natural['n_marriage_type']);?>"><?php print($natural['n_marriage_type']);?>
 	 	  			(currently selected)
 	 	  			</option>
@@ -85,8 +85,8 @@
      {
      ?>
 <div class="card ml-5 border-success" style="width: 30rem;">
-  <div class="card-body">
-    <h4 class="card-title" style="font-family: 'prataregular', Serif; font-style: italic; "> Civil Marriage <button class="btn edit_btn " id="view_edit_civil">edit</button> </h4><hr class="border-success">
+  <div class="card-body p-0">
+    <h4 class="card-title" style="font-family: 'prataregular', Serif; font-style: italic; "> Civil Marriage <button class="btn edit_btn " id="view_edit_civil">edit</button> </h4>
     <div class="card-text">
       <div class="row m-0" id="civil_view_container">
         <div class="ml-3">
