@@ -19,9 +19,7 @@
 				          <span aria-hidden="true">&times;</span>
 				        </button>
 				      </div>
-				      <div id="b_status" class="ml-4 mr-4 mt-2 mb-2">
-
-				      </div>
+				      <div id="b_status" class="ml-4 mr-4 mt-2 mb-2"></div>
 				      <div class="modal-body mx-3">
 
 				          <input type="hidden" id="client_id" value="<?php print($_GET['client_id']);?>" class="form-control validate">
@@ -104,9 +102,7 @@
 				          <span aria-hidden="true">&times;</span>
 				        </button>
 				      </div>
-				      <div id="b_status" class="ml-4 mr-4 mt-2 mb-2">
-
-				      </div>
+				      <div class="ml-4 mr-4 mt-2 mb-2 b_status"></div>
 				      <div class="modal-body mx-3">
 
 

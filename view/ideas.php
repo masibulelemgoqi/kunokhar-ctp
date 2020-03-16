@@ -8,7 +8,7 @@
 	<div id="idea_add" class="mt-5">
 		<div id="idea_status" class="ml-3 mr-3"></div>
 		<form method="POST" action="">
-			<input list="brow" class="form-control mb-3" placeholder="- Select idea Industory/Sector -">
+			<input list="brow" class="form-control mb-3 sector-input" placeholder="- Select idea Industory/Sector -">
 			<datalist id="brow">
 				<option value="Accountants"></option>
 				<option value="Advertising/Public Relations"></option>
@@ -216,7 +216,7 @@
 			<input type="hidden" id="client_id" value="<?php print($_GET['client_id']); ?>">
 			<input type="name" id="idea_name" placeholder="Enter the name of idea" class="form-control mb-3">
 			<input type="name" id="idea_trademark" placeholder="Enter idea trademark" class="form-control mb-3">
-			<label class="mb-3 font-italic text-danger">Nature of idea(2000 characters)</label>
+			<label class="mb-3 font-italic text-danger">Nature of idea(<span id="nature-char-left">2000</span> characters)</label>
 			<textarea style="height: 150px; resize: none;" class="form-control" id="idea_nature"></textarea>
 			<label class="mb-3 font-italic text-danger">Target market(1000 characters)</label>
 			<textarea style="height: 150px; resize: none;" class="form-control" id="idea_target_market"></textarea>

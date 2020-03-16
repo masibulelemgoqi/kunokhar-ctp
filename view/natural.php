@@ -95,7 +95,7 @@
          	<div class="row">Spouse: </div>
          	<div class="row mt-2">first name: <?php print($civil['c_spouse_fname']);?></div>
          	<div class="row mt-2">Last name: <?php print($civil['c_spouse_lname']);?></div>
-         	<div class="row mt-2">Id number: <?php print($civil['c_id_number']);?></div>
+         	<div class="row mt-2 person-id-number">Id number: <?php print($civil['c_id_number']);?></div>
           <div class="row mt-2">Certificate #: <?php print($civil['c_certificate_number']);?></div>
           <div class="row mt-2">Date of issue: <?php print($civil['c_date_of_issue']);?></div>
          	<div class="row mt-2">Terms of marriage: <?php print($civil['c_marriage_terms']);?></div>

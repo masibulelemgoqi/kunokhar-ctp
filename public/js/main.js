@@ -16,6 +16,7 @@ var error = null;
 var companyName = null;
 var companyRegNumber = null;
 var companyRegDate = null;
+var sector = null;
 var documentsCount = 0;
 var ideasCount = 0;
 
@@ -164,12 +165,12 @@ $(()=> {
 		e.stopPropagation();
 		if($(this).text() == "Edit") {
 			$(this).text('Cancel');
-			$('#juristic_view').hide();
-			$('#juristic_edit').show();
+			$('#civil_view_container').hide();
+			$('#civil_edit_container').show();
 		}else {
 			$(this).text('Edit');
-			$('#juristic_view').show();
-			$('#juristic_edit').hide();
+			$('#civil_view_container').show();
+			$('#civil_edit_container').hide();
 		}
 	});
 
@@ -186,6 +187,15 @@ $(()=> {
 			$('#juristic_edit').hide();
 			$('#juristic_view').show();
 		}
+	});
+
+	$('.sector-input').change(function() {
+		sector = $('.sector-input').val();
+	});
+
+	$('#idea_nature').keyup(function(e) {
+		$('#nature-char-left').empty();
+		$('#nature-char-left').text(2000 - $('#idea_nature').val().length);
 	});
 
 	// SECTION add events
@@ -571,6 +581,11 @@ $(()=> {
 			return;
 		}
 
+		if(sector == null) {
+			$('#idea_status').html('<div class="alert alert-danger">Sector or industory can\'t be empty</div>');
+			return;	
+		}
+
 		if(idea_name.length < 3) {
 			$('#idea_status').html('<div class="alert alert-danger">Idea name should be at least 3 characters</div>');
 			return;
@@ -586,7 +601,7 @@ $(()=> {
 			return;
 		}
 
-		if(idea_nature.length < 2000) {
+		if(idea_target_market.length < 1000) {
 			$('#idea_status').html('<div class="alert alert-danger">Idea target market should be at least 2000 characters</div>');
 			return;
 		}
@@ -594,7 +609,7 @@ $(()=> {
 		$.ajax({
 			method: 'POST',
 			url: '../controller/controller.php',
-			data: {client_id: client_id, idea_name: idea_name, idea_trademark: idea_trademark, idea_nature: idea_nature, idea_target_market: idea_target_market, action: 'add_idea'}
+			data: {client_id: client_id, idea_name: idea_name, idea_trademark: idea_trademark, idea_nature: idea_nature, idea_target_market: idea_target_market, sector: sector, action: 'add_idea'}
 		}).then(function(data) {
 			if(data == "1") {
 				$('#idea_status').html('<div class="alert alert-success">Successfully added the idea</div>');	
@@ -916,7 +931,6 @@ $(()=> {
 		var date_of_issue = $('#date_of_issue').val();
 		var marriage_terms = $('#marriage_terms').val();
 		var detail_of_marriage = $('#detail_of_marriage').val();
-
 		if(c_id == "" || spouse_fname == "" || spouse_lname == "" || certificate_no == "" || date_of_issue == "" || marriage_terms == "" || detail_of_marriage == "" || spouse_id_number =="") {
 			$("#c_status").html("<div class='alert alert-danger'>All fields are required</div>");
 			return;
@@ -947,20 +961,16 @@ $(()=> {
 			method: 'POST',
 			url: '../controller/controller.php',
 			data: {c_id: c_id, spouse_fname: spouse_fname, spouse_lname: spouse_lname, certificate_no: certificate_no, date_of_issue: date_of_issue, marriage_terms: marriage_terms, detail_of_marriage: detail_of_marriage, spouse_id_number: spouse_id_number, action: 'edit_civil'},
-			success: function(data)
-			{
-				if(data == "1")
-				{
+			success: function(data) {
+				if(data == "1") {
 					$("#c_status").html("<div class='alert alert-success'>successfully editted data</div>");
 					location.reload(600);
-				}else
-				{
+				}else {
 					$("#c_status").html(data);
 				}
 			},
 
-			error: function(data)
-			{
+			error: function(data) {
 				$("#c_status").html("<div class='alert alert-danger'>Error occured</div>");
 			}
 		});
@@ -1071,38 +1081,47 @@ function edit_share_holder(id)
 	var sh_id = id;
 	var fname = $('#fname_'+id).val();
 	var lname = $('#lname_'+id).val();
-	var j_id = $('#j_id_'+id).val();
 	var title = $('#title_'+id).val();
 	var id_number = $('#id_number_'+id).val();
 	var amount_contributed = $('#amount_contributed_'+id).val();
 
-	if(fname != "" && lname != "" && sh_id != "" && title != "" && id_number != "" && amount_contributed != "")
-	{
-		$.ajax(
-		{
-			method: 'POST',
-			url: '../controller/controller.php',
-			data: {sh_id: sh_id, fname: fname, lname: lname, title: title, id_number: id_number, amount_contributed: amount_contributed , action: 'edit_share_holder'},
-			success: function(data)
-			{
-				if(data == "1")
-				{
+	if(fname == "" || lname== "" || sh_id == "" || title == "" || id_number == "" || amount_contributed == "") {
+		$('#holder_status_'+id).html('<div class="alert alert-danger">All fields are required</div>');
+		return;
+	}
+	if(!isName(fname)) {
+		$('#holder_status_'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;		
+	}
+	if(!isName(lname)) {
+		$('#holder_status_'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;		
+	}
+	if(!valid_idnumber(id_number)) {
+		$('#holder_status_'+id).html(`<div class="alert alert-danger">${error}</div>`);
+		return;		
+	}
+	if(isNaN(amount_contributed)) {
+		$('#holder_status_'+id).html(`<div class="alert alert-danger">Amount must be in numbers</div>`);
+		return;		
+	}
 
-					$('#holder_status_'+id).html('<div class="alert alert-success">Share holder Updated successfully</div>');
-				}else
-				{
-					$('#holder_status_'+id).html(data);
-				}
-			},
-			error: function(data)
-			{
+	$.ajax({
+		method: 'POST',
+		url: '../controller/controller.php',
+		data: {sh_id: sh_id, fname: fname, lname: lname, title: title, id_number: id_number, amount_contributed: amount_contributed , action: 'edit_share_holder'},
+		success: function(data) {
+			if(data == "1") {
+				$('#holder_status_'+id).html('<div class="alert alert-success">Share holder Updated successfully</div>');
+			}else {
 				$('#holder_status_'+id).html(data);
 			}
-		});
-	}else
-	{
-		$('#holder_status_'+id).html('<div class="alert alert-danger">All fields are required</div>');
-	}
+		},
+		error: function(data) {
+			$('#holder_status_'+id).html(data);
+		}
+	});
+
 }
 
 //stake holder functions
@@ -1200,29 +1219,46 @@ function edit_beneficiary(id)
 	var lname = $('#b_lname'+id).val();
 	var id_number = $('#b_id_number'+id).val();
 
-	if(id !="" && fname != "" && lname != "" && id_number != "")
-	{
-		$.ajax(
-		{
-			method: 'POST',
-			url: '../controller/controller.php',
-			data: {id: id, fname: fname, lname: lname, id_number:id_number, action: 'edit_beneficiary'},
-			success: (data) =>
-			{
-				if(data == "1")
-				{
-					$('#b_status').html("<div class='alert alert-success'>Beneficiary updated successfully</div>");
-					location.reload(6000);
-				}else
-				{
-					$('#b_status').html(data);
-				}
-			}
-		});
-	}else
-	{
-		$('#b_status').html("<div class='alert alert-danger'>All fields are required</div>");
+	if(id =="" || fname == "" || lname == "" || id_number == "") {
+		$('.b_status').html("<div class='alert alert-danger'>All fields are required</div>");
+		console.log('error');
+		return;
 	}
+	if(!isName(fname)) {
+		$('.b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+		console.log(error);
+		return;	
+	}
+	if(!isName(lname)) {
+		$('.b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+		console.log(error);
+		return;	
+	}
+	if(!valid_idnumber(id_number)) {
+		$('.b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+		console.log(error);
+		return;	
+	}
+	if(!isSameIdNumber(id_number)) {
+		$('.b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+		console.log(error);
+		return;	
+	}
+
+	$.ajax({
+		method: 'POST',
+		url: '../controller/controller.php',
+		data: {id: id, fname: fname, lname: lname, id_number:id_number, action: 'edit_beneficiary'},
+		success: function(data) {
+			if(data == "1") {
+				$('.b_status').html("<div class='alert alert-success'>Beneficiary updated successfully</div>");
+				location.reload(6000);
+			}else {
+				$('.b_status').html(data);
+			}
+		}
+	});
+
 }
 
 //delete beneficiary
@@ -1388,15 +1424,15 @@ function valid_idnumber(id_number) {
 	}else if(isNaN(id_number)) {
 		error = "Id number should be numbers";	
 	}else if(year < 0) {
-		error = "year should be a number bigger than or equal to zero";		
+		error = "year in id number should be a number bigger than or equal to zero";		
 	}else if(month < 0 || month > 12) {
-		error = "month should be from 1 - 12";
+		error = "month in id number should be from 1 - 12";
 	}else if(day < 0 || day > 31) {
-		error = "day should be from 1 - 31";	
+		error = "day in id number should be from 1 - 31";	
 	}else if(month == 02 && day > 29) {
-		error = "day should be from 1 - 29";
+		error = "day in id number should be from 1 - 29";
 	}else if((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
-		error = "day should be from 1 - 30";
+		error = "day in id number should be from 1 - 30";
 	}else {
 		error = null;
 	}
@@ -1480,25 +1516,44 @@ function isCompany(company_name, company_date_reg, company_reg_number) {
 		error = "Company name can't be less than 3 characters";
 	}else if(parseInt(company_date_reg.slice(2,4)) > parseInt(current_year.toString().slice(2,4))) {
 		error = "Your company registration date can't be in the future";
-	}else if(!isRegistrationNumber(company_reg_number)) {
-		error = "Invalid registration number";
+	}else if(!isRegistrationNumber(company_reg_number, parseInt(company_date_reg.slice(0,4)))) {
+		error;
+	}else {
+		error = null;
 	}
 
+	if(error !== null) {
+		return false;
+	}else {
+		return true;
+	}
 }
 
-//TODO registration number
-function isRegistrationNumber(reg_number) {
+function isRegistrationNumber(reg_number, reg_year) {
+	var arr = reg_number.split("/");
+	if(arr.length !== 3) {
+		error = "This is an invalid company registration number";
+	}else if(arr.length == 3 && arr[0].length !== 4) {
+		error = "The First part is a year of company registration, it should be 4 like YYYY";
+	}else if(arr.length == 3 && arr[1].length !== 7) {
+		error = "The Second part should be 7 digits";
+	}else if(arr.length == 3 && arr[2].length !== 2) {
+		error = "The last part should be 2 digits";
+	}else if(parseInt(arr[0]) !== reg_year) {
+		error = "Incorrect company registration date/ first part of the registration number";
+	}else {
+		error = null;
+	}
 
-}
-
-function isEmail(email) {
-
+	if(error !== null) {
+		return false;
+	}else {
+		return true;
+	}
 }
 
 function isSameIdNumber(compare_id_number) {
 	var client_id_number = $('.person-id-number').text().slice(10).trim();
-	console.log(client_id_number);
-	
 	if(client_id_number == compare_id_number) {
 		error = "Id number can't be the same as the one of the client";
 		return false
@@ -1528,5 +1583,13 @@ function isCorrectDate(date) {
 		return true;
 	}
 }
+
+//TODO registration number
+
+function isEmail(email) {
+
+}
+
+
 
 

@@ -1,0 +1,93 @@
+StartFontMetrics 4.1
+Notice Converted by PHP-font-lib
+Comment https://github.com/PhenX/php-font-lib
+EncodingScheme FontSpecific
+Copyright Copyright GeronimoFonts 2014
+FontName Timeline
+FontSubfamily Regular
+UniqueID FontStruct Timeline
+FullName Timeline Regular
+Version Version 1.0
+PostScriptName Timeline
+Trademark FontStruct is a trademark of FSI FontShop International GmbH
+Manufacturer http://fontstruct.com
+Designer GeronimoFonts
+Description ‚ÄúTimeline‚Äù was built with FontStruct
+FontVendorURL http://www.fontshop.com
+FontDesignerURL http://fontstruct.com/fontstructions/show/1041118
+LicenseDescription FontStruct Non-Commercial License
+SampleText Five big quacking zephyrs jolt my wax bed
+Weight Medium
+ItalicAngle 0
+IsFixedPitch false
+UnderlineThickness 50
+UnderlinePosition 100
+FontHeightOffset 0
+Ascender 1125
+Descender -250
+FontBBox 0 -250 1000 1125
+StartCharMetrics 65
+U 32 ; WX 375 ; N space ; G 3
+U 33 ; WX 331 ; N exclam ; G 4
+U 35 ; WX 956 ; N numbersign ; G 5
+U 36 ; WX 831 ; N dollar ; G 6
+U 38 ; WX 956 ; N ampersand ; G 7
+U 43 ; WX 831 ; N plus ; G 8
+U 44 ; WX 331 ; N comma ; G 9
+U 45 ; WX 831 ; N hyphen ; G 10
+U 46 ; WX 331 ; N period ; G 11
+U 63 ; WX 831 ; N question ; G 12
+U 65 ; WX 831 ; N A ; G 13
+U 66 ; WX 831 ; N B ; G 14
+U 67 ; WX 831 ; N C ; G 15
+U 68 ; WX 831 ; N D ; G 16
+U 69 ; WX 831 ; N E ; G 17
+U 70 ; WX 831 ; N F ; G 18
+U 71 ; WX 831 ; N G ; G 19
+U 72 ; WX 831 ; N H ; G 20
+U 73 ; WX 331 ; N I ; G 21
+U 74 ; WX 831 ; N J ; G 22
+U 75 ; WX 831 ; N K ; G 23
+U 76 ; WX 831 ; N L ; G 24
+U 77 ; WX 1081 ; N M ; G 25
+U 78 ; WX 831 ; N N ; G 26
+U 79 ; WX 831 ; N O ; G 27
+U 80 ; WX 831 ; N P ; G 28
+U 81 ; WX 831 ; N Q ; G 29
+U 82 ; WX 831 ; N R ; G 30
+U 83 ; WX 831 ; N S ; G 31
+U 84 ; WX 831 ; N T ; G 32
+U 85 ; WX 831 ; N U ; G 33
+U 86 ; WX 831 ; N V ; G 34
+U 87 ; WX 1081 ; N W ; G 35
+U 88 ; WX 831 ; N X ; G 36
+U 89 ; WX 831 ; N Y ; G 37
+U 90 ; WX 831 ; N Z ; G 38
+U 97 ; WX 831 ; N a ; G 39
+U 98 ; WX 831 ; N b ; G 40
+U 99 ; WX 831 ; N c ; G 41
+U 100 ; WX 831 ; N d ; G 42
+U 101 ; WX 831 ; N e ; G 43
+U 102 ; WX 831 ; N f ; G 44
+U 103 ; WX 831 ; N g ; G 45
+U 104 ; WX 831 ; N h ; G 46
+U 105 ; WX 331 ; N i ; G 47
+U 106 ; WX 831 ; N j ; G 48
+U 107 ; WX 831 ; N k ; G 49
+U 108 ; WX 831 ; N l ; G 50
+U 109 ; WX 1081 ; N m ; G 51
+U 110 ; WX 831 ; N n ; G 52
+U 111 ; WX 831 ; N o ; G 53
+U 112 ; WX 831 ; N p ; G 54
+U 113 ; WX 831 ; N q ; G 55
+U 114 ; WX 831 ; N r ; G 56
+U 115 ; WX 831 ; N s ; G 57
+U 116 ; WX 831 ; N t ; G 58
+U 117 ; WX 831 ; N u ; G 59
+U 118 ; WX 831 ; N v ; G 60
+U 119 ; WX 1081 ; N w ; G 61
+U 120 ; WX 831 ; N x ; G 62
+U 121 ; WX 831 ; N y ; G 63
+U 122 ; WX 831 ; N z ; G 64
+EndCharMetrics
+EndFontMetrics

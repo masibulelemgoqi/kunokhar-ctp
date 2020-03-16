@@ -3,23 +3,37 @@
 	header("Content-type: text/css; charset: UTF-8");
 ?>
 
-@import url('public/fonts/FrontPageNeue.otf');
-@import url('public/fonts/FrontPageNeue.woff');
-@import url('public/fonts/junegull.ttf');
-@import url('public/fonts/Timeline.ttf');
+@import url('https://fonts.googleapis.com/css?family=Anton|Archivo+Black|Baloo+Bhai|Lalezar|Passion+One|Staatliches&display=swap');
+
+@font-face {
+    font-family: "FrontPageNeue";
+    src: url("public/fonts/FrontPageNeue.otf");
+    src: url("public/fonts/FrontPageNeue.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Junegull";
+    src: url("public/fonts/junegull.ttf") format("ttf"),
+    url('public/fonts/junegull.ttf')  format('truetype');
+}
+
+@font-face {
+    font-family: "Timeline";
+    src: url("public/fonts/Timeline.ttf") format("ttf"),
+    url('public/fonts/Timeline.ttf')  format('truetype');
+    
+}
+
 page {
-    background: white;
+    background-image: url("public/img/cert_bg.png");
+    background-size: cover;
     display: block;
-    margin: 0 auto;
-    margin-bottom: 0.5cm;
-    margin-top: 0.5cm;
-    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
 }
 
 page[size="A4"][layout="landscape"] {
+    margin: 0 !important;
     background-image: url("public/img/cert_bg.png");
-    background-size: contain;
-
+    background-size: cover;
 }
 
 @media print {
@@ -29,27 +43,10 @@ page[size="A4"][layout="landscape"] {
     }
 }
 
-label {
-    font-family: 'Cabin', sans-serif;
-    font-weight: bold;
-}
-
-.add-btn {
-    background-color: #e6e6e6;
-    color: #222;
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    transition: 0.6s ease;
-}
-
-.add-btn:hover {
-    background-color: #fff !important;
-    color: #222 !important;
-}
-
 #landscapePage .content {
-    padding: 6em 2em 4em 3em;
+    padding: 0;
+    background-image: url("public/img/cert_bg.png");
+    background-size: cover;
 }
 
 #landscapePage .content .header {
@@ -60,21 +57,27 @@ label {
 #landscapePage .content .header h2 {
     letter-spacing: 5px;
     font-size: 50px;
-    font-family: "Front Page Neue", cursive;
+    font-family: 'Anton', sans-serif;
+    <!--font-family: 'Archivo Black', sans-serif;-->
+    <!--font-family: 'Passion One', cursive;-->
+    <!--font-family: 'Lalezar', cursive;-->
+    <!--font-family: 'Baloo Bhai', cursive;-->
+    <!--`font-family: 'Staatliches', cursive;-->
     margin: 0 !important;
 }
 
 #landscapePage .content .header h4 {
     letter-spacing: 5px;
     font-size: 20px;
+    margin-top: -10px;
     margin: 0 !important;
-    font-family: "Front Page Neue", cursive;
+    font-family: 'Anton', sans-serif;
 }
 
 #landscapePage .content .header h4 span {
     letter-spacing: 5px;
     font-size: 20px;
-    font-family: "Front Page Neue", cursive;
+    font-family: 'Anton', sans-serif;
     color: #5abe55;
 }
 
@@ -121,7 +124,7 @@ label {
 
 #landscapePage .content .signitures .names {
     display: flex;
-    margin-top: 60px;
+    margin-top: 0px;
 }
 
 #landscapePage .content .signitures h3, 
@@ -143,10 +146,6 @@ label {
     letter-spacing: 1px;
 }
 
-#landscapePage .content .signitures .applicant-sign {
-    margin-right: 25%;
-}
-
 #landscapePage .content .signitures .sign-space {
     display: flex;
 }
@@ -155,7 +154,6 @@ label {
     width: 190px;
     padding: 1.5em;
     border-bottom: 2px solid #555;
-    margin-right: 21.5%;
 }
 
 #landscapePage .content .signitures .sign-space .signiture-2 {

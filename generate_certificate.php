@@ -1,8 +1,20 @@
 <?php
-
 require_once 'dompdf/autoload.inc.php';
 // reference the Dompdf namespace
 use Dompdf\Dompdf;
+
+if(isset($_GET['idea_g_id']))
+{
+    
+require 'model/Work.class.php';
+
+$work = new Work();
+
+$idea = $work->get_idea($_GET['idea_g_id']);
+$client = $work->get_client($idea['fk_client_id']);
+$juristic = $work->get_juristic($idea['fk_client_id']);
+$natural = $work->get_natural($idea['fk_client_id']);
+
 
 // instantiate and use the dompdf class
 $dompdf = new Dompdf();
@@ -10,13 +22,13 @@ $dompdf = new Dompdf();
 $html ='
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Some Code pty ltd">
-    <link rel="shortcut icon" href="public/img/Logo/kunokharK.ico">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Print Certificate</title>
+	
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   	<link href="style.php" rel="stylesheet">
+  	<link href="https://fonts.googleapis.com/css?family=Anton|Archivo+Black|Baloo+Bhai|Lalezar|Passion+One|Staatliches&display=swap" rel="stylesheet">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -34,21 +46,36 @@ $html ='
 
                     <div class="description">
                         <p>
-                            We hereby to confirm that this is a <i>Idea Registration Confirmation</i> that “Break namks” with IDEA No. KU190002 was registered as a property of 
+                            We hereby to confirm that this is a <i>Idea Registration Confirmation</i> that '.$idea['idea_name'].' with IDEA No. '.$idea['idea_code'].' was registered as a property of 
                         </p>
                     </div>
 
                     <div class="applicant">
                         <p>This certificate is awarded to:</p>
-                            <h1>Code Illusion</h1>
-                            <h4 style="margin-bottom: 40px;">Registration No: 55525666655</h4>
+';
 
+                    if($client['client_person'] == 'Juristic')
+                    {
+                        $html .= '
+                          <h1>'.$juristic['j_company_name'].'</h1>
+                          <h4 style="margin-bottom: 40px;">Registration No: '.$juristic['j_registration_number'].'</h4>
+                        ';
+                    }else
+                    {
+                        $html .= '
+                          <h1>'.$client['client_fname'].' '.$client['client_lname'].'</h1>
+                          <h4 style="margin-bottom: 40px;">ID No: '.$natural['n_id_number'].'</h4>
+                        ';                        
+                    }
+/*                          <h1>Code Illusion</h1>
+                            <h4 style="margin-bottom: 40px;">Registration No: 55525666655</h4>*/
+$html .= '
                             <p>Residential Address:</p>
                         </div>
                         <div class="address">
-                            <p>Bende A/A</p>
-                            <p>Dutywa</p>
-                            <p>5000</p>
+                            <p>'.$client['client_home_address'].'</p>
+                            <p>'.$client['client_city'].'</p>
+                            <p>'.$client['client_zip_code'].'</p>
                         </div>
 
 
@@ -56,18 +83,18 @@ $html ='
                         <div class="names">
                             <div class="applicant-sign">
                                 <h3>Applicant</h3>
-                                <h4>Mr M Mgoqi</h4>
+                                <h4>'.$client['client_title'].'. '.$client['client_initials'].' '.$client['client_lname'].'</h4>
                                 
                             </div>
 
-                            <div class="ceo-sign ">
+                            <div class="ceo-sign " style="margin-left: 350px;">
                                 <h3>Director</h3>
                                 <h4>Mr. R. Vuzane</h4>
                             </div>
                         </div>
-                        <div class="sign-space mt-2">
-                            <div class="signiture-1 "></div>
-                            <div class="signiture-2"></div>
+                        <div class="sign-space">
+                            <div class="signiture-1"></div>
+                            <div class="signiture-2" style="margin-left: 350px;"></div>
                         </div>
                     </div>
                 </div>
@@ -91,6 +118,9 @@ $dompdf->stream('certificate.pdf', array("Attachment" => false));
 
 
 exit(0);
+    
+}
+
 
 
 

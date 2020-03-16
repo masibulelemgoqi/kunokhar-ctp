@@ -246,15 +246,13 @@ class Work
     }
 
 
-    public function add_idea($client_id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market)
-    {
+    public function add_idea($client_id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market, $sector) {
         $date_n = date("y");
         $code = $this->get_idea_code();
 
-    	$sql = "INSERT INTO `idea_tb` (`fk_client_id`, `idea_name`, `idea_trademark`, `idea_nature`, `idea_target_market`, `idea_code`) VALUES (:client_id, :idea_name, :idea_trademark, :idea_nature, :idea_target_market, :code)";
+    	$sql = "INSERT INTO `idea_tb` (`fk_client_id`, `idea_name`, `idea_trademark`, `idea_nature`, `idea_target_market`, `idea_code`, `idea_sector`) VALUES (:client_id, :idea_name, :idea_trademark, :idea_nature, :idea_target_market, :code, :sector)";
 
-    	try
-    	{
+    	try {
     		$stmt = $this->con->prepare($sql);
 
     		$stmt->bindParam(':client_id', $client_id);
@@ -263,6 +261,7 @@ class Work
     		$stmt->bindParam(':idea_nature', $idea_nature);
     		$stmt->bindParam(':idea_target_market', $idea_target_market);
             $stmt->bindParam(':code', $code);
+            $stmt->bindParam(':sector', $sector);
             $client = $this->get_client($client_id);
 
     		if($stmt->execute() && $this->sendEmail($client, $idea_name, $code) && $this->add_log("added idea name: ".$idea_name." idea code: ".$code))

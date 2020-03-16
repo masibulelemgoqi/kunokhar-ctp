@@ -105,8 +105,9 @@ if(isset($_POST['action'])){
 			$idea_trademark = $_POST['idea_trademark'];
 			$idea_nature = $_POST['idea_nature'];
 			$idea_target_market = $_POST['idea_target_market'];
+			$sector = $_POST['sector'];
 
-			if($work_obj->add_idea($client_id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market)) {
+			if($work_obj->add_idea($client_id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market, $sector)) {
 				print("1");
 			}else {
 				print("<div class='alert alert-danger'>Error adding idea</div>");
