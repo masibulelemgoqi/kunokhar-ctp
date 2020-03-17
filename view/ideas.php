@@ -214,18 +214,19 @@
 				<option value="Women's Issues"></option>
 			</datalist> 
 			<input type="hidden" id="client_id" value="<?php print($_GET['client_id']); ?>">
-			<input type="name" id="idea_name" placeholder="Enter the name of idea" class="form-control mb-3">
-			<input type="name" id="idea_trademark" placeholder="Enter idea trademark" class="form-control mb-3">
-			<label class="mb-3 font-italic text-danger">Nature of idea(<span id="nature-char-left">2000</span> characters)</label>
-			<textarea style="height: 150px; resize: none;" class="form-control" id="idea_nature"></textarea>
-			<label class="mb-3 font-italic text-danger">Target market(1000 characters)</label>
-			<textarea style="height: 150px; resize: none;" class="form-control" id="idea_target_market"></textarea>
+			<input type="name" id="idea_name" placeholder="Idea name" class="form-control mb-3">
+			<input type="name" id="idea_trademark" placeholder="Idea trademark (Strickly copied from the idea summary)" class="form-control mb-3">
+			<label class="mb-3 font-italic text-danger">Nature of idea(<span id="nature-char-left">2000 Characters</span>)</label>
+			<textarea style="height: 150px; resize: none;" class="form-control" id="idea_nature" maxlength="2000" placeholder="Idea nature"></textarea>
+			<label class="mb-3 font-italic text-danger">Target market(<span id="market-char-left">1000 Characters</span>)</label>
+			<textarea style="height: 150px; resize: none;" class="form-control" id="idea_target_market" maxlength="1000" placeholder="Idea target market"></textarea>
 			<div class="mt-3">
 				<button type="submit" class="btn btn-primary float-right" id="register_idea">Save <i class="fa fa-save"></i></button>
 			</div>
 
 		</form>
 	</div>
+	
 	<div class="container">
 		<?php
 			$ideas = $work->get_ideas($_GET['client_id']);

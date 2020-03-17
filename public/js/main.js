@@ -195,7 +195,25 @@ $(()=> {
 
 	$('#idea_nature').keyup(function(e) {
 		$('#nature-char-left').empty();
-		$('#nature-char-left').text(2000 - $('#idea_nature').val().length);
+		var nature = document.getElementById('idea_nature');
+		$('#nature-char-left').text(nature.maxLength - nature.value.length +" Characters remaining");
+		if(nature.maxLength - natural.value.length == 0) {
+			nature.style.border = '1px solid red';
+		} else {
+			nature.style.border = '1px solid green';
+		}
+	});
+
+	$('#idea_target_market').keyup(function(e) {
+		$('#market-char-left').empty();
+		var market = document.getElementById('idea_target_market');
+		$('#market-char-left').text(market.maxLength - market.value.length +" Characters remaining");
+
+		if(market.maxLength - market.value.length == 0) {
+			market.style.border = '1px solid red';
+		} else {
+			market.style.border = '1px solid green';
+		}
 	});
 
 	// SECTION add events
@@ -596,13 +614,13 @@ $(()=> {
 			return;
 		}
 
-		if(idea_nature.length < 2000) {
-			$('#idea_status').html('<div class="alert alert-danger">Idea nature should be at least 2000 characters</div>');
+		if(idea_nature.length < 500) {
+			$('#idea_status').html('<div class="alert alert-danger">Idea nature should be at least 500 characters</div>');
 			return;
 		}
 
-		if(idea_target_market.length < 1000) {
-			$('#idea_status').html('<div class="alert alert-danger">Idea target market should be at least 2000 characters</div>');
+		if(idea_target_market.length < 250) {
+			$('#idea_status').html('<div class="alert alert-danger">Idea target market should be at least 250 characters</div>');
 			return;
 		}
 
