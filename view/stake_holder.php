@@ -6,7 +6,6 @@
 					    		<i class="fa fa-plus"></i>
 					    	</button>
 					    </h4>
-					    <p class="card-text">
 	                 	  <div class="row ml-0">
 							<div id="holder_del_status"></div>
 	                 	  	<div>
@@ -147,6 +146,5 @@
 							  </div>
 							</div>
 	                 	  </div>
-	                 	</p>
 	                   </div>
 	                 </div>

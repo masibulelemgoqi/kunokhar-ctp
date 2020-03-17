@@ -41,12 +41,12 @@ $html ='
                 <div class="content">
                     <div class="header">
                         <h2>CERTIFICATE</h2>
-                        <h4>OF <span>IDEA REGISTRATION</span></h4>
+                        <h4>OF IDEA REGISTRATION</h4>
                     </div>
 
                     <div class="description">
                         <p>
-                            We hereby to confirm that this is a <i>Idea Registration Confirmation</i> that '.$idea['idea_name'].' with IDEA No. '.$idea['idea_code'].' was registered as a property of 
+                            We hereby to confirm that this is a <b style="color: #333">Idea Registration Confirmation</b> that <b style="color: #333">"'.$idea['idea_name'].'"</b> with IDEA No. <b style="color: #333">'.$idea['idea_code'].'</b> was registered as a property of <b style="color: #333">Company Name/Individual</b>.
                         </p>
                     </div>
 
@@ -70,8 +70,9 @@ $html ='
 /*                          <h1>Code Illusion</h1>
                             <h4 style="margin-bottom: 40px;">Registration No: 55525666655</h4>*/
 $html .= '
-                            <p>Residential Address:</p>
+                            <p style="margin-top: 70px">Residential Address:</p>
                         </div>
+
                         <div class="address">
                             <p>'.$client['client_home_address'].'</p>
                             <p>'.$client['client_city'].'</p>

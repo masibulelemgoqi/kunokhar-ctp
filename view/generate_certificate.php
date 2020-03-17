@@ -27,12 +27,12 @@
                 <div class="content">
                     <div class="header">
                         <h2>CERTIFCATE</h2>
-                        <h4>OF <span>IDEA REGISTRATION</span></h4>
+                        <h4>OF IDEA REGISTRATION</h4>
                     </div>
 
                     <div class="description">
                         <p>
-                            We hereby to confirm that this is a <i>Idea Registration Confirmation</i> that “<?php print($idea['idea_name']);?>” with IDEA No. <?php print($idea['idea_code']);?> was registered as a property of 
+                            We hereby to confirm that this is a <b style="color: #333">Idea Registration Confirmation</b> that “<b><?php print($idea['idea_name']);?></b>” with IDEA No. <b><?php print($idea['idea_code']);?></b> was registered as a property of 
 
                             <?php 
                                 $juristic = $obj->get_juristic($client['client_id']);

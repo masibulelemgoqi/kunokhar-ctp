@@ -215,22 +215,16 @@
 	{
 ?>
 <div class="card ml-5 border-success" style="width: 14rem;">
-  <div class="card-body">
-    <h4 class="card-title m-0"  style="font-family: 'prataregular', Serif; font-style: italic; ">Spouse(s)</h4><hr class="border-success">
-    <p class="card-text">
-
- 	  <div class="row ml-0">
-	  <div class="row ml-0">
- 	  	<div class="text-center">
- 			<a href="" class="btn btn-success btn-rounded mb-4" data-toggle="modal" data-target="#addSpouse">Add spouse</a>
-		</div>
+  <div class="card-body p-0">
+    <h4 class="card-title m-0">Spouse(s) <button href="" class="btn add-btn" data-toggle="modal" data-target="#addSpouse"><i class="fa fa-plus"></i></button></h4>
+	  <div class="row">
 			<div class="modal fade" id="addSpouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			  aria-hidden="true">
 			  <div class="modal-dialog" role="document">
 			    <div class="modal-content">
 			      <form method="POST" action="">
 				      <div class="modal-header text-center">
-				        <h4 class="modal-title w-100 font-weight-bold">Spouse information</h4>
+				        <h4 class="modal-title font-weight-bold">Spouse information</h4>
 				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				          <span aria-hidden="true">&times;</span>
 				        </button>
@@ -243,27 +237,19 @@
 				          <input type="hidden" id="cs_fk_id" value="<?php print($natural['n_id']);?>" class="form-control validate">
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="cs_fname" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="fname">First name</label>
+				          <input type="name" id="cs_fname" class="form-control validate" placeholder="First Name">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="cs_lname" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="lname">Last name</label>
+				          <input type="name" id="cs_lname" class="form-control validate" placeholder="Last Name">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-user prefix grey-text"></i>
-				          <input type="name" id="id_number" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="id_number">ID number</label>
+				          <input type="name" id="id_number" class="form-control validate" placeholder="ID Number">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <i class="fa fa-id-badge prefix grey-text"></i>
-				          <input type="number" id="cs_stages_of_negotiation" class="form-control validate">
-				          <label data-error="wrong" data-success="right" for="stages_of_negotiation">Stages of negotiation</label>
+				          <input type="number" id="cs_stages_of_negotiation" class="form-control validate" placeholder="Stage of Negotiation">
 				        </div>
 
 				      </div>
@@ -276,9 +262,7 @@
 			</div>
  	  </div>
 
- 	  </div>
-
- 	  <div class="row ml-0">
+ 	  <div class="row m-4">
       <div id="s_status">
 
       </div>
@@ -290,8 +274,8 @@
  	  			foreach($spouses as $spouse)
  	  			{
       ?>
-        <div class="row mb-2">
-            <?php print($spouse['cs_fname']." ".$spouse['cs_lname']."<br>".$spouse['cs_id_number']."<br><br>  stage of negotiation: ".$spouse['cs_stages_of_negotiation']."<br><br>"); ?>
+        <div class="row mb-1">
+            <?php print($spouse['cs_fname']." ".$spouse['cs_lname']."<br>".$spouse['cs_id_number']."<br>  stage of negotiation: ".$spouse['cs_stages_of_negotiation']."<br>"); ?>
             <div class="">
               <button class="btn btn-tomato-o" onclick="delete_spouse(<?php print($spouse['cs_id']);?>);">Delete</button>
               <button class="btn btn-outline-success" onclick="edit_spouse();">Edit</button>
@@ -306,15 +290,12 @@
  	  	?>
 
  	  </div>
- 	</p>
 </div>
 </div>
 <div class="card ml-5 border-success" style="width: 14rem;">
-  <div class="card-body">
-    <h4 class="card-title m-0" style="font-family: 'prataregular', Serif; font-style: italic; ">deligation(s)</h4><hr class="border-success">
-    <p class="card-text">
-
- 	  <div class=" ml-0">
+  <div class="card-body p-0">
+    <h4 class="card-title m-0">Deligation(s)</h4>
+ 	  <div class="m-2">
  	  	<?php
  	  		$spouses = $work->get_spouses($natural['n_id']);
  	  		$s_count = 0;
@@ -322,9 +303,9 @@
  	  			{
  	  				print(++$s_count.". ".$spouse['cs_fname']." ".$spouse['cs_lname']."<br>");
  	  	?>
-		 	  		<div class="ml-1 row">
-		 	  			<a class="" href="" data-toggle="modal" data-target="#addDeligation<?php print($spouse['cs_id']); ?>"><i class="fa fa-plus-circle"></i></a>
-		 	  			<a class="ml-2" href="" data-toggle="modal" data-target="#viewDeligation<?php print($spouse['cs_id']); ?>"><i class="fa fa-eye"></i></a>
+		 	  		<div class="row texr-center m-1">
+		 	  			<a class="deligation-btn mr-2" data-toggle="modal" data-target="#addDeligation<?php print($spouse['cs_id']); ?>"><i class="fa fa-plus-circle"></i></a>
+		 	  			<a class="deligation-btn" data-toggle="modal" data-target="#viewDeligation<?php print($spouse['cs_id']); ?>"><i class="fa fa-eye"></i></a>
 		 	  		</div>
 
 					<div class="ml-0">
@@ -334,7 +315,7 @@
 						    <div class="modal-content">
 						      <form method="POST" action="">
 							      <div class="modal-header text-center">
-							        <h4 class="modal-title w-100 font-weight-bold">Deligation information</h4>
+							        <h4 class="modal-title font-weight-bold">Deligation information</h4>
 							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							          <span aria-hidden="true">&times;</span>
 							        </button>
@@ -344,21 +325,15 @@
 							      </div>
 							      <div class="modal-body mx-3">
 							        <div class="md-form mb-3">
-							          <i class="fa fa-user prefix grey-text"></i>
-							          <input type="name" class="form-control d_fname">
-							          <label data-error="wrong" data-success="right" for="d_fname">First name</label>
+							          <input type="name" class="form-control d_fname" placeholder="First Name">
 							        </div>
 
 							        <div class="md-form mb-3">
-							          <i class="fa fa-user prefix grey-text"></i>
-							          <input type="name" class="form-control d_lname">
-							          <label data-error="wrong" data-success="right" for="d_lname">Last name</label>
+							          <input type="name" class="form-control d_lname" placeholder="Last Name">
 							        </div>
 
 							        <div class="md-form mb-3">
-							          <i class="fa fa-id-badge prefix grey-text"></i>
-							          <input type="number" id="" class="form-control d_id_number">
-							          <label data-error="wrong" data-success="right" for="d_id_number">Id number</label>
+							          <input type="number" id="" class="form-control d_id_number" placeholder="ID Number">
 							        </div>
 
 							      </div>
@@ -378,7 +353,7 @@
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header text-center">
-									<h4 class="modal-title w-100 font-weight-bold"><?php print($spouse['cs_fname']." ".$spouse['cs_lname']);?> Deligation(s)</h4>
+									<h4 class="modal-title font-weight-bold"><?php print($spouse['cs_fname']." ".$spouse['cs_lname']);?> Deligation(s)</h4>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 									</button>
@@ -416,7 +391,6 @@
 
 
  	  </div>
- 	</p>
 </div>
 </div>
 

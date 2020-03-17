@@ -120,15 +120,15 @@ if($u_details['w_type'] != "Admin")
   			if(count($work->get_clients()) > 0){
 		?>
   		<div class="row mb-0 ml-4 mr-4">
-			<div class="col-lg-6">
+			<div class="col-lg-6 ml-auto">
 				<div class="pl-5 py-5">
 					<form action="">
-					<div class="input-group mb-1">
-						<input type="search" placeholder="Search person or company here..." aria-describedby="button-addon5" class="form-control border-tomato">
-						<div class="input-group-append">
-						<button id="button-addon5" type="submit" class="btn btn-tomato-o"><i class="fa fa-search"></i></button>
+						<div class="input-group mb-1">
+							<input type="search" placeholder="Search person or company here..." aria-describedby="button-addon5" class="form-control border-tomato">
+							<div class="input-group-append">
+								<button id="button-addon5" type="submit" class="btn btn-tomato-o"><i class="fa fa-search"></i></button>
+							</div>
 						</div>
-					</div>
 					</form>
 					<!-- End -->
 

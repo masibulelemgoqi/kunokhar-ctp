@@ -3,6 +3,7 @@
 @import url('../fonts/junegull.ttf');
 @import url('../fonts/Timeline.ttf');
 @import url('https://fonts.googleapis.com/css?family=Cabin&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Yeseva+One&display=swap');
 
 @font-face {
     font-family: 'prataregular';
@@ -91,7 +92,6 @@ page[size="A4"][layout="landscape"] {
 }
 
 #landscapePage .content .header {
-    line-height: -50px;
     margin-bottom: 40px;
 }
 
@@ -107,13 +107,6 @@ page[size="A4"][layout="landscape"] {
     font-size: 20px;
     margin: 0 !important;
     font-family: "Front Page Neue", cursive;
-}
-
-#landscapePage .content .header h4 span {
-    letter-spacing: 5px;
-    font-size: 20px;
-    font-family: "Front Page Neue", cursive;
-    color: #5abe55;
 }
 
 
@@ -261,6 +254,18 @@ label {
 .add-btn:hover {
 	background-color: #fff !important;
 	color: #222 !important;
+}
+
+.deligation-btn {
+  background-color: #222;
+  padding: 0.2em 1em;
+  
+}
+
+.deligation-btn i {
+  color: #fff;
+  font-weight: 300;
+  cursor: pointer;
 }
 
 .text-tomato

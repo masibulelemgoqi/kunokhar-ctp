@@ -5,7 +5,7 @@
    		 <button class="btn btn-outline-dark ml-3" id="idea_container"> <i class="fa fa-lightbulb-o" aria-hidden="true"></i>+</button> &nbsp;&nbsp;
 	</div><hr>
 
-	<div id="idea_add" class="mt-5">
+	<div id="idea_add" class="mt-5 mb-5">
 		<div id="idea_status" class="ml-3 mr-3"></div>
 		<form method="POST" action="">
 			<input list="brow" class="form-control mb-3 sector-input" placeholder="- Select idea Industory/Sector -">
@@ -118,6 +118,8 @@
 				<option value="Industrial Unions"></option>
 				<option value="Insurance"></option>
 				<option value="Internet"></option>
+				<option value="IT"></option>
+				<option value="Internet Of Things (IoT)"></option>
 				<option value="Labor"></option>
 				<option value="Lawyers & Lobbyists"></option>
 				<option value="Lawyers / Law Firms"></option>
@@ -188,6 +190,7 @@
 				<option value="Teachers Unions"></option>
 				<option value="Teachers/Education"></option>
 				<option value="Telecom Services & Equipment"></option>
+				<option value="Telecommunication"></option>
 				<option value="Telephone Utilities"></option>
 				<option value="Textiles"></option>
 				<option value="Timber, Logging & Paper Mills"></option>
@@ -254,9 +257,9 @@
 
 					        </form>
 					        <button class="btn btn-outline-success" data-toggle="modal" data-target="#more-info-idea<?php print($idea['idea_id']);?>">more info</button>
-							<div class="modal fade" id="more-info-idea<?php print($idea['idea_id']);?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+							<div class="modal fade" id="more-info-idea<?php print($idea['idea_id']);?>" role="dialog" aria-labelledby="myModalLabel"
 							  aria-hidden="true">
-							  <div class="modal-dialog" role="document">
+							  <div class="modal-dialog modal-xl" role="document" >
 							    <div class="modal-content">
 								      <div class="modal-header text-center">
 								        <h4 class="modal-title w-100 font-weight-bold">Idea: <?php print($idea['idea_code']);?> </h4>
@@ -269,7 +272,7 @@
 								      </div>
 								      <div class="modal-body mx-3">
 
-								        <div class="md-form mb-3 border text-disable">
+								        <div class="md-form mb-3 text-disable">
 								          <label data-error="wrong" data-success="right" for="fname">Idea code</label>
 								          <div>
 								          	<?php print($idea['idea_code']);?>

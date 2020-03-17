@@ -4,6 +4,8 @@
 ?>
 
 @import url('https://fonts.googleapis.com/css?family=Anton|Archivo+Black|Baloo+Bhai|Lalezar|Passion+One|Staatliches&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Yeseva+One&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Sorts+Mill+Goudy&display=swap');
 
 @font-face {
     font-family: "FrontPageNeue";
@@ -50,37 +52,28 @@ page[size="A4"][layout="landscape"] {
 }
 
 #landscapePage .content .header {
-    line-height: -50px;
     margin-bottom: 40px;
+    postion: relative;
 }
 
 #landscapePage .content .header h2 {
     letter-spacing: 5px;
     font-size: 50px;
     font-family: 'Anton', sans-serif;
-    <!--font-family: 'Archivo Black', sans-serif;-->
-    <!--font-family: 'Passion One', cursive;-->
-    <!--font-family: 'Lalezar', cursive;-->
-    <!--font-family: 'Baloo Bhai', cursive;-->
-    <!--`font-family: 'Staatliches', cursive;-->
     margin: 0 !important;
+    padding: 0;
 }
 
 #landscapePage .content .header h4 {
-    letter-spacing: 5px;
+    letter-spacing: 5.8px;
     font-size: 20px;
-    margin-top: -10px;
+    position: absolute;
+    top: 70px;
     margin: 0 !important;
     font-family: 'Anton', sans-serif;
+    padding: 0;
+    color: #3e3e3e;
 }
-
-#landscapePage .content .header h4 span {
-    letter-spacing: 5px;
-    font-size: 20px;
-    font-family: 'Anton', sans-serif;
-    color: #5abe55;
-}
-
 
 #landscapePage .content .description {
     color: #7b7979;
@@ -92,34 +85,41 @@ page[size="A4"][layout="landscape"] {
 
 #landscapePage .content .applicant {
     line-height: 0px;
+    margin-top: 20px;
 }
 
 #landscapePage .content .applicant p {
     letter-spacing: 1px;
-    font-family: "Consolas", cursive;
+    font-family: "Lucida Fax", cursive;
     font-size: 18px;
-    font-weight: bold;
+    color: #ad0f0f;
 }
 
 #landscapePage .content .applicant h1 {
     margin: 0 !important;
-    color: #336699;
+    color: #222;
     font-size: 30px;
-    font-family: "Timeline", cursive;
+    font-family: 'Yeseva One', cursive;
 }
 
 #landscapePage .content .applicant h4 {
-    font-family: "Front Page Neue", cursive;
-    font-size: 23pt;
+    font-family: "Lucida Fax", cursive;
+    font-size: 20px;
     letter-spacing: 1px;
-    color: #abaaaa;
+    color: #444;
 }
 
 #landscapePage .content .address {
-    margin-top: 30px !important;
+    margin-top: 20px !important;
     color: #7b7979;
     font-family: "Lucida Fax", cursive;
     line-height: 5px;
+    margin-bottom: 40px;
+}
+
+#landscapePage .content .signitures {
+    position: absolute;
+    bottom: 30px;
 }
 
 #landscapePage .content .signitures .names {
@@ -134,14 +134,14 @@ page[size="A4"][layout="landscape"] {
 
 #landscapePage .content .signitures h3 {
     color: #b3b3b3;
-    font-size: 20px;
+    font-size: 16px;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
 #landscapePage .content .signitures h4 {
-    color: #5abe55;
-    font-size: 18px;
+    color: #333;
+    font-size: 20px;
     font-family: "Lucida Fax", cursive;
     letter-spacing: 1px;
 }
