@@ -39,8 +39,7 @@ textarea, input {
      	  $juristic = array();
      	  $juristic = $work->get_juristic($_GET['client_id']);
 
-	  	if(count($juristic) > 0)
-	  	{
+	  	if($juristic !== null) {
 		  	include 'juristic.php';
 		    include 'company_member.php';
 		  	include 'stake_holder.php';
@@ -58,8 +57,7 @@ textarea, input {
                 }
             }
 
-	  	}else
-	  	{
+	  	}else {
 
 	  ?>
 
@@ -104,9 +102,9 @@ textarea, input {
 	 	  }else
 	 	  {
 	 ?>
-	<div class="card ml-5 border-success" style="width: 18rem;">
-	  <div class="card-body">
-	    <h4 class="card-title" style="font-family: 'prataregular', Serif; font-style: italic; ">Person </h4><hr class="border-success">
+	<div class="card ml-5 border-success mb-3" style="width: 18rem;">
+	  <div class="card-body p-0">
+	    <h4 class="card-title m-0">Person </h4>
 	    <p class="card-text">
 	      <div id="n_status" class="ml-0"></div>
      	  <div class="row ml-0 badge badge-success">

@@ -57,10 +57,11 @@ if($u_details['w_type'] != "Admin")
   				<div class="col-sm-6">
   					<select class="form-control" id="title">
   						<option disabled selected>- Select Title -</option>
-  						<option value="Mr">Mr</option>
-  						<option value="Mrs">Mrs</option>
-  						<option value="Dr.">Dr.</option>
-  						<option value="Prof.">Prof.</option>
+  						<option>Mr</option>
+						<option>Ms</option>
+  						<option>Mrs</option>
+  						<option>Dr.</option>
+  						<option>Prof.</option>
   					</select>
   	      		</div>
   	      		<div class="col-sm-6">
@@ -89,10 +90,10 @@ if($u_details['w_type'] != "Admin")
   	        <h3 style="font-size: 18px; font-weight: 700;">Residential Address</h3>
   	        <div class="md-form mb-3 row">
   	          	<div class="col-sm-12 mb-2">
-  		          	<input type="name" id="home_address" class="form-control validate" placeholder="Line 1">
+  		          	<input type="name" id="home_address" class="form-control validate" placeholder="Street Name">
   		      	</div>
   		      	<div class="col-sm-12 mb-2">
-  		          	<input type="name" id="city" class="form-control validate" placeholder="Line 3">
+  		          	<input type="name" id="city" class="form-control validate" placeholder="City">
   		      	</div>
   		      	<div class="col-sm-12 mb-2">
   		          	<input type="number" id="zip_code" class="form-control validate" placeholder="Zip Code">
