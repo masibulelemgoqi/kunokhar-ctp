@@ -15,7 +15,7 @@ require 'partials/navbar_admin.php';
 		<button class="btn btn-success" id="add_user_btn">Add User</button>
 	</div>
 	<?php
-		if($u_details['w_type'] == "CEO")
+		if($u_details['w_type'] == "Super User")
 		{
 	?>
 	<h1><a href="./main.php"><i class="fa fa-chevron-circle-left"></i></a></h1>
@@ -36,8 +36,7 @@ require 'partials/navbar_admin.php';
 				<option value="">User type</option>
 				<option value="Admin">Admin</option>
 				<option value="Preparer">Preparer</option>
-				<option value="Reviewer">Reviewer</option>
-				<option value="CEO">CEO</option>
+				<option value="Super User">Super User</option>
 			</select><br>
 			<input type="password" class="form-control" id="password" placeholder="password"><br>
 			<input type="password" class="form-control" id="verify_password" placeholder="Verify password"><br>
@@ -108,10 +107,17 @@ require 'partials/navbar_admin.php';
 	      <?php
 	  		}
 	      ?>
-	      </td>
-	      <td><button class="btn btn-info">Edit</button>
-	      	  <button class="btn btn-danger" onclick="delete_user(<?php print($w['w_id']);?>);">Delete</button>
-	      </td>
+		  </td>
+		  <?php 
+		 	if($w['w_type'] !== "Admin") {
+		  ?>
+			<td><button class="btn btn-info">Edit</button>
+				<button class="btn btn-danger" onclick="delete_user(<?php print($w['w_id']);?>);">Delete</button>
+			</td>
+		  <?php	 
+			 } 
+		  ?>
+
 	    </tr>
 	  	<?php
 	  			}

@@ -1,4 +1,5 @@
 <?php
+session_start();
 if(isset($_SESSION['id']))
 {
 	header('Location: view/main.php');
@@ -59,10 +60,7 @@ if(isset($_SESSION['id']))
 
 <script src="public/js/jquery.min.js"></script>
 <script src="public/js/bootstrap.min.js"></script>
-<script src="public/js/ajax.js"></script>
 <script src="public/js/main.js"></script>
-<script src="public/js/somefunctions.js"></script>
-<script src="public/js/validate.js"></script>
 
 </body>
 </html>

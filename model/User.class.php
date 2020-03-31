@@ -13,71 +13,61 @@ class User
 
     }
 
-    public function add_user($fname, $lname, $email, $position, $password, $cell_number)
-    {
-
+    public function add_user($fname, $lname, $email, $position, $password, $cell_number) {
         try {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $date_created = date("Y-m-d H:m:s");
+            $user_status = 0;
+            $date_loggedin = null;
 
-                $hash = password_hash($password, PASSWORD_DEFAULT);
-                $date_created = date("Y-m-d H:m:s");
-                $user_status = 0;
-                $date_loggedin = null;
+            $sql = "INSERT INTO `workers_tb` (`w_fname`, `w_lfname`, `w_email`, `w_type`, `w_password`, `w_datecreated`, `w_active_status`) VALUES (:fname, :lname, :email, :position, :hash, :date_created, :user_status)";
 
-                $sql = "INSERT INTO `workers_tb` (`w_fname`, `w_lfname`, `w_email`, `w_type`, `w_password`, `w_datecreated`, `w_active_status`) VALUES (:fname, :lname, :email, :position, :hash, :date_created, :user_status)";
-
-                $stmt = $this->con->prepare($sql);
-                $stmt->bindParam(':fname', $fname);
-                $stmt->bindParam(':lname', $lname);
-                $stmt->bindParam(':email', $email);
-                $stmt->bindParam(':position', $position);
-                $stmt->bindParam(':hash', $hash);
-                $stmt->bindParam(':date_created', $date_created);
-                $stmt->bindParam(':user_status', $user_status);
-                if($stmt->execute() && $this->add_log("Added user ".$fname." ".$lname."  with position: ".$position))
-                {
-                    return true;
-                    $this->con = null;
-                }
-
-
-            } catch (PDOException $e) {
-                echo "Error: ".$e->getMessage();
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindParam(':fname', $fname);
+            $stmt->bindParam(':lname', $lname);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':position', $position);
+            $stmt->bindParam(':hash', $hash);
+            $stmt->bindParam(':date_created', $date_created);
+            $stmt->bindParam(':user_status', $user_status);
+            if($stmt->execute() && $this->add_log("Added user ".$fname." ".$lname."  with position: ".$position)) {
+                return true;
+                $this->con = null;
             }
+        } catch (PDOException $e) {
+            echo "Error: ".$e->getMessage();
+        }
     }
 
-    public function log_in($email, $password)
-    {
-            $sql = "SELECT w_id, w_email, w_password FROM workers_tb WHERE w_email = :email";
-            $stmt = $this->con->prepare($sql);
-            $stmt->execute(array(':email' => $email));
-            $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if($stmt->rowCount = 1)
-            {
+    public function log_in($email, $password) {
+        try {
+            $stmt = $this->con->query("SELECT * FROM workers_tb WHERE w_email = '$email'");
+            if($stmt->rowCount() == 1) {
+                $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
                 $hash = $userRow['w_password'];
-
-                if(password_verify($password, $hash))
-                {
+                if(password_verify($password, $hash)) {
                     session_start();
                     $_SESSION['id'] = $userRow['w_id'];
                     $_SESSION['last_login'] = time();
                     $id = $userRow['w_id'];
                     $this->add_log("Logged in");
                     $val = 1;
-
                     $statement = $this->con->prepare("UPDATE `workers_tb` SET `w_active_status`=:val WHERE w_id=:id");
                     $statement->bindParam(':id', $id);
                     $statement->bindParam(':val', $val);
-
-                    if($statement->execute())
-                    {
-                       return true;
+                    if($statement->execute()) {
+                        echo json_encode(array(
+                            'success' => true,
+                            'user'    => $userRow
+                        ));
                     }
                 }
-            }else
-            {
-                return false;
+            }else {
+                echo json_encode(array('success' => false));
             }
+        } catch (PDOException $e) {
+            echo "Error: ".$e->getMessage();
+        }
     }
 
     public function log_out($w_id)

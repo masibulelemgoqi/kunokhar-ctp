@@ -33,10 +33,7 @@ if(isset($_POST['action'])){
 			$person = $_POST['person'];
 			$title = $_POST['title'];
 			$initials = $_POST['initials'];
-
-			if($work_obj->add_client($fname, $lname, $email, $cell_number, $home_address, $city, $zip_code, $person, $title, $initials)) {
-				print("<div class='alert alert-success'>Client added successfully, now refresh the page to work more on this client</div>");
-			}
+			$work_obj->add_client($fname, $lname, $email, $cell_number, $home_address, $city, $zip_code, $person, $title, $initials);
 		break;
 
 		case 'add_juristic':
@@ -99,7 +96,7 @@ if(isset($_POST['action'])){
 			}
 		break;
 
-		case 'add_idea':
+		case 'addIdea':
 			$client_id = $_POST['client_id'];
 			$idea_name = $_POST['idea_name'];
 			$idea_trademark = $_POST['idea_trademark'];
@@ -177,6 +174,64 @@ if(isset($_POST['action'])){
 			}
 		break;
 
+		//SECTION get
+
+		case 'get_spouse':
+			$id = $_POST['id'];
+			$work_obj->getSpouse($id);
+		break;
+
+		case 'getClientsByMonth':
+			$dateFilter = $_POST['dateFilter'];
+			$person = $_POST['person'];
+			echo json_encode($work_obj->getClients($dateFilter, $person, "month"));	
+		break;
+
+		case 'getClientsByPerson':
+			$dateFilter = $_POST['dateFilter'];
+			$person = $_POST['person'];
+			echo json_encode($work_obj->getClients($dateFilter, $person, "person"));	
+		break;
+
+		case 'getClient':
+			$id = $_POST['id'];
+			$work_obj->getClient($id);
+		break;
+
+		case 'getDirector':
+			$id = $_POST['id'];
+			$work_obj->getDirector($id); 
+		break;
+
+		case 'getShareHolder':
+			$id = $_POST['id'];
+			$work_obj->getShareHolder($id); 
+		break;
+
+		case 'getIdea':
+			$id = $_POST['id'];
+			$work_obj->getIdea($id);
+		break;
+
+		case 'getBeneficiary': 
+			$id = $_POST['id'];
+			$work_obj->getBeneficiary($id);
+		break;
+
+		case 'getDocument':
+			$id = $_POST['id'];
+			$doc = $work_obj->getDocument($id);
+			if($doc !== null) {
+				echo json_encode(array(
+					'success'	=> true,
+					'doc'		=> $doc
+				));
+			}else {
+				echo json_encode(array(
+					'success'	=> false
+				));
+			}
+		break;
 		//SECTION  edit
 
 		case 'edit_civil':
@@ -297,18 +352,33 @@ if(isset($_POST['action'])){
 			}
 		break;
 
-		case 'edit_idea':
+		case 'editIdea':
 
 			$id = $_POST['id'];
 			$idea_name = $_POST['idea_name'];
 			$idea_trademark = $_POST['idea_trademark'];
 			$idea_nature = $_POST['idea_nature'];
 			$idea_target_market = $_POST['idea_target_market'];
+			$sector = $_POST['sector'];
 
-			if($work_obj->edit_idea($id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market)) {
+			if($work_obj->edit_idea($id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market, $sector)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Error while editting idea</div>");
+				print("<div class='alert alert-danger'>Error while editing idea</div>");
+			}
+		break;
+
+		case 'edit_spouse':
+			$id = $_POST['id'];
+			$fname = $_POST['fname'];
+			$lname = $_POST['lname'];
+			$stages_of_negotiation = $_POST['stages_of_negotiation'];
+			$id_number = $_POST['id_number'];
+
+			if($work_obj->edit_customary_spouse($id, $fname, $lname, $id_number, $stages_of_negotiation)) {
+				print(1);
+			}else {
+				print("<div class='alert alert-danger'>Could not edit information</div>");
 			}
 		break;
 
@@ -363,15 +433,20 @@ if(isset($_POST['action'])){
 			}
 		break;
 
+		case 'deleteDoc':
+			$id = $_POST['id'];
+			if($work_obj->deleteDoc($id)) {
+				print(1);
+			}else {
+				print('<div class="alert alert-danger">Sorry we were unable to delete a document, please try again...</div>');
+			}		
+		break;
+
 		//SECTION Authentification
 		case 'log_in':
 			$email = $_POST['email'];
 			$password = $_POST['password'];
-			if($user_obj->log_in($email, $password)) {
-				echo "1";
-			}else {
-				print("<div class='alert alert-danger'>Cannot login, make sure you provide correct details</div>");
-			}
+			$user_obj->log_in($email, $password);
 		break;
 
 		//SECTION Default
@@ -381,39 +456,43 @@ if(isset($_POST['action'])){
 	}
 }
 
+if(isset($_FILES['doc']['name'])) {
 
-
-if(isset($_POST['document_description']) && isset($_FILES['file']['name']) && isset($_POST['add_document']))
-{
 	$description = $_POST['document_description'];
 	$id = $_POST['client_id'];
-	$filename = $_FILES['file']['name'];
+	$filename = $_FILES['doc']['name'];
+	$error = null;
+	// destination of the file on the server
+	$destination = '../public/uploads/'. $filename;
+	// get the file extension
+	$extension = pathinfo($filename, PATHINFO_EXTENSION);
+	// the physical file on a temporary uploads directory on the server
+	$file = $_FILES['doc']['tmp_name'];
+	$size = $_FILES['doc']['size'];
 
-      // destination of the file on the server
-      $destination = '../public/uploads/'. $filename;
-      // get the file extension
-      $extension = pathinfo($filename, PATHINFO_EXTENSION);
-      // the physical file on a temporary uploads directory on the server
-      $file = $_FILES['file']['tmp_name'];
-      $size = $_FILES['file']['size'];
-      if (!in_array($extension, ['pdf', 'docx', 'png', 'jpg']))
-      {
+	if (!in_array($extension, ['pdf', 'docx', 'doc'])) {
+		$error = "document should be either pdf / docx / doc";
+	} elseif ($_FILES['doc']['size'] > 10000000) { // file shouldn't be larger than 1Megabyte
+		$error = "document size should not be above 10MB";
+	} else {
+		// move the uploaded (temporary) file to the specified destination
+		if (move_uploaded_file($file, $destination) && $work_obj->addDocument($id, $description, $filename, $size, $extension))
+		{
+			$error = null;
+		} else
+		{
+			$error = "An error ocurred while uploading document, please try again";
+		}
+	}
 
-         header("Location: ../view/work_on_client.php?client_id=".$id."");
-      } elseif ($_FILES['file']['size'] > 100000000) { // file shouldn't be larger than 1Megabyte
-         header("Location: ../view/work_on_client.php?client_id=".$id."");
-      } else
-      {
-         // move the uploaded (temporary) file to the specified destination
-         if (move_uploaded_file($file, $destination) && $work_obj->add_document($id, $description, $filename, $size, $extension))
-         {
-        	 header("Location: ../view/work_on_client.php?client_id=".$id."");
-         } else
-         {
-         	header("Location: ../view/work_on_client.php?client_id=".$id."");
-         }
-      }
-
+	if($error == null) {
+		echo json_encode(array('success' => true));
+	}else {
+		echo json_encode(array(
+			'success' => false,
+			'error'   => $error
+		));
+	}
 }
 
 if(isset($_GET['doc_name']))

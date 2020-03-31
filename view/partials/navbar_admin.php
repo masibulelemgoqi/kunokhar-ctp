@@ -9,16 +9,10 @@
    </button>
 
    <div class="collapse navbar-collapse ml-2" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" ><?php print($u_details['w_fname']."@"."<span class='badge badge-warning'>".$u_details['w_type']."</span>"); ?></a>
-        
-      </li>      
-    </ul>
-    <ul class="navbar-nav navbar-nav-right mr-5 px-5">
+    <ul class="navbar-nav navbar-nav-right ml-auto">
       <li class="nav-item">
         <a class="nav-link text-dark" href="profile.php">
-            Profile <i class="fa fa-user" aria-hidden="true"></i>
+            <?php print($u_details['w_fname']."@"."<span class='badge badge-warning'>".$u_details['w_type']."</span>"); ?>
         </a>
       </li>  
       <li class="nav-item">

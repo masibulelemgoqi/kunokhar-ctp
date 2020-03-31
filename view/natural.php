@@ -1,423 +1,165 @@
-
-<div class="card ml-5 border-success" style="width: 18rem;">
-  <div class="card-body p-0">
-    <h4 class="card-title m-0">Person <button class="btn edit_btn edit-natural-class" style="margin-left: 50%;">Edit</button></h4>
-    <div class="card-text" id="natural_view">
- 	  <div class="row ml-0 badge badge-success">
- 	  	<?php print($client_identification['client_person']." :");?>
- 	  </div>
- 	  <div class="row ml-0">
- 	  	<div>Middle name: <?php print(" ".$natural['n_middle_name']);?></div><br>
- 	  	<div>DOB: <?php print(" ".$natural['n_dob']);?></div><br>
- 	  	<div>ID number: <?php print(" ".$natural['n_id_number']);?></div><br>
- 	  	<div>Marital status: <?php print(" ".$natural['n_marital_status']);?></div><br>
- 	  	<?php
- 	  		if($natural['n_marital_status'] == "Married")
- 	  		{
- 	  			print("<div>Marriage type:  ".$natural['n_marriage_type']."</div>");
- 	  		}
-
- 	  	?>
- 	  </div>
- 	</div>
-
-    <div class="card-text" id="natural_edit">
- 	  <div class="row ml-0 badge badge-success">
- 	  	<?php print($client_identification['client_person']." :");?>
- 	  </div>
- 	  <div class="row">
- 	  	<div id="ne_status"></div>
- 	  	<form action="" method="POST">
- 	  		<input type="hidden" id="ne_id" value="<?php print($natural['n_id']);?>">
-	 	  	<div class="row m-2">
-	 	  		<label>Middle name:</label>
-	 	  		<input type="name" id="ne_middle_name" value="<?php print($natural['n_middle_name']);?>" class="form-control mb-2 border-success" placeholder="middle name">
-	 	  	</div>
-	 	  	<div class="row m-2">
-	 	  		<label>DOB:</label>
-	 	  		<input type="date" id="ne_dob" value="<?php print($natural['n_dob']);?>" class="form-control mb-2 border-success" >
-	 	  	</div>
-	 	  	<div class="row m-2">
-	 	  		<label>ID number:</label>
-	 	  		<input type="number" id="ne_id_number" value="<?php print($natural['n_id_number']);?>" class="form-control mb-2 border-success">
-	 	  	</div>
-	 	  	<div class="row m-2">
-	 	  		<label>Marital status:</label>
-	 	  		<select id="ne_marital_status" class="form-control mb-2 border-success">
-	 	  			<option class="text-disabled" value="<?php print($natural['n_marital_status']);?>"><?php print($natural['n_marital_status']);?>
-	 	  			(currently selected)
-	 	  			</option>
-	 	  			<option value="Single">Single</option>
-	 	  			<option value="Married">Married</option>
-	 	  		</select>
-	 	  	</div>
-
-	 	  	<div class="row m-2 m_type">
-	 	  		<label>Marriage type:</label>
-	 	  		<select id="ne_marriage_type" class="form-control mb-2 border-success">
-	 	  			<option class="text-disabled" value="<?php print($natural['n_marriage_type']);?>"><?php print($natural['n_marriage_type']);?>
-	 	  			(currently selected)
-	 	  			</option>
-	 	  			<option value="Civil">Civil</option>
-	 	  			<option value="Customary">Customary</option>
-	 	  		</select>
-	 	  	</div>
-	 	  	<div class="m-2">
-	 	  		<button class="btn btn-success" id="edit_natural_save">Save <i class="fa fa-save"></i></button>
-	 	  	</div>
- 	  	</form>
- 	  </div>
- 	</div>
-</div>
-</div>
-
-<?php
-	if($natural['n_marital_status'] == "Married")
-	{
-		if($natural['n_marriage_type'] == "Civil")
-		{
+<?php require_once('session.php');
+	require 'partials/header.php';
+	require_once('../model/User.class.php');
+	$user = new User();
+	$u_details = $user->getUser($_SESSION['id']);
+	include 'partials/navbar_worker.php';
 ?>
+<div class="container">
+	<div id="snackbar"></div>
+	<h3 class="font-weight-bold mb-4 text-center  p-4 mr-5" style="font-family: Verdana;">Personal / Individual's details</h3>
+	<div class="row " id="identification">
+		<div class="card border border-success" style="width: 18rem;">
+			<div class="card-body p-0">
+				<h4 class="card-title m-0">Basic Information
+					<button class="btn edit_btn edit-identification">Edit</button>
+				</h4>
+				<div class="client-details"></div>
+			</div>
+		</div>
+		<div class="card ml-5 border-success" style="width: 18rem;">
+			<div class="card-body p-0">
+				<h4 class="card-title m-0">Person <button class="btn edit_btn edit-natural" style="margin-left: 50%;">Edit</button></h4>
+				<div class="row mx-2 mt-2 badge badge-success person-heading-div"></div>
+				<div class="card-text row ml-0">
+					<div id="natural_view"></div>
+				</div>
+			</div>
+		</div>
+	<div>
 
+	<div class="card ml-5 border-success" style="width: 30rem;">
+		<div class="card-body p-0">
+			<h4 class="card-title m-0"> <span id="natural-title"></span> </h4>
+			<div class="card-text">
+				<div class="row m-0" id="show-full-info"></div>
+			</div>
+		</div>
+	</div>
 
+	<div class="modal fade" id="addSpouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			<form method="POST" action="">
+				<div class="modal-header text-center">
+					<h4 class="modal-title font-weight-bold">Spouse information</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div id="cs_status" class="ml-4 mr-4 mt-2 mb-2">
 
+				</div>
+				<div class="modal-body mx-3">
+					<input type="hidden" id="cs_fk_id" value="" class="form-control validate">
+					<p hidden id="hidden-spouse-id"></p>
+					<div class="md-form mb-3">
+					<input type="name" id="cs_fname" class="form-control validate" placeholder="First Name">
+					</div>
 
-    <?php
-    	$civil = $work->get_civil($natural['n_id']);
-     if($civil != null)
-     {
-     ?>
-<div class="card ml-5 border-success" style="width: 30rem;">
-  <div class="card-body p-0">
-    <h4 class="card-title m-0"> Civil Marriage <button class="btn edit_btn " id="view_edit_civil">Edit</button> </h4>
-    <div class="card-text">
-      <div class="row m-0" id="civil_view_container">
-        <div class="ml-3">
-         	<div class="row">Spouse: </div>
-         	<div class="row mt-2">first name: <?php print($civil['c_spouse_fname']);?></div>
-         	<div class="row mt-2">Last name: <?php print($civil['c_spouse_lname']);?></div>
-         	<div class="row mt-2 person-id-number">Id number: <?php print($civil['c_id_number']);?></div>
-          <div class="row mt-2">Certificate #: <?php print($civil['c_certificate_number']);?></div>
-          <div class="row mt-2">Date of issue: <?php print($civil['c_date_of_issue']);?></div>
-         	<div class="row mt-2">Terms of marriage: <?php print($civil['c_marriage_terms']);?></div>
-         	<div class="row mt-2">Detail of marriage: <?php print($civil['c_detail_of_marriage']);?></div>
-         </div>
-      </div>
+					<div class="md-form mb-3">
+					<input type="name" id="cs_lname" class="form-control validate" placeholder="Last Name">
+					</div>
 
-      <div class="row m-0" id="civil_edit_container">
-   	  	<div id="c_status"></div>
-   	  	<form method="POST" action="">
-   	  		<input type="hidden" id="spouse_id" value="<?php print($civil['c_id']);?>">
-   	  		<div class="row mb-2">
-            <div class="col-6">
-   	  			     <input type="name" id="spouse_fname" placeholder="Spouse first name" class="form-control border-success" value="<?php print($civil['c_spouse_fname']);?>">
-            </div>
-            <div class="col-6">
-   	  			     <input type="name" id="spouse_lname" placeholder="Spouse Last name" class="form-control border-success" value="<?php print($civil['c_spouse_lname']);?>">
-            </div>
-   	  		</div>
-   	  		<div class="row m-0">
-   	  			<input type="name" id="spouse_id_number" placeholder="Spouse Id number" class=" form-control mb-2 border-success" value="<?php print($civil['c_id_number']);?>">
-   	  		</div>
-  				<label><i>Date of issue:</i> </label>
-   	  		<div class="row  mb-2">
-          <div class="col-6">
-  				      <input type="date" id="date_of_issue" placeholder="" class="form-control border-success" value="<?php print($civil['c_date_of_issue']);?>">
-          </div>
-          <div class="col-6">
-  				      <input type="name" id="certificate_no" placeholder="certificate number" class="form-control border-success" value="<?php print($civil['c_certificate_number']);?>">
-          </div>
+					<div class="md-form mb-3">
+					<input type="name" id="id_number" class="form-control validate" placeholder="ID Number">
+					</div>
 
-   	  		</div>
-   	  		<select class="form-control border-success" id="marriage_terms">
-            <option value="<?php print($civil['c_marriage_terms']);?>"><?php print($civil['c_marriage_terms']);?>(currently selected marriage term)</option>
-   	  			<option value="In-community">In-community</option>
-   	  			<option value="Out-of-community">Out-of-community</option>
-   	  		</select>
-   	  		<label class="label mt-2 "><i>Detail of marriage: </i></label>
-   	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;"><?php print($civil['c_detail_of_marriage']);?></textarea>
-   	  		<div class="d-flex justify-content-center">
-   	  			<button class="btn btn-success" id="edit_civil"> Save</button>
-   	  		</div>
+					<div class="md-form mb-3">
+					<input type="number" id="cs_stages_of_negotiation" class="form-control validate" placeholder="Stage of Negotiation">
+					</div>
 
-   	  	</form>
-   	  </div>
+				</div>
+				<div class="modal-footer d-flex justify-content-center">
+					<button class="btn btn-success spouse-save" id="spouse_action">Add spouse</button>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
-    </div>
-   </div>
- </div>
-     <?php
-
-     }else
-     {
-     ?>
-<div class="card border-success ml-5" style="width: 30rem;">
-  <div class="card-body">
-    <h4 class="card-title" style="font-family: 'prataregular', Serif; font-style: italic; "> Civil Marriage </h4><hr class="border-success">
-    <div class="card-text">
-   	  <div class="row m-0">
-   	  	<div id="c_status"></div>
-   	  	<form method="POST" action="">
-   	  		<input type="hidden" id="natural_id" value="<?php print($natural['n_id']);?>">
-   	  		<div class="row mb-2">
-            <div class="col-6">
-   	  			     <input type="name" id="spouse_fname" placeholder="Spouse first name" class="form-control border-success">
-            </div>
-            <div class="col-6">
-   	  			     <input type="name" id="spouse_lname" placeholder="Spouse Last name" class="form-control border-success">
-            </div>
-   	  		</div>
-   	  		<div class="row m-0">
-   	  			<input type="name" id="spouse_id_number" placeholder="Spouse Id number" class=" form-control mb-2 border-success">
-   	  		</div>
-  				<label><i>Date of issue:</i> </label>
-   	  		<div class="row  mb-2">
-          <div class="col-6">
-  				      <input type="date" id="date_of_issue" placeholder="" class="form-control border-success">
-          </div>
-          <div class="col-6">
-  				      <input type="name" id="certificate_no" placeholder="certificate number" class="form-control border-success">
-          </div>
-
-   	  		</div>
-   	  		<select class="form-control border-success" id="marriage_terms">
-   	  			<option value="">Marriage terms</option>
-   	  			<option value="In-community">In-community</option>
-   	  			<option value="Out-of-community">Out-of-community</option>
-   	  		</select>
-   	  		<label class="label mt-2 "><i>Detail of marriage: </i></label>
-   	  		<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;"></textarea>
-   	  		<div class="d-flex justify-content-center">
-   	  			<button class="btn btn-success" id="add_civil"> Save</button>
-   	  		</div>
-
-   	  	</form>
-   	  </div>
- 	</div>
-     <?php
-     }
-     ?>
-
-</div>
-</div>
-
-<?php
-		if($civil !== null)
-		{
-			include 'documents.php';
-            if(count($docs) >= 2)
-            {
-              include 'ideas.php';
-            }
-		}
-	}
-
-	if($natural['n_marriage_type'] == "Customary")
-	{
-?>
-<div class="card ml-5 border-success" style="width: 14rem;">
-  <div class="card-body p-0">
-    <h4 class="card-title m-0">Spouse(s) <button href="" class="btn add-btn" data-toggle="modal" data-target="#addSpouse"><i class="fa fa-plus"></i></button></h4>
-	  <div class="row">
-			<div class="modal fade" id="addSpouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+	<div class="modal fade" id="addBeneficiary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			  aria-hidden="true">
 			  <div class="modal-dialog" role="document">
 			    <div class="modal-content">
 			      <form method="POST" action="">
 				      <div class="modal-header text-center">
-				        <h4 class="modal-title font-weight-bold">Spouse information</h4>
+				        <h4 class="modal-title font-weight-bold">Beneficiary Information</h4>
 				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				          <span aria-hidden="true">&times;</span>
 				        </button>
 				      </div>
-				      <div id="cs_status" class="ml-4 mr-4 mt-2 mb-2">
-
-				      </div>
+				      <div id="b_status" class="ml-4 mr-4 mt-2 mb-2"></div>
 				      <div class="modal-body mx-3">
-
-				          <input type="hidden" id="cs_fk_id" value="<?php print($natural['n_id']);?>" class="form-control validate">
-
+					  	<input type="hidden" id="b_id">
 				        <div class="md-form mb-3">
-				          <input type="name" id="cs_fname" class="form-control validate" placeholder="First Name">
+				          <input type="name" id="b_fname" class="form-control validate" placeholder="First Name">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <input type="name" id="cs_lname" class="form-control validate" placeholder="Last Name">
+				          <input type="name" id="b_lname" class="form-control validate" placeholder="Last Name">
 				        </div>
 
 				        <div class="md-form mb-3">
-				          <input type="name" id="id_number" class="form-control validate" placeholder="ID Number">
-				        </div>
-
-				        <div class="md-form mb-3">
-				          <input type="number" id="cs_stages_of_negotiation" class="form-control validate" placeholder="Stage of Negotiation">
+				          <input type="name" id="b_id_number" class="form-control validate" placeholder="ID Number">
 				        </div>
 
 				      </div>
 				      <div class="modal-footer d-flex justify-content-center">
-				        <button class="btn btn-success" id="add_spouse">Save</button>
+				        <button class="btn btn-success" id="add_beneficiary">Save</button>
 				      </div>
 				    </form>
 			    </div>
 			  </div>
 			</div>
- 	  </div>
 
- 	  <div class="row m-4">
-      <div id="s_status">
-
-      </div>
- 	  	<?php
- 	  		$spouses = $work->get_spouses($natural['n_id']);
-
- 	  		if(count($spouses) > 0)
- 	  		{
- 	  			foreach($spouses as $spouse)
- 	  			{
-      ?>
-        <div class="row mb-1">
-            <?php print($spouse['cs_fname']." ".$spouse['cs_lname']."<br>".$spouse['cs_id_number']."<br>  stage of negotiation: ".$spouse['cs_stages_of_negotiation']."<br>"); ?>
-            <div class="">
-              <button class="btn btn-tomato-o" onclick="delete_spouse(<?php print($spouse['cs_id']);?>);">Delete</button>
-              <button class="btn btn-outline-success" onclick="edit_spouse();">Edit</button>
-            </div>
-
-        </div>
-      <?php
-
- 	  			}
- 	  		}
-
- 	  	?>
-
- 	  </div>
-</div>
-</div>
-<div class="card ml-5 border-success" style="width: 14rem;">
-  <div class="card-body p-0">
-    <h4 class="card-title m-0">Deligation(s)</h4>
- 	  <div class="m-2">
- 	  	<?php
- 	  		$spouses = $work->get_spouses($natural['n_id']);
- 	  		$s_count = 0;
- 	  			foreach($spouses as $spouse)
- 	  			{
- 	  				print(++$s_count.". ".$spouse['cs_fname']." ".$spouse['cs_lname']."<br>");
- 	  	?>
-		 	  		<div class="row texr-center m-1">
-		 	  			<a class="deligation-btn mr-2" data-toggle="modal" data-target="#addDeligation<?php print($spouse['cs_id']); ?>"><i class="fa fa-plus-circle"></i></a>
-		 	  			<a class="deligation-btn" data-toggle="modal" data-target="#viewDeligation<?php print($spouse['cs_id']); ?>"><i class="fa fa-eye"></i></a>
-		 	  		</div>
-
-					<div class="ml-0">
-						<div class="modal fade" id="addDeligation<?php print($spouse['cs_id']); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-						  aria-hidden="true">
-						  <div class="modal-dialog" role="document">
-						    <div class="modal-content">
-						      <form method="POST" action="">
-							      <div class="modal-header text-center">
-							        <h4 class="modal-title font-weight-bold">Deligation information</h4>
-							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							          <span aria-hidden="true">&times;</span>
-							        </button>
-							      </div>
-							      <div class="ml-4 mr-4 mt-2 mb-2 d_status">
-
-							      </div>
-							      <div class="modal-body mx-3">
-							        <div class="md-form mb-3">
-							          <input type="name" class="form-control d_fname" placeholder="First Name">
-							        </div>
-
-							        <div class="md-form mb-3">
-							          <input type="name" class="form-control d_lname" placeholder="Last Name">
-							        </div>
-
-							        <div class="md-form mb-3">
-							          <input type="number" id="" class="form-control d_id_number" placeholder="ID Number">
-							        </div>
-
-							      </div>
-							    </form>
-							      <div class="modal-footer d-flex justify-content-center">
-									<p  hidden><?php print($spouse['cs_id']); ?></p>
-							        <a class="btn btn-success add_deligation">Save</a>
-							      </div>
-						    </div>
-						  </div>
-						</div>
-					</div>
-
-					<div class="ml-0">
-						<div class="modal fade" id="viewDeligation<?php print($spouse['cs_id']); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-						  aria-hidden="true">
-							<div class="modal-dialog" role="document">
-								<div class="modal-content">
-									<div class="modal-header text-center">
-									<h4 class="modal-title font-weight-bold"><?php print($spouse['cs_fname']." ".$spouse['cs_lname']);?> Deligation(s)</h4>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-									</button>
-									</div>
-									<div id="d_status_<?php print($spouse['cs_id']); ?>" class="ml-4 mr-4 mt-2 mb-2">
-
-									</div>
-									<div class="modal-body mx-3">
-									<?php
-										$deligations = $work->get_deligations($spouse['cs_id']);
-										if(count($deligations) > 0)
-										{
-											foreach($deligations as $deligation)
-											{
-												print($deligation['d_fname']." ".$deligation['d_lname']."<br>  ID number: ".$deligation['d_id_number']."<br>");
-											?>
-											<a href="" class="btn btn-warning">edit</a> <a href="" class="btn btn-danger">Delete</a><br><br>
-											<?php
-											}
-
-										}
-									?>
-
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-		 <?php
-
-		 	}
-		 ?>
-
-
- 	  </div>
-</div>
 </div>
 
-<?php
+<div class="container-fluid mt-5 documents">
+	<h1 class="font-weight-bold mb-5 text-center">Documents</h1>
+		<div class="ml-5">
+			<p class="font-weight-italic text-success text-center">
+				All the documents must be in pdf/doc/docx format.
+			</p>
+		</div>
+		<div class="statusMsg mx-5"></div>
+		<form id="upload_document" method="POST" class="mb-5" enctype="multipart/form-data">
+			<div class="row ml-5 d-flex justify-content-center">
+				<div class="md-form col-sm-3 ">
+					<select class="form-control border-success" name="document_description" id="document_description"></select>
+				</div>
+				<div class="md-form col-sm-3">
+					<input type="file" name="doc" id="doc" class="form-control border-success">
+				</div>
+				<div class="md-form col-sm-3 float-right">
+					<button class="btn btn-success" name="add_document" id="add_document">Upload file <i class="fa fa-save" aria-hidden="true"></i></button>
+				</div>
+			</div>
+		</form>
 
-	  		if(count($spouses) > 0 && count($deligations) > 0)
-	  		{
-				include 'documents.php';
-	            if(count($docs) >= 2)
-	            {
-					include 'ideas.php';
-	            }
-	        }
-		}
 
-	}
+	<div class="row ml-1">
+			<div class="col-sm-4 border-right">
+				<h5 class="font-weight-bold text-center">Required documents</h5>
+				<div class="mt-5" id="required-doc">
 
-	if($natural['n_marital_status'] == "Single")
-	{
-		include 'beneficiary.php';
-  		if(count($beneficiaries) > 0)
-  		{
-			include 'documents.php';
-            if(count($docs) >= 2)
-            {
-				include 'ideas.php';
-            }
-		}
-	}
-?>
+				</div>
+			</div>
+		<div class="col-sm-8">
+
+			<h5 class="font-weight-bold mr-2 text-center">Supporting documents</h5>
+			<div class="mt-5 ml-5">
+				<div class="row ml-5" id="documentsView"></div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<div class="container mt-5 ideas">
+		<?php require_once('idea_form.php'); ?>
+		<div class="container">
+			<div class='mt-5 mb-5 h3 text-center'>List of ideas</div>
+			<div class="row" id="list-of-ideas"></div>
+		</div>
+	</div>
+<?php require 'partials/footer.php';?>
