@@ -28,7 +28,7 @@
 		</div>
 	<div>
 
-	<div class="card ml-5 border-success" style="width: 30rem;">
+	<div class="card ml-5 border-success other-info" style="width: 30rem;">
 		<div class="card-body p-0">
 			<h4 class="card-title m-0"> <span id="natural-title"></span> </h4>
 			<div class="card-text">
@@ -79,39 +79,60 @@
 	</div>
 
 	<div class="modal fade" id="addBeneficiary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-			  aria-hidden="true">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
-			      <form method="POST" action="">
-				      <div class="modal-header text-center">
-				        <h4 class="modal-title font-weight-bold">Beneficiary Information</h4>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				      </div>
-				      <div id="b_status" class="ml-4 mr-4 mt-2 mb-2"></div>
-				      <div class="modal-body mx-3">
-					  	<input type="hidden" id="b_id">
-				        <div class="md-form mb-3">
-				          <input type="name" id="b_fname" class="form-control validate" placeholder="First Name">
-				        </div>
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form method="POST" action="">
+				<div class="modal-header text-center">
+				<h4 class="modal-title font-weight-bold">Beneficiary Information</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				</div>
+				<div id="b_status" class="ml-4 mr-4 mt-2 mb-2"></div>
+				<div class="modal-body mx-3">
+				<input type="hidden" id="b_id">
+				<div class="md-form mb-3">
+					<input type="name" id="b_fname" class="form-control validate" placeholder="First Name">
+				</div>
 
-				        <div class="md-form mb-3">
-				          <input type="name" id="b_lname" class="form-control validate" placeholder="Last Name">
-				        </div>
+				<div class="md-form mb-3">
+					<input type="name" id="b_lname" class="form-control validate" placeholder="Last Name">
+				</div>
 
-				        <div class="md-form mb-3">
-				          <input type="name" id="b_id_number" class="form-control validate" placeholder="ID Number">
-				        </div>
+				<div class="md-form mb-3">
+					<input type="name" id="b_id_number" class="form-control validate" placeholder="ID Number">
+				</div>
 
-				      </div>
-				      <div class="modal-footer d-flex justify-content-center">
-				        <button class="btn btn-success" id="add_beneficiary">Save</button>
-				      </div>
-				    </form>
-			    </div>
-			  </div>
+				</div>
+				<div class="modal-footer d-flex justify-content-center">
+				<button class="btn btn-success" id="add_beneficiary">Save</button>
+				</div>
+			</form>
+		</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addDeligation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header text-center border-0">
+				<h4 class="modal-title font-weight-bold">Deligation(s)</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
+			<div class="modal-body">
+				<div class="d-flex justify-content-start">
+					<button class="btn btn-success" id="deligation-add-btn"><i class="fa fa-plus"></i></button>
+				</div>
+				<div id="deligation-fields"></div>
+				<div class="mx-2 my-4" id="deligation-show"></div>
+			</div>
+		</div>
+		</div>
+	</div>
 
 </div>
 

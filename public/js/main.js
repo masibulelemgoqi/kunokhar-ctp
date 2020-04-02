@@ -1,6 +1,7 @@
 
 // ANCHOR  variables
 var error = null;
+var controller = '../controller/controller.php';
 var companyName = null;
 var companyRegNumber = null;
 var companyRegDate = null;
@@ -9,8 +10,10 @@ var juristic = null;
 var natural = null;
 var client = null;
 var civil = null;
+var deligation = null;
 var companyDirector = null;
 var shareHolder = null;
+var spouseId = null;
 var idea = null;
 var dateFilter = $('#date-filter').val();
 
@@ -58,7 +61,8 @@ $(()=> {
 	$('#marriage_type').hide();
 	$('#ne_marriage_type').hide();
 	$('#add_user_container').hide();
-    $('.m_type').hide();
+	$('.m_type').hide();
+	$('.modal-backdrop').remove();
 
 	$('#add_user_btn').click(function(e) {
 		$('#add_user_container').toggle();
@@ -122,7 +126,7 @@ $(()=> {
 		var email = $('#email').val();
 		var password = $('#password').val();
 		if(email == "" || password == ""){
-			$('#status').html("<div class='alert alert-danger'> All fields are required</div>");
+			$('#status').html("<div class='text-danger'> All fields are required</div>");
 			return;
 		}
 
@@ -138,7 +142,7 @@ $(()=> {
 				sessionStorage.setItem('user_role', data.user.w_type);
 				window.location.href = "view/main.php";
 			}else{
-				$('#status').html("<div class='alert alert-danger'>Cannot login, make sure you provide correct details</div>");						
+				$('#status').html("<div class='text-danger'>Cannot login, make sure you provide correct details</div>");						
 			}
 		});
 	});
@@ -246,7 +250,7 @@ $(()=> {
 		$('#cs_lname').val("");
 		$('#id_number').val("");
 		$('#cs_stages_of_negotiation').val("");
-		$('#cs_status').html("");
+		snackBar("");
 		$('#addSpouse').modal();
 	});
 
@@ -344,9 +348,41 @@ $(()=> {
 	$('#show-full-info').on('click', '.deligations', function(e) {
 		e.preventDefault()
 		e.stopPropagation();
-		var id = $(this).closest('.spouse-actions').find('p')[0].innerHTML;
-		$('#spouse_action').text("Edit spouse");
-		getSpouse(id);
+		spouseId = $(this).closest('.actions').find('p')[0].innerHTML;
+		showDeligations(spouseId);
+	});
+
+	$('#deligation-add-btn').click(function(e) {
+		var indicator = $(this).find('i').attr('class');
+		$('#deligation-fields').empty();
+		if(indicator.includes('fa-plus')) {
+			$(this).find('i').removeClass('fa-plus');
+			$(this).find('i').addClass('fa-times');
+			$(this).removeClass('btn-success');
+			$(this).addClass('btn-danger');
+			var html = `
+				<form method="POST">
+					<input type="hidden">
+					<div class="m-3 d-flex">
+						<input type="text" class="form-control mr-3" id="d_fname" placeholder="first name">
+						<input type="text" class="form-control ml-3" id="d_lname" placeholder="last name">
+					</div>
+					<div class="m-3">
+						<input type="text" class="form-control" id="d_id_number" placeholder="Id number">
+					</div>
+					<div class="d-flex justify-content-center">
+						<button class="btn btn-success" id="deligation-action">Save</button>
+					</div>
+				</form>
+			`;
+			$('#deligation-fields').append(html);
+		}else {
+			$(this).find('i').removeClass('fa-times');
+			$(this).find('i').addClass('fa-plus');
+			$(this).removeClass('btn-danger');
+			$(this).addClass('btn-success');
+			$('#deligation-fields').empty();
+		}
 		
 	});
 
@@ -411,7 +447,53 @@ $(()=> {
 				deleteDoc(id);
 			break;
 		}
-	})
+	});
+
+	$('#deligation-show').on('click', 'a', function(e) {
+		var id = $(this).closest('.actions').find('p')[0].innerHTML;
+		action = $(this).find('i').attr('class');
+		console.log(action);
+		if(action.includes('fa-edit')) {
+			getDeligation(id);
+			setTimeout(() => {
+				console.log(deligation);
+				
+				var indicator = $('#deligation-add-btn').find('i').attr('class');
+				$('#deligation-fields').empty();
+				if(indicator.includes('fa-plus')) {
+					$('#deligation-add-btn').find('i').removeClass('fa-plus');
+					$('#deligation-add-btn').find('i').addClass('fa-times');
+					$('#deligation-add-btn').removeClass('btn-success');
+					$('#deligation-add-btn').addClass('btn-danger');
+					var html = `
+						<form method="POST">
+							<input type="hidden" id="d_id" value="${deligation.d_id}">
+							<div class="m-3 d-flex">
+								<input type="text" class="form-control mr-3" id="d_fname" placeholder="first name" value="${deligation.d_fname}">
+								<input type="text" class="form-control ml-3" id="d_lname" placeholder="last name" value="${deligation.d_lname}">
+							</div>
+							<div class="m-3">
+								<input type="text" class="form-control" id="d_id_number" placeholder="Id number" value="${deligation.d_id_number}">
+							</div>
+							<div class="d-flex justify-content-center">
+								<button class="btn btn-success" id="deligation-action">Update</button>
+							</div>
+						</form>
+					`;
+					$('#deligation-fields').append(html);
+				}else {
+					$('#deligation-add-btn').find('i').removeClass('fa-times');
+					$('#deligation-add-btn').find('i').addClass('fa-plus');
+					$('#deligation-add-btn').removeClass('btn-danger');
+					$('#deligation-add-btn').addClass('btn-success');
+					$('#deligation-fields').empty();
+				}
+			}, 1500);
+		}else if(action.includes('fa-trash-o')) {
+			deleteDeligation(id);
+		}
+		
+	});
 	// SECTION add events
 	$('#add_user').click(function(e) {
 		e.preventDefault();
@@ -424,21 +506,21 @@ $(()=> {
 		var verify_password = $('#verify_password').val();
 
 		if(fname == "" || lname == "" || email == "" || cell_number == "" || position == "" || password == "" || verify_password == "") {
-			$('#status').html("<div class='alert alert-danger'> All fields are required</div>");
+			$('#status').html("<div class='text-danger'> All fields are required</div>");
 			return;
 		}
 		if(password != verify_password) {
-			$('#status').html("<div class='alert alert-danger'>password does not match</div>");
+			$('#status').html("<div class='text-danger'>password does not match</div>");
 			return;
 		}
 		$.ajax({
 			method: "POST",
-			url: '../controller/controller.php',
+			url: controller,
 			data: {fname: fname, lname: lname, email: email, cell_number: cell_number, position: position, password: password, action: "add_user"}
 				
 		}).then(function(data) {
 		    if(data == "1") {
-		       $('#status').html("<div class='alert alert-success'>User has been successfully added</div>");
+		       $('#status').html("<div class='text-success'>User has been successfully added</div>");
 		       setTimeout(function(){location.reload()}, 2000);
 		    }else {
 		        $('#status').html(data);
@@ -465,33 +547,33 @@ $(()=> {
 		var initials = $('#initials').val();
 
 		if(fname == "" || lname == "" || email == "" || cellNumber =="" || home_address == "" || zip_code == "" || city == "" || person =="" || title == "" || initials == "") {
-			$('#status').html("<div class='alert alert-danger'>All fields are required</div>");	
+			snackBar("<div class='text-danger'>All fields are required</div>");	
 			return;
 		}
 
 		if(!cell_number(cellNumber)) {
-			$('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;		
 		}
 
 		if(!isZipCode(zip_code)) {
-			$('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;		
 		}
 
 		if(!isName(fname)) {
-			$('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;			
 		}
 
 		if(!isName(lname)) {
-			$('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;			
 		}
 
 		$.ajax({
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			dataType: 'json',
 			data: {fname: fname, lname: lname, email: email, cell_number: cellNumber, home_address: home_address, zip_code: zip_code, city: city, person: person, title: title, initials: initials, action: 'add_client'},
 		}).then(function(data) {
@@ -503,7 +585,7 @@ $(()=> {
 					window.location.href = 'natural.php';
 				}
 			}else {
-				$('#status').html(data.error);
+				snackBar(data.error);
 			}
 		});
 	});
@@ -523,28 +605,28 @@ $(()=> {
 		var marriage_type = input.find('#marriage_type').val();
 
 		if(dob == "" || id_number =="" || marital_status == "") {
-			status.html("<div class='alert alert-danger'> All fields are required</div>");
+			snackBar("<div class='text-danger font-weight-bold'> All fields are required</div>");
 			return;
 		}
 
 		if(!valid_idnumber(id_number)) {
-			status.html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger font-weight-bold'>${error}</div>`);
 			return;
 		}
 
 		if(!isDob(dob)) {
-			status.html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger font-weight-bold'>${error}</div>`);
 			return;		
 		}
 
 		if(!isCorrectDate(dob)) {
-			status.html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger font-weight-bold'>${error}</div>`);
 			return;		
 		}
 
 		if(marital_status == "Married") {
 			if(marriage_type == "") {
-				status.html("<div class='alert alert-danger'>Marriage has to be selected</div>");
+				snackBar("<div class='text-danger font-weight-bold'>Marriage has to be selected</div>");
 				return;		
 			}
 		}
@@ -554,19 +636,17 @@ $(()=> {
 		}
 		if(action == "Save") {
 			if(!isName(fname)) {
-				status.html(`<div class='alert alert-danger'>${error}</div>`);
+				snackBar(`<div class='text-danger font-weight-bold'>${error}</div>`);
 				return;
 			}
 	
 			if(!isName(lname)) {
-				status.html(`<div class='alert alert-danger'>${error}</div>`);
+				snackBar(`<div class='text-danger font-weight-bold'>${error}</div>`);
 				return;
 			}
-			addNatural(client_id, fname, lname, mname, dob, id_number, marital_status, marriage_type, status);
+			addNatural(client_id, fname, lname, mname, dob, id_number, marital_status, marriage_type);
 		}else if(action == "Update") {
-			console.log(action);
-			
-			editNatural(mname, dob, id_number, marital_status, marriage_type, status);
+			editNatural(mname, dob, id_number, marital_status, marriage_type);
 		}
 
 	});
@@ -580,24 +660,24 @@ $(()=> {
 		var registration_number = add.find('#registration_number').val();
 
 		if(company_name == "" || registration_number == "" || registration_date == "") {
-			add.find('#j_status').html("<div class='alert alert-danger'>All fields are required</div>");
+			add.find('#j_status').html("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
 
 		if(!isCompany(company_name, registration_date, registration_number)) {
-			add.find('#j_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			add.find('#j_status').html(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isCorrectDate(registration_date)) {
-			add.find('#j_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			add.find('#j_status').html(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
 
 		$.ajax(
 		{
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			data: {client_id: client_id, company_name: company_name, registration_date: registration_date, registration_number: registration_number, action: 'add_juristic'}
 		}).then(function(data) {
 			if(data == "1"){
@@ -622,32 +702,32 @@ $(()=> {
 		var id_number = $('#j_id_number').val();
 		var date_of_appointment = $('#j_date_of_appointment').val();
 		if(fname == "" || lname == "" || title == "" || id_number == "" || date_of_appointment == "") {
-			$('#member_status').html('<div class="alert alert-danger">All fields are required</div>');
+			$('#member_status').html('<div class=" text-danger">All fields are required</div>');
 			return;
 		}
 
 		if(!valid_idnumber(id_number)) {
-			$('#member_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#member_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
 		if(!isSameIdNumber(id_number)) {
-			$('#member_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#member_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
 		if(!isCorrectDate(date_of_appointment)) {
-			$('#member_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#member_status').html(`<div class=" text-danger">${error}</div>`);
 			return;	
 		}
 
 		if(!isName(fname)) {
-			$('#member_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#member_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
 		if(!isName(lname)) {
-			$('#member_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#member_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
@@ -669,32 +749,32 @@ $(()=> {
 		var amount_contributed = $('#amount_contributed').val();
 
 		if(fname == "" || lname == "" || title == "" || id_number == "" || amount_contributed == "") {
-			$('#holder_status').html('<div class="alert alert-danger">All fields are required</div>');
+			$('#holder_status').html('<div class=" text-danger">All fields are required</div>');
 			return;
 		}
 
 		if(!valid_idnumber(id_number)) {
-			$('#holder_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#holder_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
 		if(isNaN(amount_contributed)) {
-			$('#holder_status').html('<div class="alert alert-danger">Amount contributed should be a number</div>');
+			$('#holder_status').html('<div class=" text-danger">Amount contributed should be a number</div>');
 			return;		
 		}
 
 		if(amount_contributed < 0) {
-			$('#holder_status').html('<div class="alert alert-danger">Amount contributed should be greater than 0</div>');
+			$('#holder_status').html('<div class=" text-danger">Amount contributed should be greater than 0</div>');
 			return;		
 		}
 
 		if(!isName(fname)) {
-			$('#holder_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#holder_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
 		if(!isName(lname)) {
-			$('#holder_status').html(`<div class="alert alert-danger">${error}</div>`);
+			$('#holder_status').html(`<div class=" text-danger">${error}</div>`);
 			return;			
 		}
 
@@ -707,7 +787,7 @@ $(()=> {
 
 	$('#show-full-info').on('click', '#add_civil', function(e) {
 		e.preventDefault();
-		var action = $(this).text();
+		var action = $(this).text().trim();	
 		var add = $(this).closest('#show-full-info');
 		var natural_id = natural.n_id
 		var spouse_fname = add.find('#spouse_fname').val();
@@ -718,39 +798,44 @@ $(()=> {
 		var marriage_terms = add.find('#marriage_terms').val();
 		var detail_of_marriage = add.find('#detail_of_marriage').val().trim();
 
+		// console.log(detail_of_marriage+" "+marriage_terms+" "+date_of_issue+" "+spouse_id_number+" "+certificate_no+" "+spouse_lname+" "+spouse_fname+" "+natural_id);
+		
+
 		if(natural_id == "" || spouse_fname == "" || spouse_lname == "" || certificate_no == "" || date_of_issue == "" || marriage_terms == "" || detail_of_marriage == "" || spouse_id_number =="") {
-			$("#c_status").html("<div class='alert alert-danger'>All fields are required</div>");
+			snackBar("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
 
 		if(!valid_idnumber(spouse_id_number)) {
-			$("#c_status").html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isSameIdNumber(spouse_id_number)) {
-			$("#c_status").html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;			
 		} 
 
 		if(!isName(spouse_fname)) {
-			$("#c_status").html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isName(spouse_lname)) {
-			$("#c_status").html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isCorrectDate(date_of_issue)) {
-			$("#c_status").html(`<div class='alert alert-danger'>${error}</div>`);
+			console.log(error);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
-
-		if(action == "Save") {
+		
+		if(action == 'Save') {
+			console.log(action);
 			addCivil(natural_id, spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number);
-		}else if(action == "Update") { 
+		}else if(action == 'Update') { 
 			editCivil(natural_id, spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number);
 		}
 	});
@@ -765,31 +850,28 @@ $(()=> {
 		var idea_target_market = $('#idea_target_market').val();
 		var sector = $('#sector-input').val();
 
-		console.log(sector);
-		
-
 		if(sector == "" || client_id == "" || idea_name == "" || idea_trademark == "" || idea_nature == "" || idea_target_market == "") {
-			$('#idea_status').html('<div class="alert alert-danger">All the fields are required</div>');
+			$('#idea_status').html('<div class=" text-danger">All the fields are required</div>');
 			return;
 		}
 
 		if(idea_name.length < 3) {
-			$('#idea_status').html('<div class="alert alert-danger">Idea name should be at least 3 characters</div>');
+			$('#idea_status').html('<div class=" text-danger">Idea name should be at least 3 characters</div>');
 			return;
 		}
 
 		if(idea_trademark.length < 2) {
-			$('#idea_status').html('<div class="alert alert-danger">Idea trademark should be at least 2 characters</div>');
+			$('#idea_status').html('<div class=" text-danger">Idea trademark should be at least 2 characters</div>');
 			return;
 		}
 
 		if(idea_nature.length < 500) {
-			$('#idea_status').html('<div class="alert alert-danger">Idea nature should be at least 500 characters</div>');
+			$('#idea_status').html('<div class=" text-danger">Idea nature should be at least 500 characters</div>');
 			return;
 		}
 
 		if(idea_target_market.length < 250) {
-			$('#idea_status').html('<div class="alert alert-danger">Idea target market should be at least 250 characters</div>');
+			$('#idea_status').html('<div class=" text-danger">Idea target market should be at least 250 characters</div>');
 			return;
 		}
 
@@ -811,27 +893,27 @@ $(()=> {
 		 
 
 		if(id =="" || fname == "" || lname == "" || stages_of_negotiation == "" || id_number == "") {
-			$('#cs_status').html("<div class='alert alert-danger'>All fields are required</div>");
+			snackBar("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
 
 		if(!valid_idnumber(id_number)) {
-			$('#cs_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;	
 		}
 
 		if(!isSameIdNumber(id_number)) {
-			$('#cs_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isName(fname)) {
-			$('#cs_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
 
 		if(!isName(lname)) {
-			$('#cs_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
 
@@ -851,27 +933,27 @@ $(()=> {
 		var id_number = $('#b_id_number').val();
 
 		if(id =="" || fname == "" || lname == "" || id_number == "") {
-			$('#b_status').html("<div class='alert alert-danger'>All fields are required</div>");
+			$('#b_status').html("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
 
 		if(!valid_idnumber(id_number)) {
-			$('#b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			$('#b_status').html(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
 
 		if(!isSameIdNumber(id_number)) {
-			$('#b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			$('#b_status').html(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
 
 		if(!isName(fname)) {
-			$('#b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			$('#b_status').html(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isName(lname)) {
-			$('#b_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			$('#b_status').html(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
@@ -882,55 +964,47 @@ $(()=> {
 		}
 	});
 
-	$('.add_deligation').click(function(e) {
+	$('#deligation-fields').on('click', '#deligation-action', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("hi");
-		
-		var id = $(this).closest('.modal-footer').find('p').text();
-		var fname = $('.d_fname').val();
-		var lname = $('.d_lname').val();
-		var id_number = $('.d_id_number').val();
+		var id = spouseId;
+		var action = $(this).text();
+		var add = $(this).closest('#deligation-fields');
+		var fname = add.find('#d_fname').val();
+		var lname = add.find('#d_lname').val();
+		var id_number = add.find('#d_id_number').val();
 
 		if(id =="" || fname == "" || lname == "" || id_number == ""){
-			$('.d_status').html("<div class='alert alert-danger'>All fields are required</div>");
+			snackBar("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
 
 		if(!valid_idnumber(id_number)) {
-			$('.d_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isSameIdNumber(id_number)) {
-			$('.d_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;	
 		}
 
 		if(!isName(fname)) {
-			$('.d_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
 
 		if(!isName(lname)) {
-			$('.d_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;			
 		}
-		$.ajax({
-			method: 'POST',
-			url: '../controller/controller.php',
-			data: {id: id, fname: fname, lname: lname, id_number: id_number, action: 'add_deligation'},
-			success: (data) =>
-			{
 
-			}
-		}).then(function(data) {
-			if(data == "1") {
-				$('.d_status').html("<div class='alert alert-success'>Information added successfully</div>");
-			}else {
-				$('.d_status').html(data);
-			}
-		});
+		if(action == "Save") {
+			addDeligation(id, fname, lname, id_number);
+		}else if(action == "Update") {
+			var d_id = add.find('#d_id').val();
+			editDeligation(d_id ,fname, lname, id_number);
+		}
 		
 	});
 
@@ -940,7 +1014,7 @@ $(()=> {
 		var formData = new FormData(form);	
 		formData.append('client_id', client.client_id);
 		$.ajax({
-			url: '../controller/controller.php',
+			url: controller,
 			method : 'POST',
 			data: formData,
 			dataType: 'json',
@@ -948,10 +1022,10 @@ $(()=> {
 			contentType: false,
 		}).then(function(data) {
 			if(data.success) {
-				$('.statusMsg').html("<div class='alert alert-success mx-5 text-center'>Document uploaded successfully</div>");
+				snackBar("<div class='text-success mx-5 text-center'>Document uploaded successfully</div>");
 				getClient();
 			}else {
-				$('.statusMsg').html("<div class='alert alert-danger mx-5 text-center'>"+data.error+"</div>");
+				snackBar("<div class='texttext-danger mx-5 text-center'>"+data.error+"</div>");
 			}
 		});
 	});
@@ -972,41 +1046,41 @@ $(()=> {
 		var initials = edit.find('#client_initials').val();
 
 		if(client_id == "" || fname == "" || lname == "" || email == "" || cellNumber =="" || home_address == "" || zip_code == "" || city == "" || title == "" || initials == "") {
-			edit.find('#status').html("<div class='alert alert-danger'>All fields are required</div>");	
+			snackBar("<div class='text-danger'>All fields are required</div>");	
 			return;
 		}
 
 		if(!cell_number(cellNumber)) {
-			edit.find('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;	
 		}
 
 		if(!isName(fname)) {
-			edit.find('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;			
 		}
 
 		if(!isName(lname)) {
-			edit.find('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;			
 		}
 
 		if(!isZipCode(zip_code)) {
-			edit.find('#status').html(`<div class='alert alert-danger'>${error}</div>`);	
+			snackBar(`<div class='text-danger'>${error}</div>`);	
 			return;		
 		}
 		$.ajax({
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			data: {client_id: client_id, fname: fname, lname: lname, email: email, cell_number: cellNumber, home_address: home_address, zip_code: zip_code, city: city, title: title, initials: initials, action: 'edit_client'}
 		}).then(function(data) {
-			edit.find('#status').html(data);
+			snackBar(data);
 			setTimeout(() => {
 				window.location.reload();
 			}, 1500);
 		}).catch(function(error) {
 			console.error(error);
-			edit.find('#status').html("<div class='alert alert-danger'>Error occured</div>");
+			snackBar("<div class='text-danger'>Error occured</div>");
 		});
 	});
 
@@ -1019,34 +1093,34 @@ $(()=> {
 		var registration_number = edit.find('#registration_number').val();
 
 		if(company_name == "" || registration_number == "" || registration_date == "") {
-			edit.find('#j_status').html("<div class='alert alert-danger'>All fields are required</div>");
+			snackBar("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
 
 		if(!isCompany(company_name, registration_date, registration_number)) {
-			edit.find('#j_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		if(!isCorrectDate(registration_date)) {
-			edit.find('#j_status').html(`<div class='alert alert-danger'>${error}</div>`);
+			snackBar(`<div class='text-danger'>${error}</div>`);
 			return;		
 		}
 
 		$.ajax({
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			data: {j_id: j_id, company_name: company_name, registration_date: registration_date, registration_number: registration_number, action: 'edit_juristic'}
 		}).then(function(data) {
 			if(data == "1") {
-				edit.find('#j_status').html("<div class='alert alert-success'>Information edited successfully</div>");	
+				snackBar("<div class='text-success'>Information edited successfully</div>");	
 				location.reload(6000);
 			}else {
-				edit.find('#j_status').html(data);	
+				snackBar(data);	
 			}
 		}).catch(function(error) {
 			console.error(error);
-			edit.find('#j_status').html(error);
+			snackBar(error);
 		});
 
 	});
@@ -1103,17 +1177,18 @@ $(()=> {
 function addSpouse(id, fname, lname, stages_of_negotiation, id_number) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {id: id, fname: fname, lname: lname, id_number:id_number, stages_of_negotiation: stages_of_negotiation, action: 'add_spouse'}
 	}).then(function(data) {
 		if(data == "1") {
-			$('#cs_status').html("<div class='alert alert-success'>Information added successfully</div>");
+			snackBar("<div class='text-success'>Information added successfully</div>");
 			$('#cs_fname').val("");
 			$('#cs_lname').val("");
 			$('#id_number').val("");
 			$('#cs_stages_of_negotiation').val("");
 		}else {
-			$('#cs_status').html(data);
+			snackBar(data);
+			
 		}
 	});
 }
@@ -1121,7 +1196,7 @@ function addSpouse(id, fname, lname, stages_of_negotiation, id_number) {
 function addDirector(fname, lname, j_id, title, id_number, date_of_appointment) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {fname: fname, lname: lname, j_id: j_id, title: title, id_number: id_number, date_of_appointment: date_of_appointment, action: 'add_company_member'}
 	}).then(function(data) {
 		if(data == "1") {
@@ -1130,13 +1205,10 @@ function addDirector(fname, lname, j_id, title, id_number, date_of_appointment) 
 			$('#title').val("");
 			$('#id_number').val("");
 			$('#date_of_appointment').val("");
-			$('#member_status').html('<div class="alert alert-success">Company member added successfully, You can add another one or please refresh the page to see the member</div>');
+			snackBar('<div class="text-success">Company member added successfully, You can add another one or please refresh the page to see the member</div>');
 		}else {
-			$('#member_status').html(data);
+			snackBar(data);
 		}
-	}).catch(function(error) {
-		console.error(error);
-		$('#member_status').html(error);
 	});
 }
 
@@ -1144,7 +1216,7 @@ function addShareHolder(j_id, fname, lname, title, id_number, amount_contributed
 
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {fname: fname, lname: lname, j_id: j_id, title: title, id_number: id_number, amount_contributed: amount_contributed , action: 'add_share_holder'}
 	}).then(function(data) {
 		if(data == "1") {
@@ -1153,14 +1225,11 @@ function addShareHolder(j_id, fname, lname, title, id_number, amount_contributed
 			$('#title_').val("");
 			$('#id_number_').val("");
 			$('#amount_contributed').val("");
-			$('#holder_status').html('<div class="alert alert-success">Share holder added successfully, You can add another one or please refresh the page to see the member</div>');
+			snackBar('<div class="text-success">Share holder added successfully, You can add another one or please refresh the page to see the member</div>');
 			getClient();
 		}else {
-			$('#holder_status').html(data);
+			snackBar(data);
 		}
-	}).catch(function(error) {
-		console.error(error);
-		$('#holder_status').html(error);
 	});
 
 }
@@ -1168,52 +1237,45 @@ function addShareHolder(j_id, fname, lname, title, id_number, amount_contributed
 function addIdea(client_id, sector, idea_name, idea_trademark, idea_nature, idea_target_market) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {client_id: client_id, idea_name: idea_name, idea_trademark: idea_trademark, idea_nature: idea_nature, idea_target_market: idea_target_market, sector: sector, action: 'addIdea'}
 	}).then(function(data) {
 		if(data == "1") {
-			$('#idea_status').html('<div class="alert alert-success">Successfully added the idea</div>');	
+			snackBar('<div class="text-success">Successfully added the idea</div>');	
 			$('#client_id').val("");
 			$('#idea_name').val("");
 			$('#idea_trademark').val("");
 			$('#idea_nature').val("");
 			$('#idea_target_market').val("");
 		}else {
-			$('#idea_status').html(data);
+			snackBar(data);
 		}
-	}).catch(function(error) {
-		console.error(error);
 	});
 }
 
-function addNatural(client_id, fname, lname, mname, dob, id_number, marital_status, marriage_type, status) {
+function addNatural(client_id, fname, lname, mname, dob, id_number, marital_status, marriage_type) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {client_id: client_id, fname: fname, lname: lname, mname: mname, dob: dob, id_number: id_number, marital_status: marital_status, marriage_type: marriage_type, action: 'add_natural'}
 	}).then(function(data) {
 		if(data == "1") {
-			status.html("<div class='alert alert-success'>Details added successfully</div>");
+			snackBar("<div class='text-success'>Details added successfully</div>");
 			setTimeout(function(){location.reload()}, 2000);
 		}else {
-			status.html(data);	
+			snackBar(data);	
 		}
-	}).catch(function(error) {
-		console.error(error);
-		status.html(error);
 	});
 }
 
 function addCivil(natural_id, spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number) {
-	console.log("here");
-	
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {natural_id: natural_id, spouse_fname: spouse_fname, spouse_lname: spouse_lname, certificate_no: certificate_no, date_of_issue: date_of_issue, marriage_terms: marriage_terms, detail_of_marriage: detail_of_marriage, spouse_id_number: spouse_id_number, action: 'add_civil'}
 	}).then(function(data) {
 		if(data == "1") {
-			$("#c_status").html("<div class='alert alert-success'>successfully added data</div>");
+			snackBar("<div class='text-success'>successfully added data</div>");
 			$('#spouse_fname').val("");
 			$('#spouse_lname').val("");
 			$('#certificate_no').val("");
@@ -1221,33 +1283,45 @@ function addCivil(natural_id, spouse_fname, spouse_lname, certificate_no, date_o
 			$('#date_of_issue').val("");
 			$('#marriage_terms').val("");
 			$('#detail_of_marriage').val("");
+			getClient();
 		}else {
-			$("#c_status").html(data);
+			snackBar(data);
 		}
-	}).catch(function(error) {
-		console.error(error);
-		$("#c_status").html("<div class='alert alert-danger'>Error occured</div>");
-		
 	});
 }
 
 function addBeneficiary(id, fname, lname, id_number) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {id: id, fname: fname, lname: lname, id_number:id_number, action: 'add_beneficiary'}
 	}).then(function(data) {
 		if(data == "1") {
-			$('#b_status').html("<div class='alert alert-success'>Beneficiary added successfully</div>");
+			snackBar("<div class='text-success'>Beneficiary added successfully</div>");
 			$('#client_id').val("");
 			$('#b_fname').val("");
 			$('#b_lname').val("");
 			$('#b_id_number').val("");
 		}else {
-			$('#b_status').html(data);
+			snackBar(data);
 		}
 	}).catch(function(error) {
 		console.error(error);
+	});
+}
+
+function addDeligation(id, fname, lname, id_number) {
+	$.ajax({
+		method: 'POST',
+		url: controller,
+		data: {id: id, fname: fname, lname: lname, id_number: id_number, action: 'add_deligation'}
+	}).then(function(data) {
+		if(data == "1") {
+			snackBar("<div class='text-success'>Information added successfully</div>");
+			showDeligations(id);
+		}else {
+			snackBar(data);
+		}
 	});
 }
 
@@ -1256,13 +1330,13 @@ function editSpouse(fname, lname, stages_of_negotiation, id_number) {
 	var id = $('#hidden-spouse-id').text();
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {id: id, fname: fname, lname: lname, id_number:id_number, stages_of_negotiation: stages_of_negotiation, action: 'edit_spouse'}
 	}).then(function(data) {
 		if(data == 1) {
-			$('#cs_status').html("<div class='alert alert-success'>Information Edited successfully</div>");
+			snackBar("<div class='text-success'>Information Edited successfully</div>");
 		}else {
-			$('#cs_status').html(data);
+			snackBar(data);
 		}
 	});
 }
@@ -1270,14 +1344,14 @@ function editSpouse(fname, lname, stages_of_negotiation, id_number) {
 function verifyDoc(document_id) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {document_id: document_id, action: "verify_doc"},
 		success: function(data) {
 			if(data == "1") {
 				getClient();
+				snackBar("<div class='text-success'>Document added successfully</div>");
 			}else {
 				console.log(data);
-				
 			}
 		}
 	});
@@ -1287,93 +1361,66 @@ function editDirector(fname, lname, title, id_number, date_of_appointment) {
 	var cm_id = companyDirector.director.cm_id;
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {cm_id: cm_id, fname: fname, lname: lname, title: title, id_number: id_number, date_of_appointment: date_of_appointment, action: 'edit_company_member'}
 	}).then(function(data) {
 		if(data == "1") {
-			$('#member_status').html('<div class="alert alert-success">Company member updated successfully</div>');
+			snackBar('<div class="text-success">Company member updated successfully</div>');
 		}else {
-			$('#member_status').html(data);
-		}
-	}).catch(function(error) {
-		$('#member_status').html(error);
-	});
-
-}
-
-function editShareHolder(fname, lname, title, id_number, amount_contributed) {
-	var sh_id = shareHolder.holder.sh_id;
-
-	$.ajax({
-		method: 'POST',
-		url: '../controller/controller.php',
-		data: {sh_id: sh_id, fname: fname, lname: lname, title: title, id_number: id_number, amount_contributed: amount_contributed , action: 'edit_share_holder'},
-		success: function(data) {
-			if(data == "1") {
-				$('#holder_status_'+id).html('<div class="alert alert-success">Share holder Updated successfully</div>');
-			}else {
-				$('#holder_status_'+id).html(data);
-			}
-		},
-		error: function(data) {
-			$('#holder_status_'+id).html(data);
+			snackBar(data);
 		}
 	});
 
 }
+
 
 function editIdea(sector, idea_name, idea_trademark, idea_nature, idea_target_market) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {id: idea.idea.idea_id, idea_name: idea_name, idea_trademark: idea_trademark, idea_nature: idea_nature, idea_target_market: idea_target_market, sector: sector, action: 'editIdea'}
 	}).then(function(data) {
 		if(data == "1") {
-			$('#idea_status').html('<div class="alert alert-success">Successfully edited the idea</div>');	
+			snackBar('<div class="text-success font-weight-bold">Successfully edited the idea</div>');	
 			setTimeout(() => {window.location.reload()}, 1000);
 		}else {
-			$('#idea_status').html(data);
+			snackBar(data);
 		}
-	}).catch(function(error) {
-		console.error(error);
 	});
 }
 
-function editNatural(mname, dob, id_number, marital_status, marriage_type, status) {
+function editNatural(mname, dob, id_number, marital_status, marriage_type) {
 	var n_id = natural.n_id;
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {n_id: n_id, mname: mname, dob: dob, id_number: id_number, marital_status: marital_status, marriage_type: marriage_type, action: 'edit_natural'}
 	}).then(function(data) {
 		if(data == "1") {
-			status.html("<div class='alert alert-success'>Details edited successfully</div>");
+			snackBar("<div class='text-success font-weight-bold'>Details edited successfully</div>");
 			setTimeout(function(){location.reload();}, 2000);
 		}else {
-			status.html(data);	
+			snackBar(data);	
 		}
-	}).catch(function(error) {
-		console.error(error);
-		status.html(error);
 	});
 }
 
 function editCivil(spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number) {
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {c_id: civil.c_id, spouse_fname: spouse_fname, spouse_lname: spouse_lname, certificate_no: certificate_no, date_of_issue: date_of_issue, marriage_terms: marriage_terms, detail_of_marriage: detail_of_marriage, spouse_id_number: spouse_id_number, action: 'edit_civil'},
 		success: function(data) {
 			if(data == "1") {
-				$("#c_status").html("<div class='alert alert-success'>successfully editted data</div>");
+				snackBar("<div class='text-success'>successfully editted data</div>");
 				location.reload(600);
 			}else {
-				$("#c_status").html(data);
+				snackBar(data);
 			}
 		},
 
 		error: function(data) {
-			$("#c_status").html("<div class='alert alert-danger'>Error occured</div>");
+			snackBar("<div class='texttext-danger'>Error occured</div>");
 		}
 	});
 }
@@ -1382,16 +1429,31 @@ function editBeneficiary(fname, lname, id_number) {
 	var id = $('#b_id').val();
 	$.ajax({
 		method: 'POST',
-		url: '../controller/controller.php',
+		url: controller,
 		data: {id: id, fname: fname, lname: lname, id_number:id_number, action: 'edit_beneficiary'},
 		success: function(data) {
 			if(data == "1") {
-				$('#b_status').html("<div class='alert alert-success'>Beneficiary updated successfully</div>");
+				snackBar("<div class='text-success'>Beneficiary updated successfully</div>");
 			}else {
-				$('#b_status').html(data);
+				snackBar(data);
 			}
 		}
 	});
+}
+
+function editDeligation(id ,fname, lname, id_number) {
+	$.ajax({
+		method: 'POST',
+		url: controller,
+		data: {id: id, fname: fname, lname: lname, id_number: id_number, action: 'editDeligation'}
+	}).then(function(data) {
+		if(data == "1") {
+			snackBar("<div class='text-success'>Information updated successfully</div>");
+			showDeligations(spouseId);
+		}else {
+			snackBar(data);
+		}
+	});	
 }
 
 
@@ -1403,19 +1465,19 @@ function deleteDirector(str) {
 	if (r == true) {
 		$.ajax({
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			data: {cm_id: cm_id, action: 'delete_member'},
 			success: (data) => {
 				
 				if(data == "1") {
-					$('#member_del_status').html("<div class='alert alert-success'>member Deleted</div>");
-					location.reload(6000);
+					snackBar("<div class='text-success'>member Deleted</div>");
+					getClient();
 				}else {
-					$('#member_del_status').html(data);
+					snackBar(data);
 				}
 			},
 			error: (data) => {
-				$('#member_del_status').html(data);
+				snackBar(data);
 			}
 		});		  
 	}
@@ -1427,19 +1489,19 @@ function deleteShareHolder(str) {
 		var sh_id = str;
 		$.ajax({
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			data: {sh_id: sh_id, action: 'delete_holder'},
 			success: (data) => {
 				
 				if(data == "1") {
-					$('#holder_del_status').html("<div class='alert alert-success'>holder deleted</div>");
+					snackBar("<div class='text-success'>holder deleted</div>");
 					location.reload(6000);
 				}else {
-					$('#holder_del_status').html(data);
+					snackBar(data);
 				}
 			},
 			error: (data) => {
-				$('#holder_del_status').html(data);
+				snackBar(data);
 			}
 		});
 	}
@@ -1451,18 +1513,18 @@ function deleteBeneficiary(id) {
 	  var b_id = id;
 	  $.ajax({
 	  	method: 'POST',
-	  	url: '../controller/controller.php',
+	  	url: controller,
 	  	data: {b_id: b_id, action: 'delete_beneficiary'},
 	  	success: (data) => {
 	  		if(data == "1") {
-				$('#beneficiary_status').html("<div class='alert alert-success'>beneficiary deleted</div>");
+				snackBar("<div class='text-success'>beneficiary deleted</div>");
 				setTimeout(() => {window.location.reload();}, 1000);  
 	  		}else {
-	  			$('#beneficiary_status').html(data);
+				snackBar(data);
 	  		}
 	  	},
 	  	error: (data) => {
-	  		$('#beneficiary_status').html(data);
+			snackBar(data);
 	  	}
 	  });
 	}
@@ -1474,18 +1536,18 @@ function deleteSpouse(id) {
 		var cs_id = id;
 		$.ajax({
 			method: 'POST',
-			url: '../controller/controller.php',
+			url: controller,
 			data: {cs_id: cs_id, action: 'delete_spouse'},
 			success: (data) => {
 				if(data == "1") {
-					$('#s_status').html("<div class='alert alert-success'>spouse deleted successfully</div>");
+					snackBar("<div class='text-success'>spouse deleted successfully</div>");
 					location.reload(6000);
 				}else {
-					$('#s_status').html(data);
+					snackBar(data);
 				}
 			},
 			error: (data) => {
-				$('#s_status').html(data);
+				snackBar(data);
 			}
 		});
 	}
@@ -1493,10 +1555,10 @@ function deleteSpouse(id) {
 }
 
 function deleteDoc(id) {
-	var r = confirm("Are you sure you want to delete the spouse? press okay if yes");
+	var r = confirm("Are you sure you want to delete the document? press okay if yes");
 	if (r == true) {
 		$.ajax({
-			url: '../controller/controller.php',
+			url: controller,
 			method: 'POST',
 			data: {id: id, action: 'deleteDoc'}
 		}).then(function(data) {
@@ -1506,6 +1568,19 @@ function deleteDoc(id) {
 	}
 }
 
+function deleteDeligation(id) {
+	var r = confirm("Are you sure you want to delete the deligation? press okay if yes");
+	if (r == true) {
+		$.ajax({
+			url: controller,
+			method: 'POST',
+			data: {id: id, action: 'deleteDeligation'}
+		}).then(function(data) {
+			snackBar(data);
+			showDeligations(spouseId);
+		});
+	}
+}
 //SECTION  Get functions
 
 function loadMain() {
@@ -1514,7 +1589,7 @@ function loadMain() {
 
 function getClientsByMonth() {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {dateFilter: dateFilter, person: person,  action: 'getClientsByMonth'}
@@ -1526,7 +1601,7 @@ function getClientsByMonth() {
 
 function getClientsByPerson() {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {dateFilter: dateFilter, person: person, action: 'getClientsByPerson'}
@@ -1537,7 +1612,7 @@ function getClientsByPerson() {
 
 function getDirector(id) {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'getDirector'}
@@ -1552,7 +1627,7 @@ function getDirector(id) {
 
 function getShareHolder(id) {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'getShareHolder'}
@@ -1643,7 +1718,7 @@ function clientFinalView(clients) {
 
 function getIdea(id) {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'getIdea'}
@@ -1656,17 +1731,60 @@ function getIdea(id) {
 	});
 }
 
-function getDeligations(id) {
+function showDeligations(id) {
+	$.ajax({
+		url: controller,
+		method: 'POST',
+		dataType: 'json',
+		data: {id: id, action: 'getDeligations'}
+	}).then(function(data) {
+		var deligations = null;
+		$('#deligation-show').empty();
+		if(data.success) {
+			deligations = data.deligations;
+			deligations.forEach(function(deligation) {
+				var html = `
+					<div class="bg-light p-3 rounded-sm row mb-3">
+						<div class="font-weight-bold">
+							<div><i class="fa fa-user"></i> <span class="ml-3">${deligation.d_fname} ${deligation.d_lname}</span></div>
+							<div><i class="fa fa-book"></i> <span class="ml-3">${deligation.d_id_number}</span></div>
+						</div>
+						<div class="ml-auto actions">
+							<p hidden>${deligation.d_id}</p>
+							<a class=""><i class="fa fa-trash-o" style="font-size: 23px; color: #9C514D;"></i></a>
+							<a class="ml-3"><i class="fa fa-edit" style="font-size: 23px; color: #7FA259;"></i></a>
+						</div>
+					</div>
+				`;
 
+				$('#deligation-show').append(html);
+			})
+		}else {
+			$('#deligation-show').append("<div class='text-muted h3 text-center'>No deligations to show</div>");
+		}
+
+		$('#addDeligation').modal();
+	});
 }
 
 function getDeligation(id) {
-
+	$.ajax({
+		url: controller,
+		method: 'POST',
+		dataType: 'json',
+		data: {id: id, action: 'getDeligation'}
+	}).then(function(data) {
+		if(data.success) {
+			deligation = data.deligation;
+		}else {
+			
+		}
+	});
 }
 
 function getDocument(id) {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'getDocument'}
@@ -1678,7 +1796,7 @@ function getDocument(id) {
 
 function getSpouse(id) {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'get_spouse'}
@@ -1701,7 +1819,7 @@ function getSpouse(id) {
 
 function getBeneficiary(id) {
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'getBeneficiary'}
@@ -1723,7 +1841,7 @@ function getBeneficiary(id) {
 function getClient() {
 	var id = sessionStorage.getItem('client_id');
 	$.ajax({
-		url: '../controller/controller.php',
+		url: controller,
 		method: 'POST',
 		dataType: 'json',
 		data: {id: id, action: 'getClient'}
@@ -1744,7 +1862,6 @@ function getClient() {
 }
 
 function showIdentification(client) {
-
 	var html = `
 	<div class="card-text" id="view_ident">
 		<div class="row mb-2">
@@ -1856,7 +1973,7 @@ function showDirectors(directors) {
 				<div>
 					<p hidden>${member.cm_id}</p>
 					<a class="mr-3 view" style="cursor: pointer;"><i class="fa fa-eye"></i></a> 
-					<a style="cursor: pointer;" class="delete"><i class="fa fa-trash text-danger"></i></a>
+					<a style="cursor: pointer;" class="delete"><i class="fa fa-trash texttext-danger"></i></a>
 				</div>
 			</div>
 		`;
@@ -1874,7 +1991,7 @@ function showShareHolders(holders) {
 				<div>
 					<p hidden>${holder.sh_id}</p>
 					<a class="mr-3 view" style="cursor: pointer;"><i class="fa fa-eye"></i></a> 
-					<a style="cursor: pointer;" class="delete"><i class="fa fa-trash text-danger"></i></a>
+					<a style="cursor: pointer;" class="delete"><i class="fa fa-trash texttext-danger"></i></a>
 				</div>
 			</div>
 		`;
@@ -1884,6 +2001,7 @@ function showShareHolders(holders) {
 
 function showNatural(client, natural, beneficiaries, civil, spouses, documents, ideas) {
 	$('.person-heading-div').append(client.client_person);
+	$('#natural_view').empty();
 	if(natural !== null) {
 		var middleName = ``;
 		var marriageStatus = ``;
@@ -1934,12 +2052,14 @@ function showNatural(client, natural, beneficiaries, civil, spouses, documents, 
 			}
 		}	
 	}else {
+		$('.other-info').hide();
+		$('.documents').hide();
+		$('.ideas').hide();
 		var html = `
 			<div class="m-1">
 				<form method="POST" action="" class="add-natural">
-					<input type="hidden" class="form-control mb-3" id="client_id__" value="">
-					<input type="name" class="form-control mb-3" id="fname__" value="${client.client_fname}" disabled>
-					<input type="name" class="form-control mb-3" id="lname__" value="${client.client_fname}" disabled>
+					<input type="hidden" class="form-control mb-3" id="fname__" value="${client.client_fname}" disabled>
+					<input type="hidden" class="form-control mb-3" id="lname__" value="${client.client_lname}" disabled>
 					<input type="name" class="form-control mb-3" id="mname__" placeholder="Middle name">
 					<label class="font-italic">Date of birth: </label>
 					<input type="date" class="form-control mb-3" id="dob__" placeholder="Date of Birth">
@@ -1958,8 +2078,6 @@ function showNatural(client, natural, beneficiaries, civil, spouses, documents, 
 				</form>
 			</div>
 		`;
-
-		$('#natural_view').empty();
 		$('#natural_view').append(html);
 	}
 
@@ -2015,10 +2133,9 @@ function showCivil(civil) {
 	$('#show-full-info').empty();
 	
 	if(civil !== null) {
-		$('#natural-title').after('<button class="btn edit_btn " id="edit_natural_beneficiary">Edit</button>');
+		$('#natural-title').after('<button class="btn edit_btn" id="edit_civil">Edit</button>');
 		var html = `
 			<div class="ml-3">
-				<div class="row">Spouse: </div>
 				<div class="row mt-2">first name: ${civil.c_spouse_fname}</div>
 				<div class="row mt-2">Last name: ${civil.c_spouse_lname}</div>
 				<div class="row mt-2 person-id-number">Id number: ${civil.c_id_number}</div>
@@ -2034,27 +2151,25 @@ function showCivil(civil) {
 				<div class="row m-0">
 					<div id="c_status"></div>
 					<form method="POST" action="">
-						<input type="hidden" id="natural_id" value="<?php print($natural['n_id']);?>">
 						<div class="row mb-2">
-						<div class="col-6">
+							<div class="col-6">
 								<input type="name" id="spouse_fname" placeholder="Spouse first name" class="form-control border-success">
-						</div>
-						<div class="col-6">
+							</div>
+							<div class="col-6">
 								<input type="name" id="spouse_lname" placeholder="Spouse Last name" class="form-control border-success">
-						</div>
+							</div>
 						</div>
 						<div class="row m-0">
 							<input type="name" id="spouse_id_number" placeholder="Spouse Id number" class=" form-control mb-2 border-success">
 						</div>
-							<label><i>Date of issue:</i> </label>
+						<label><i>Date of issue:</i> </label>
 						<div class="row  mb-2">
-					<div class="col-6">
+							<div class="col-6">
 								<input type="date" id="date_of_issue" placeholder="" class="form-control border-success">
-					</div>
-					<div class="col-6">
+							</div>
+							<div class="col-6">
 								<input type="name" id="certificate_no" placeholder="certificate number" class="form-control border-success">
-					</div>
-
+							</div>
 						</div>
 						<select class="form-control border-success" id="marriage_terms">
 							<option value="" disabled selected>Marriage terms</option>
@@ -2080,7 +2195,6 @@ function showSpouses(spouses) {
 	if(spouses.length > 0) {
 		spouses.forEach(function(spouse) {
 			html = `
-					
 					<div class="m-3 actions">
 						<span hidden>Spouse</span>
 						<p hidden>${spouse.cs_id}</p>
@@ -2090,7 +2204,7 @@ function showSpouses(spouses) {
 						<div class="d-flex justify-content-between">
 							<a class='ml-2 delete'><i class="fa fa-trash-o"></i></a>
 							<a class='ml-0 edit'><i class="fa fa-edit"></i></a>
-							<a class='mr-2 delegations'><i class="fa fa-users"></i></a>
+							<a class='mr-2 deligations'><i class="fa fa-users"></i></a>
 						</div>
 					</div>
 			`;
@@ -2248,35 +2362,27 @@ function showIdeas(ideas) {
 
 //delete user/ worker
 
-function delete_user(id)
-{
-		var r = confirm("Are you sure you want to delete this worker? press okay if yes");
-		if (r == true) 
-		{
-		  var user_id = id;
-		  $.ajax(
-		  {
-		  	method: 'POST',
-		  	url: '../controller/controller.php',
-		  	data: {user_id: user_id, action: 'delete_user'},
-		  	success: (data) =>
-		  	{
-		  		
-		  		if(data == "1")
-		  		{
-		  			$('#status').html("<div class='alert alert-success'>Worker deleted successfully</div>");
-		  			location.reload(6000);
-		  		}else
-		  		{
-		  			$('#status').html(data);
-		  		}
-		  	},
-		  	error: (data) =>
-		  	{
-		  		$('#status').html(data);
-		  	}
-		  });
-		}
+function delete_user(id) {
+	var r = confirm("Are you sure you want to delete this worker? press okay if yes");
+	if (r == true) {
+		var user_id = id;
+			$.ajax({
+			method: 'POST',
+			url: controller,
+			data: {user_id: user_id, action: 'delete_user'},
+			success: (data) => {
+				if(data == "1") {
+					$('#status').html("<div class='text-success'>Worker deleted successfully</div>");
+					location.reload(6000);
+				}else {
+					$('#status').html(data);
+				}
+			},
+			error: (data) => {
+				$('#status').html(data);
+			}
+		});
+	}
 }
 
 // ANCHOR validations
@@ -2465,8 +2571,9 @@ function isEmail(email) {
    ||||																	 ||||
 */
 
-function snackBar() {
+function snackBar(msg) {
 	// Get the snackbar DIV
+	$("#snackbar").html(msg);
 	var x = document.getElementById("snackbar");
 	// Add the "show" class to DIV
 	x.className = "show";

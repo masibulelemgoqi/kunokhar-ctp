@@ -18,7 +18,7 @@ if(isset($_POST['action'])){
 			$password = $_POST['password'];
 			$cell_number = $_POST['cell_number'];
 			if($user_obj->add_user($fname, $lname, $email, $position, $password, $cell_number)) {
-				print("<div class='alert alert-success'>User has been successfully added</div>");
+				print("<div class='text-success'>User has been successfully added</div>");
 			}
 		break;
 
@@ -45,7 +45,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_juristic($client_id, $company_name, $registration_number, $registration_date)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add data</div>");
+				print("<div class='text-danger'>Could not add data</div>");
 			}
 		break;
 
@@ -62,7 +62,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_natural($client_id, $fname, $lname, $mname, $dob, $id_number, $marital_status, $marriage_type)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add data</div>");
+				print("<div class='text-danger'>Could not add data</div>");
 			}
 		break;
 
@@ -77,7 +77,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_company_member($j_id, $fname, $lname, $title, $id_number, $date_of_appointment)) {
 				print('1');
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to add the member, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to add the member, please try again...</div>');
 			}
 		break;
 
@@ -92,7 +92,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_share_holder($j_id, $fname, $lname, $title, $id_number, $amount_contributed)) {
 				print('1');
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to add the share holder, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to add the share holder, please try again...</div>');
 			}
 		break;
 
@@ -107,7 +107,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_idea($client_id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market, $sector)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Error adding idea</div>");
+				print("<div class='text-danger'>Error adding idea</div>");
 			}
 		break;
 
@@ -124,14 +124,8 @@ if(isset($_POST['action'])){
 			if($work_obj->add_civil($natural_id, $spouse_fname, $spouse_lname, $spouse_id_number, $certificate_no, $date_of_issue, $marriage_terms, $detail_of_marriage)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add information</div>");
+				print("<div class='text-danger'>Could not add information</div>");
 			}
-		break;
-
-		case 'upload_document':
-			$doc_description = $_POST['doc_description'];
-			/*$filename = $_FILES['fd']['name'];*/
-			echo $doc_description;
 		break;
 
 		case 'add_deligation':
@@ -143,7 +137,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_customary_deligation($id, $fname, $lname, $id_number)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add information</div>");
+				print("<div class='text-danger'>Could not add information</div>");
 			}
 		break;
 
@@ -157,7 +151,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_customary_spouse($id, $fname, $lname, $id_number, $stages_of_negotiation)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add information</div>");
+				print("<div class='text-danger'>Could not add information</div>");
 			}
 		break;
 
@@ -170,7 +164,7 @@ if(isset($_POST['action'])){
 			if($work_obj->add_beneficiary($id, $fname, $lname, $id_number)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add information</div>");
+				print("<div class='text-danger'>Could not add information</div>");
 			}
 		break;
 
@@ -232,6 +226,36 @@ if(isset($_POST['action'])){
 				));
 			}
 		break;
+
+		case 'getDeligations':
+			$id = $_POST['id'];
+			$deligations = $work_obj->getDeligations($id);
+			if(count($deligations) > 0) {
+				echo json_encode(array(
+					'success'		=> true,
+					'deligations'	=> $deligations
+				));
+			}else {
+				echo json_encode(array(
+					'success'	=> false
+				));
+			}
+		break;
+
+		case 'getDeligation':
+			$id = $_POST['id'];
+			$deligation = $work_obj->getDeligation($id);
+			if($deligation !== null) {
+				echo json_encode(array(
+					'success'		=> true,
+					'deligation'	=> $deligation
+				));
+			}else {
+				echo json_encode(array(
+					'success'	=> false
+				));
+			}
+		break;
 		//SECTION  edit
 
 		case 'edit_civil':
@@ -247,7 +271,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_civil($c_id, $spouse_fname, $spouse_lname, $spouse_id_number, $certificate_no, $date_of_issue, $marriage_terms, $detail_of_marriage)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not edit information</div>");
+				print("<div class='text-danger'>Could not edit information</div>");
 			}
 		break;
 
@@ -262,7 +286,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_company_member($cm_id, $fname, $lname, $title, $id_number, $date_of_appointment)) {
 				print('1');
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to edit the member, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to edit the member, please try again...</div>');
 			}
 		break;
 
@@ -277,7 +301,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_share_holder($sh_id, $fname, $lname, $title, $id_number, $amount_contributed)) {
 				print('1');
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to edit the share holder, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to edit the share holder, please try again...</div>');
 			}
 		break;
 
@@ -294,9 +318,9 @@ if(isset($_POST['action'])){
 			$initials = $_POST['initials'];
 
 			if($work_obj->edit_client($id ,$fname, $lname, $email, $cell_number, $home_address, $zip_code, $city, $title, $initials)) {
-				print("<div class='alert alert-success'>Client updated successfully</div>");
+				print("<div class='text-success'>Client updated successfully</div>");
 			}else {
-				print("<div class='alert alert-danger'>Could not update Client</div>");
+				print("<div class='text-danger'>Could not update Client</div>");
 			}
 		break;
 
@@ -307,7 +331,7 @@ if(isset($_POST['action'])){
 			if($work_obj->verify_doc($document_id)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not verify document</div>");
+				print("<div class='text-danger'>Could not verify document</div>");
 			}
 		break;
 
@@ -320,7 +344,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_juristic($j_id, $company_name, $registration_number, $registration_date)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add data</div>");
+				print("<div class='text-danger'>Could not add data</div>");
 			}
 		break;
 
@@ -333,7 +357,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_beneficiary($id, $fname, $lname, $id_number)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add information</div>");
+				print("<div class='text-danger'>Could not add information</div>");
 			}
 		break;
 
@@ -348,7 +372,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_natural($n_id, $mname, $dob, $id_number, $marital_status, $marriage_type)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Could not add data</div>");
+				print("<div class='text-danger'>Could not add data</div>");
 			}
 		break;
 
@@ -364,7 +388,7 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_idea($id, $idea_name, $idea_trademark, $idea_nature, $idea_target_market, $sector)) {
 				print("1");
 			}else {
-				print("<div class='alert alert-danger'>Error while editing idea</div>");
+				print("<div class='text-danger'>Error while editing idea</div>");
 			}
 		break;
 
@@ -378,7 +402,20 @@ if(isset($_POST['action'])){
 			if($work_obj->edit_customary_spouse($id, $fname, $lname, $id_number, $stages_of_negotiation)) {
 				print(1);
 			}else {
-				print("<div class='alert alert-danger'>Could not edit information</div>");
+				print("<div class='text-danger'>Could not edit information</div>");
+			}
+		break;
+
+		case 'editDeligation':
+			$id = $_POST['id'];
+			$fname = $_POST['fname'];
+			$lname = $_POST['lname'];
+			$id_number = $_POST['id_number'];
+
+			if($work_obj->editDeligation($id, $fname, $lname, $id_number)) {
+				print("1");
+			}else {
+				print("<div class='text-danger'>Could not update information</div>");
 			}
 		break;
 
@@ -389,7 +426,7 @@ if(isset($_POST['action'])){
 			if($work_obj->delete_member($cm_id)) {
 				print("1");
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to delete a company member, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to delete a company member, please try again...</div>');
 			}
 		break;
 
@@ -399,7 +436,7 @@ if(isset($_POST['action'])){
 			if($work_obj->delete_holder($sh_id)) {
 				print("1");
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to delete a share holder, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to delete a share holder, please try again...</div>');
 			}
 		break;
 
@@ -409,7 +446,7 @@ if(isset($_POST['action'])){
 			if($work_obj->delete_beneficiary($b_id)) {
 				print("1");
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to delete a beneficiary, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to delete a beneficiary, please try again...</div>');
 			}
 		break;
 
@@ -419,7 +456,7 @@ if(isset($_POST['action'])){
 			if($user_obj->delete_user($id)) {
 				print("1");
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to delete a worker, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to delete a worker, please try again...</div>');
 			}
 		break;
 
@@ -429,7 +466,7 @@ if(isset($_POST['action'])){
 			if($work_obj->delete_customary_spouse($id)) {
 				print("1");
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to delete a spouse, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to delete a spouse, please try again...</div>');
 			}
 		break;
 
@@ -438,8 +475,17 @@ if(isset($_POST['action'])){
 			if($work_obj->deleteDoc($id)) {
 				print(1);
 			}else {
-				print('<div class="alert alert-danger">Sorry we were unable to delete a document, please try again...</div>');
+				print('<div class="text-danger">Sorry we were unable to delete a document, please try again...</div>');
 			}		
+		break;
+
+		case 'deleteDeligation':
+			$id = $_POST['id'];
+			if($work_obj->deleteDeligation($id)) {
+				print('<div class="text-success">Deligation deleted successfully</div>');
+			}else {
+				print('<div class="text-danger">Sorry we were unable to delete the deligation, please try again...</div>');
+			}
 		break;
 
 		//SECTION Authentification

@@ -585,6 +585,23 @@ class Work {
         }
     }
 
+    public function editDeligation($id, $fname, $lname, $id_number) {
+        try {
+            $sql = "UPDATE `deligation_tb` SET `d_fname`=:fname, `d_lname`=:lname, `d_id_number`=:id_number WHERE `d_id`=:id";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':fname', $fname);
+            $stmt->bindParam(':lname', $lname);
+            $stmt->bindParam(':id_number', $id_number);
+            if($stmt->execute()) {
+                return true;
+                $this->con = null;
+            }
+        }catch(PDOException $e) {
+            echo "Error: ".$e->getMessage();
+        }      
+    }
+
 
     ///====================   view   methods ============================
 
@@ -706,7 +723,7 @@ class Work {
                             ));
                         }else if($natural['n_marital_status'] == "Married") {
                             if($natural['n_marriage_type'] == "Civil") {
-                                $civil = $this->get_civil($id);
+                                $civil = $this->get_civil($natural['n_id']);
                                 echo json_encode(array(
                                     'client'        => $client,
                                     'natural'       => $natural,
@@ -954,7 +971,7 @@ class Work {
         }
     }
 
-    public function get_deligations($id) {
+    public function getDeligations($id) {
         try {
             $stmt = $this->con->query("SELECT * FROM `deligation_tb` WHERE `d_fk_cs_id`=$id");
             $res = array();
@@ -962,6 +979,19 @@ class Work {
                 $res[] = $row;
             }
             return $res;
+        }catch(PDOException $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function getDeligation($id) {
+        try {
+            $stmt = $this->con->query("SELECT * FROM `deligation_tb` WHERE `d_id`=$id");
+            if($stmt->rowCount() == 0) {
+                return null;
+            }else {
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
         }
@@ -1188,6 +1218,13 @@ class Work {
           $this->con = null;
       }
     }
+
+    public function deleteDeligation($id) {
+        if($this->con->exec("DELETE FROM `deligation_tb` WHERE `d_id` = $id")) {
+            return true;
+            $this->con = null;
+        }
+      }
 
     public function deleteDoc($id) {
         $doc = $this->getDocument($id);
