@@ -10,29 +10,13 @@
    </button>
 
    <div class="collapse navbar-collapse ml-1" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-
+    <ul class="navbar-nav navbar-nav-right mr-5 ml-auto">
       <li class="nav-item">
-        <?php
-          if($u_details['w_type'] == "Super User")
-          {
-        ?>
-          <a class="nav-link text-dark" href="./admin.php"> Admin space</a>
-          <?php
-          }
-        ?>
-
-      </li>
-
-    </ul>
-    <ul class="navbar-nav navbar-nav-right mr-5 px-5">
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="profile.php">
-            <?php print($u_details['w_fname']."@"."<span class='badge badge-warning'>".$u_details['w_type']."</span>"); ?>
+        <a class="nav-link text-dark" id="user">
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn btn-default text-right text-dark" href="../controller/controller.php?worker_id=<?php print($u_details['w_id']);?>">
+        <a class="nav-link btn btn-default text-right text-dark" href="" id="logout">
             Logout&nbsp;<i class="fa fa-sign-out"></i>
         </a>
       </li>

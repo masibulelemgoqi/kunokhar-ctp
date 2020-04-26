@@ -227,6 +227,8 @@ if(isset($_POST['action'])){
 			}
 		break;
 
+
+
 		case 'getDeligations':
 			$id = $_POST['id'];
 			$deligations = $work_obj->getDeligations($id);
@@ -495,6 +497,10 @@ if(isset($_POST['action'])){
 			$user_obj->log_in($email, $password);
 		break;
 
+		case 'logout': 
+			$user_obj->logout();
+		break;
+
 		//SECTION Default
 		default:
 			Echo "Oop, page requested is not available yet";
@@ -506,12 +512,13 @@ if(isset($_FILES['doc']['name'])) {
 
 	$description = $_POST['document_description'];
 	$id = $_POST['client_id'];
-	$filename = $_FILES['doc']['name'];
+	$fileN = $_FILES['doc']['name'];
+	// get the file extension
+	$extension = pathinfo($fileN, PATHINFO_EXTENSION);
+	$filename = time().'.'.$extension;
 	$error = null;
 	// destination of the file on the server
 	$destination = '../public/uploads/'. $filename;
-	// get the file extension
-	$extension = pathinfo($filename, PATHINFO_EXTENSION);
 	// the physical file on a temporary uploads directory on the server
 	$file = $_FILES['doc']['tmp_name'];
 	$size = $_FILES['doc']['size'];
@@ -539,11 +546,6 @@ if(isset($_FILES['doc']['name'])) {
 			'error'   => $error
 		));
 	}
-}
-
-if(isset($_GET['doc_name']))
-{
-	$work_obj->readPDF($_GET['doc_name']);
 }
 
 

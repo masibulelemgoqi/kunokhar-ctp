@@ -14,17 +14,8 @@
    <link rel="stylesheet" type="text/css" href="../public/css/style.css">
 </head>
 <body class="bg-work">
-<?php
-require_once('../model/User.class.php');
-require_once('../model/Work.class.php');
+<?php include 'partials/navbar_worker.php';?>
 
-$user = new User();
-$work = new Work();
-$u_details = $user->getUser($_SESSION['id']);
-
-include 'partials/navbar_worker.php';
-?>
-<?php if($u_details['w_type'] != "Admin") {?>
 <div class="work-content">
 <div id="snackbar"></div>
   	<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -110,9 +101,6 @@ include 'partials/navbar_worker.php';
     <a href="" class="btn btn-tomato-o btn-rounded" data-toggle="modal" data-target="#modalLoginForm">Add Client</a>
   </div>
 
-  <?php
-  }
-  ?>
 	<div class="container">
 		<div class="mb-0 ml-0 mr-4 d-flex align-items-baseline" id="search-zone">
 			<div class="col-lg-6">

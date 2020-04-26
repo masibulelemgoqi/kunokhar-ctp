@@ -32,16 +32,14 @@ class Work {
             $stmt->bindParam(':initials', $initials);
 
     		if($stmt->execute()) {
-                if($this->add_log("Added client,".$fname." ".$lname)) {
-                    $client = $this->get_clients();
-                    $lastClient = $client[0];
-                    $id = $lastClient['client_id'];
-                    echo json_encode(array(
-                        'success' => true,
-                        'id'      => $id
-                    ));
-                    $this->con = null;
-                }
+                $client = $this->get_clients();
+                $lastClient = $client[0];
+                $id = $lastClient['client_id'];
+                echo json_encode(array(
+                    'success' => true,
+                    'id'      => $id
+                ));
+                $this->con = null;
     		}
     	} catch (PDOException $e) {
     		echo "Error: ".$e->getMessage();
@@ -56,12 +54,10 @@ class Work {
     		$stmt->bindParam(':company_name', $company_name);
     		$stmt->bindParam(':registration_number', $registration_number);
     		$stmt->bindParam(':registration_date', $registration_date);
-            $client = $this->get_client($client_id);
+
             if($stmt->execute()) {
-                if($this->add_log("Added juristics user details, to client ".$client['client_fname']." ".$client['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
     	}catch (PDOException $e)
     	{
@@ -82,12 +78,9 @@ class Work {
     		$stmt->bindParam(':marital_status', $marital_status);
             $stmt->bindParam(':marriage_type', $marriage_type);
             
-            $client = $this->get_client($client_id);
             if($stmt->execute()) {
-                if($this->add_log("Added natural user details, to client ".$client['client_fname']." ".$client['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
 
     	}catch(PDOException $e) {
@@ -107,10 +100,8 @@ class Work {
     		$stmt->bindParam(':date_of_appointment', $date_of_appointment);
 
     		if($stmt->execute()) {
-                if($this->add_log("Added director,".$fname." ".$lname)) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
     	}catch(PDOException $e) {
     		echo "Error: ".$e->getMessage();
@@ -129,10 +120,8 @@ class Work {
     		$stmt->bindParam(':amount_contributed', $amount_contributed);
 
     		if($stmt->execute()) {
-                if($this->add_log("Added Share holder,".$fname." ".$lname)) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
     	}catch(PDOException $e) {
     		echo "Error: ".$e->getMessage();
@@ -150,11 +139,8 @@ class Work {
     		$stmt->bindParam(':description', $description);
     		$stmt->bindParam(':date_updated', $date_updated);
 
-    		if($stmt->execute()) {
-    			return true;
-    			$this->con = null;
-    		}
-
+            return true;
+            $this->con = null;
     	}catch(PDOException $e) {
     		echo "Error: ".$e->getMessage();
     	}
@@ -173,12 +159,9 @@ class Work {
     		$stmt->bindParam(':extension', $extension);
             $stmt->bindParam(':date_added', $date_added);
             
-            $client = $this->get_client($id);
     		if($stmt->execute()){
-                if($this->add_log("Added document,".$description." for client ".$client['client_fname']." ".$client['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
     	}catch(PDOException $e) {
     		echo "Error: ".$e->getMessage();
@@ -203,10 +186,9 @@ class Work {
             $client = $this->get_client($client_id);
 
     		if($stmt->execute()) {
-                if($this->sendEmail($client, $idea_name, $code) && $this->add_log("added idea name: ".$idea_name." idea code: ".$code)) {
-                    return true;
-                    $this->con = null;
-                }
+                $this->sendEmail($client, $idea_name, $code);
+                return true;
+                $this->con = null;
     		}
     	}catch(PDOException $e) {
     		echo "Error".$e->getMessage();
@@ -227,10 +209,8 @@ class Work {
             $stmt->bindParam(':marriage_terms', $marriage_terms);
 
             if($stmt->execute()) {
-                if($this->add_log("added civil spouse, ".$spouse_fname ."  ".$spouse_lname)) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
             }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
@@ -249,10 +229,8 @@ class Work {
 
             if($stmt->execute())
             {
-                if($this->add_log("added customary spouse ".$fname." ".$lname)) {
-                    return true;
-                    $this->con = null;;
-                }
+                return true;
+                $this->con = null;;
             }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
@@ -273,11 +251,8 @@ class Work {
             $client = $this->get_client($id);
 
             if($stmt->execute()) {
-                if($this->add_log("added beneficiary ".$fname." ".$lname." to client, ".$client['client_fname']."  ".$client['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
-                
+               return true;
+                $this->con = null;
             }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
@@ -294,37 +269,13 @@ class Work {
             $stmt->bindParam(':id_number', $id_number);
 
             if($stmt->execute()) {
-                if($this->add_log("added customary deligation")) {
-                    return true;
-                    $this->con = null;
-                }
-            }
-        }catch(PDOException $e) {
-            echo "Error: ".$e->getMessage();
-        }
-    }
-
-    public function add_log($action) {
-        try {
-            session_start();
-            $date_log = date("Y-m-d H:i:s");
-            $w = $this->getUser($_SESSION['id']);
-            $w_id = $w['w_id'];
-            $report = $w['w_fname']." ".$w['w_lfname'].", ".$action;
-            $sql = "INSERT INTO `log_tb` (`fk_w_id`, `log_report`, `log_date`) VALUES (:w_id, :report, :date_log)";
-            $stmt = $this->con->prepare($sql);
-            $stmt->bindParam(':w_id', $w_id);
-            $stmt->bindParam(':report', $report);
-            $stmt->bindParam(':date_log', $date_log);
-
-            if($stmt->execute()) {
                 return true;
+                $this->con = null;
             }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
         }
     }
-
 
     ///====================   edit   methods ============================
 
@@ -343,10 +294,8 @@ class Work {
 
             if($stmt->execute())
             {
-                if($this->add_log("edited civil spouse, ".$spouse_fname ."  ".$spouse_lname)) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
             }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
@@ -365,10 +314,8 @@ class Work {
     		$stmt->bindParam(':date_of_appointment', $date_of_appointment);
 
     		if($stmt->execute()) {
-                if($this->add_log("Edited director,".$fname." ".$lname)) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
     	}catch(PDOException $e) {
     		echo "Error: ".$e->getMessage();
@@ -387,10 +334,8 @@ class Work {
     		$stmt->bindParam(':amount_contributed', $amount_contributed);
 
     		if($stmt->execute()) {
-                if($this->add_log("Edited share holder,".$fname." ".$lname)) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
     	}catch(PDOException $e) {
     		echo "Error: ".$e->getMessage();
@@ -415,10 +360,8 @@ class Work {
             $stmt->bindParam(':initials', $initials);
 
     		if($stmt->execute()) {
-                if($this->add_log("Edited client,".$row['client_fname']." ".$row['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
     		}
 
     	} catch (PDOException $e) {
@@ -451,13 +394,10 @@ class Work {
             $stmt->bindParam(':registration_date', $registration_date);
             $stmt->bindParam(':registration_number', $registration_number);
             $stmt->bindParam(':j_id', $j_id);
-            $juri = $this->get_juri($j_id);
 
             if($stmt->execute()) {
-                if($this->add_log("edited Juristics info for company, ".$juri['j_company_name']." with registration number ".$juri['j_registration_number'])) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
             }
         }catch(PDOException $e) {
             echo "Error: ".$e->getMessage();
@@ -476,10 +416,8 @@ class Work {
             $stmt->bindParam(':id', $id);
 
             if($stmt->execute()) {
-                if($this->add_log("Edited beneficiary details for client ".$client['client_title'].". ".$client['client_fname']." ".$client['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
+                return true;
+                $this->con = null;
             }
 
 
@@ -502,9 +440,7 @@ class Work {
             $stmt->bindParam(':n_id', $n_id);
 
             if($stmt->execute()) {
-                if($this->add_log("Edited natural details for client ".$client['client_title'].". ".$client['client_fname']." ".$client['client_lname'])) {
-                    return true;
-                }
+                return true;
             }
 
         }catch(PDOException $e) {
@@ -527,38 +463,8 @@ class Work {
             $stmt->bindParam(':id', $id);
 
             if($stmt->execute()) {
-                if($this->add_log("Edited idea with code: ".$idea['idea_code'].", details for client: ".$client['client_title'].". ".$client['client_fname']." ".$client['client_lname'])) {
-                    return true;
-                    $this->con = null;
-                }
-
-                // $str = "";
-                // if($idea['idea_name'] != $idea_name)
-                // {
-                //     $str .= " <br>idea name: ".$idea_name;
-                // }
-
-                // if($idea['idea_target_market'] != $idea_target_market)
-                // {
-                //     $str .= " <br>Idea target market: ".$idea_target_market;
-                // }
-
-                // if($idea['idea_nature'] != $idea_nature)
-                // {
-                //     $str .= " <br>Idea nature: ".$idea_nature;
-                // }
-
-                // if($idea['idea_trademark'] != $idea_trademark)
-                // {
-                //     $str .= " <br>Idea trademark: ".$idea_trademark;
-                // }
-
-                // if($str != "")
-                // {
-                //     $val = "<br>Idea , updates: ".$str;
-
-                //     $this->addUpdate($id, $val);
-                // }
+                return true;
+                $this->con = null;
             }
 
 
@@ -916,14 +822,6 @@ class Work {
         }
     }
 
-    public function readPDF($filename) {
-		$path = '../public/uploads/'.$filename;
-		header('Content-Type: application/pdf');
-		header('Content-Disposition: inline; filename='.$path);
-		header('Content-Transfer-Encoding: binary');
-		header('Accept-Ranges: bytes');
-		readfile($path);
-    }
 
     public function get_ideas($id) {
         try {
@@ -1229,11 +1127,12 @@ class Work {
     public function deleteDoc($id) {
         $doc = $this->getDocument($id);
         if($this->con->exec("DELETE FROM `documents_tb` WHERE `document_id` = $id")) {
-            $destination = '../public/uploads/'. $doc['document_name'];
-            if(unlink($destination)) {
-                return true;
-                $this->con = null;
+            $file = '../public/uploads/'. $doc['document_name'];
+            if(file_exists($file)) {
+                unlink($file);
             }
+            return true;
+            $this->con = null;
         }       
     }
 

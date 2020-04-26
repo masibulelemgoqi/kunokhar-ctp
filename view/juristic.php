@@ -1,12 +1,10 @@
 <?php require_once('session.php');
 require 'partials/header.php';
-require_once('../model/User.class.php');
-$user = new User();
-$u_details = $user->getUser($_SESSION['id']);
+require_once('./session.php');
 include 'partials/navbar_worker.php';
 ?>
+<div id="snackbar"></div>
 <div class="container">
-	<div id="snackbar"></div>
 	<h3 class="font-weight-bold mb-4 text-center  p-4 mr-5" style="font-family: Verdana;">Personal / Company details</h3>
 	<div class="row " id="identification">
 		<div class="card border border-success" style="width: 18rem;">
@@ -184,10 +182,10 @@ include 'partials/navbar_worker.php';
 					</select>
 				</div>
 				<div class="md-form col-sm-3">
-					<input type="file" name="file" class="form-control border-success">
+					<input type="file" name="doc" id="doc" class="form-control border-success">
 				</div>
 				<div class="md-form col-sm-3 float-right">
-					<button class="btn btn-success" name="add_document">Upload file <i class="fa fa-save" aria-hidden="true"></i></button>
+					<button class="btn btn-success" name="add_document" id="add_document">Upload file <i class="fa fa-save" aria-hidden="true"></i></button>
 				</div>
 			</div>
 		</form>

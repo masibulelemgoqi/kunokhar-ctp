@@ -1,8 +1,5 @@
 <?php require_once('session.php');
 	require 'partials/header.php';
-	require_once('../model/User.class.php');
-	$user = new User();
-	$u_details = $user->getUser($_SESSION['id']);
 	include 'partials/navbar_worker.php';
 ?>
 <div class="container">

@@ -12,19 +12,24 @@ var client = null;
 var civil = null;
 var deligation = null;
 var companyDirector = null;
+var companyDirectors = null;
 var shareHolder = null;
+var signsForCompany = null;
 var spouseId = null;
 var idea = null;
-var dateFilter = $('#date-filter').val();
+var doc = null;
+var dateFilter = null;
 
 // ANCHOR  Load pages
 
 window.onload = function() {
 	var url = window.location.href.split("/");
 	page = url[url.length - 1].trim();
+	console.log(url);
 	
 	switch(page) {
 		case 'main.php':
+			dateFilter = $('#date-filter').val();
 			if(sessionStorage.getItem('person') === null || sessionStorage.getItem('person').undefined) {
 				sessionStorage.setItem('person', person);
 				person = sessionStorage.getItem('person');
@@ -35,6 +40,7 @@ window.onload = function() {
 			loadMain();
 		break;
 		case 'worker.php':
+			dateFilter = $('#date-filter').val();
 			if(sessionStorage.getItem('person') === null || sessionStorage.getItem('person').undefined) {
 				sessionStorage.setItem('person', person);
 				person = sessionStorage.getItem('person');
@@ -45,10 +51,15 @@ window.onload = function() {
 			loadMain();
 		break;
 		case 'juristic.php':
+			loadCurrentUser();
 			getClient();
 		break;
 		case 'natural.php':
+			loadCurrentUser();
 			getClient();
+		break;
+		case 'certificate.php':
+			getCertificate();
 		break;
 	}
 }
@@ -136,16 +147,29 @@ $(()=> {
 			dataType: 'json',
 			data: {email: email, password: password, action: "log_in"}
 		}).then(function(data) {
-			console.log(data);
-			
 			if(data.success){
-				sessionStorage.setItem('user_role', data.user.w_type);
-				window.location.href = "view/main.php";
+				sessionStorage.setItem('user_role', data.auth.user_role);
+				var fullname = data.user.name;
+				var fName = (fullname.split(" "))[0];
+				sessionStorage.setItem('name', fName);
+				location.href = "view/main.php";
 			}else{
-				$('#status').html("<div class='text-danger'>Cannot login, make sure you provide correct details</div>");						
+				$('#status').html(data.message);						
 			}
 		});
 	});
+
+	$('#logout').click(function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$.ajax({
+			method: 'POST',
+			url: controller,
+			data: {action: 'logout'}
+		}).then((data)=>{
+			location.href = '../index.php'
+		});
+	})
 
 	// SECTION Trigger
 	$('.edit-identification').click(function(e) {
@@ -225,7 +249,7 @@ $(()=> {
 		$('#nature-char-left').empty();
 		var nature = document.getElementById('idea_nature');
 		$('#nature-char-left').text(nature.maxLength - nature.value.length +" Characters remaining");
-		if(nature.maxLength - natural.value.length == 0) {
+		if(nature.maxLength - nature.value.length == 0) {
 			nature.style.border = '1px solid red';
 		} else {
 			nature.style.border = '1px solid green';
@@ -250,7 +274,6 @@ $(()=> {
 		$('#cs_lname').val("");
 		$('#id_number').val("");
 		$('#cs_stages_of_negotiation').val("");
-		snackBar("");
 		$('#addSpouse').modal();
 	});
 
@@ -270,40 +293,37 @@ $(()=> {
 	});
 
 	$('#company-directors').on('click', '.view', function(e) {
+		e.stopPropagation();
 		var id = $(this).closest('div').find('p')[0].innerHTML;
+		var field = $('#modalAddMember');
 		getDirector(id);
 		setTimeout(()=>{
 			var director = companyDirector.director;
-			$('#modalAddMember').find('.modal-title').text("Edit Director");
-			$('#modalAddMember').find('#add_company_member').text("Update");
-			$('#modalAddMember').find('#j_title').val(director.cm_title);
-			$('#modalAddMember').find('#j_fname').val(director.cm_fname);
-			$('#modalAddMember').find('#j_lname').val(director.cm_lname);
-			$('#modalAddMember').find('#j_id_number').val(director.cm_id_number);
-			console.log(moment(director.cm_date_of_appointment).format("L"));
-			
-			$('#modalAddMember').find('#j_date_of_appointment').val("05-02-2020");
-			$('#modalAddMember').modal();
+			field.find('.modal-title').text("Edit Director");
+			field.find('#add_company_member').text("Update");
+			field.find('#j_title').val(director.cm_title);
+			field.find('#j_fname').val(director.cm_fname);
+			field.find('#j_lname').val(director.cm_lname);
+			field.find('#j_id_number').val(director.cm_id_number);
+			field.find('#j_date_of_appointment').val(dateOnly(director.cm_date_of_appointment));
+			field.modal();
 		}, 1500);
-
-
 	});
-
 	$('#company-share-holders').on('click', '.view', function(e) {
 		e.stopPropagation();
 		var id = $(this).closest('div').find('p')[0].innerHTML;
-		
+		var field = $('#modalAddshareholder');
 		getShareHolder(id);
 		setTimeout(()=>{
 			var holder = shareHolder.holder;
-			$('#modalAddshareholder').find('.modal-title').text("Edit ShareHolder");
-			$('#modalAddshareholder').find('#add_share_holder').text("Update");
-			$('#modalAddshareholder').find('#title_').val(holder.sh_title);
-			$('#modalAddshareholder').find('#fname_').val(holder.sh_fname);
-			$('#modalAddshareholder').find('#lname_').val(holder.sh_lname);
-			$('#modalAddshareholder').find('#id_number_').val(holder.sh_id_number);
-			$('#modalAddshareholder').find('#amount_contributed').val(holder.sh_amount_contributed);
-			$('#modalAddshareholder').modal();
+			field.find('.modal-title').text("Edit ShareHolder");
+			field.find('#add_share_holder').text("Update");
+			field.find('#title_').val(holder.sh_title);
+			field.find('#fname_').val(holder.sh_fname);
+			field.find('#lname_').val(holder.sh_lname);
+			field.find('#id_number_').val(holder.sh_id_number);
+			field.find('#amount_contributed').val(holder.sh_amount_contributed);
+			field.modal();
 		}, 1500);
 
 
@@ -427,26 +447,26 @@ $(()=> {
 		e.stopPropagation();
 		var action = $(this).text();
 		var id = $(this).closest('.document-action').find('p').text();
-
-		switch (action) {
-			case "Verify":
-				verifyDoc(id);
-			break;
-			case "Download":
-				
-			break;
-			case "view document":
-				
-			break;
-			case "Edit":
-				var doc = getDocument(id);
-				$('html, body').animate({scrollTop: $(".documents").offset().top}, 2000);
-
-			break;	
-			case "Delete":
-				deleteDoc(id);
-			break;
-		}
+		getDocument(id);
+		setTimeout(() => {
+			switch (action) {
+				case "Verify":
+					verifyDoc(id);
+				break;
+				case "Download":
+					window.open('../public/uploads/'+doc.doc.document_name);
+				break;
+				case "view document":
+					window.open('../public/uploads/'+doc.doc.document_name);
+				break;
+				case "Edit":
+					$('html, body').animate({scrollTop: $(".documents").offset().top}, 2000);
+				break;	
+				case "Delete":
+					deleteDoc(id);
+				break;
+			}	
+		}, 1000);
 	});
 
 	$('#deligation-show').on('click', 'a', function(e) {
@@ -493,6 +513,35 @@ $(()=> {
 			deleteDeligation(id);
 		}
 		
+	});
+
+	$('#list-of-ideas').on('click', 'a', function(e) {
+		var id = $(this).closest('.card-body').find('span')[0].innerText;
+		sessionStorage.setItem('ideaId', id);
+		window.location.href = './certificate.php';
+	});
+
+	$('#changeWhoSigns').on('click', 'button', function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		var action = $(this)[0].innerText.trim();
+		switch(action) {
+			case 'Done':
+				var applicant =  client.client_title+" "+ client.client_fname.slice(0,1)+". "+ client.client_lname;
+				if(signsForCompany !== null) {
+					if(signsForCompany !== applicant) {
+						$('.applicant-sign .sign-name').html(signsForCompany);
+						$('.applicant-sign .signing').html("Director");
+					}
+				}
+				$('#changeWhoSigns').modal('hide');
+			break;
+		}
+		
+	});
+
+	$('#whoSigns').change(function(e) {
+		signsForCompany = $(this).val();
 	});
 	// SECTION add events
 	$('#add_user').click(function(e) {
@@ -786,6 +835,7 @@ $(()=> {
 	});
 
 	$('#show-full-info').on('click', '#add_civil', function(e) {
+		e.stopPropagation();
 		e.preventDefault();
 		var action = $(this).text().trim();	
 		var add = $(this).closest('#show-full-info');
@@ -798,10 +848,7 @@ $(()=> {
 		var marriage_terms = add.find('#marriage_terms').val();
 		var detail_of_marriage = add.find('#detail_of_marriage').val().trim();
 
-		// console.log(detail_of_marriage+" "+marriage_terms+" "+date_of_issue+" "+spouse_id_number+" "+certificate_no+" "+spouse_lname+" "+spouse_fname+" "+natural_id);
-		
-
-		if(natural_id == "" || spouse_fname == "" || spouse_lname == "" || certificate_no == "" || date_of_issue == "" || marriage_terms == "" || detail_of_marriage == "" || spouse_id_number =="") {
+		if(natural_id == "" || spouse_fname == "" || spouse_lname == "" || certificate_no == "" || date_of_issue == "" || marriage_terms == null || detail_of_marriage == "" || spouse_id_number =="") {
 			snackBar("<div class='text-danger'>All fields are required</div>");
 			return;
 		}
@@ -833,16 +880,77 @@ $(()=> {
 		}
 		
 		if(action == 'Save') {
-			console.log(action);
 			addCivil(natural_id, spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number);
 		}else if(action == 'Update') { 
-			editCivil(natural_id, spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number);
+			editCivil(spouse_fname, spouse_lname, certificate_no, date_of_issue, marriage_terms, detail_of_marriage, spouse_id_number);
 		}
+	});
+
+	//TODO working on
+	$('.other-info').on('click', '.edit_btn', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		var action = $(this)[0].innerText;
+		var options = null;
+		if(action === "Edit") {
+			$(this)[0].innerText = "Cancel";
+			var mTerms = ['In-community', 'Out-of-community'];
+			if(mTerms.includes(civil.c_marriage_terms)) {
+				var i = mTerms.indexOf(civil.c_marriage_terms);
+				mTerms.splice(i, 1);
+				options = `
+					<option selected value='${civil.c_marriage_terms}'>${civil.c_marriage_terms}</option>
+					<option value='${mTerms[0]}'>${mTerms[0]}</option>
+				`;
+			}
+			$('#show-full-info').empty();
+			var html = `
+					<div class="row m-0">
+						<div id="c_status"></div>
+						<form method="POST" action="">
+							<div class="row mb-2">
+								<div class="col-6">
+									<input type="name" id="spouse_fname" placeholder="Spouse first name" class="form-control border-success" value='${civil.c_spouse_fname}'>
+								</div>
+								<div class="col-6">
+									<input type="name" id="spouse_lname" placeholder="Spouse Last name" class="form-control border-success" value='${civil.c_spouse_lname}'>
+								</div>
+							</div>
+							<div class="row m-0">
+								<input type="name" id="spouse_id_number" placeholder="Spouse Id number" class="form-control mb-2 border-success" value='${civil.c_id_number}'>
+							</div>
+							<label><i>Date of issue:</i> </label>
+							<div class="row  mb-2">
+								<div class="col-6">
+									<input type="date" id="date_of_issue" placeholder="" class="form-control border-success" value='${civil.c_date_of_issue}'>
+								</div>
+								<div class="col-6">
+									<input type="name" id="certificate_no" placeholder="certificate number" class="form-control border-success" value='${civil.c_certificate_number}'>
+								</div>
+							</div>
+							<select class="form-control border-success" id="marriage_terms">
+								${options}
+							</select>
+							<label class="label mt-2 "><i>Detail of marriage: </i></label>
+							<textarea class="form-control mb-2 border-success" id="detail_of_marriage" style="height: 80px; resize: none;">${civil.c_detail_of_marriage}</textarea>
+							<div class="d-flex justify-content-center">
+								<button class="btn btn-success" id="add_civil">Update</button>
+							</div>
+
+						</form>
+					</div>
+			`;
+			$('#show-full-info').append(html);
+		}else {
+			$(this)[0].innerText = "Edit";
+			showCivil(civil);
+		}
+		
 	});
 
 	$('#register_idea').click(function(e) {
 		e.preventDefault();
-		var action = $(this).text();
+		var action = ($(this).text()).trim();
 		var client_id = client.client_id;
 		var idea_name = $('#idea_name').val();
 		var idea_trademark = $('#idea_trademark').val();
@@ -875,9 +983,9 @@ $(()=> {
 			return;
 		}
 
-		if(action == "Save") {
+		if(action === "Save") {
 			addIdea(client_id, sector, idea_name, idea_trademark, idea_nature, idea_target_market);
-		}else if(action == "Update") {
+		}else if(action === "Update") {
 			editIdea(sector, idea_name, idea_trademark, idea_nature, idea_target_market);
 		}
 	});
@@ -1205,7 +1313,7 @@ function addDirector(fname, lname, j_id, title, id_number, date_of_appointment) 
 			$('#title').val("");
 			$('#id_number').val("");
 			$('#date_of_appointment').val("");
-			snackBar('<div class="text-success">Company member added successfully, You can add another one or please refresh the page to see the member</div>');
+			snackBar('<div class="text-success">Company member added successfully</div>');
 		}else {
 			snackBar(data);
 		}
@@ -1225,7 +1333,7 @@ function addShareHolder(j_id, fname, lname, title, id_number, amount_contributed
 			$('#title_').val("");
 			$('#id_number_').val("");
 			$('#amount_contributed').val("");
-			snackBar('<div class="text-success">Share holder added successfully, You can add another one or please refresh the page to see the member</div>');
+			snackBar('<div class="text-success">Share holder added successfully</div>');
 			getClient();
 		}else {
 			snackBar(data);
@@ -1261,7 +1369,7 @@ function addNatural(client_id, fname, lname, mname, dob, id_number, marital_stat
 	}).then(function(data) {
 		if(data == "1") {
 			snackBar("<div class='text-success'>Details added successfully</div>");
-			setTimeout(function(){location.reload()}, 2000);
+			setTimeout(function(){location.reload()}, 1500);
 		}else {
 			snackBar(data);	
 		}
@@ -1348,8 +1456,10 @@ function verifyDoc(document_id) {
 		data: {document_id: document_id, action: "verify_doc"},
 		success: function(data) {
 			if(data == "1") {
-				getClient();
 				snackBar("<div class='text-success'>Document added successfully</div>");
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
 			}else {
 				console.log(data);
 			}
@@ -1398,7 +1508,8 @@ function editNatural(mname, dob, id_number, marital_status, marriage_type) {
 	}).then(function(data) {
 		if(data == "1") {
 			snackBar("<div class='text-success font-weight-bold'>Details edited successfully</div>");
-			setTimeout(function(){location.reload();}, 2000);
+			getClient();
+			showCivil(civil);
 		}else {
 			snackBar(data);	
 		}
@@ -1412,8 +1523,10 @@ function editCivil(spouse_fname, spouse_lname, certificate_no, date_of_issue, ma
 		data: {c_id: civil.c_id, spouse_fname: spouse_fname, spouse_lname: spouse_lname, certificate_no: certificate_no, date_of_issue: date_of_issue, marriage_terms: marriage_terms, detail_of_marriage: detail_of_marriage, spouse_id_number: spouse_id_number, action: 'edit_civil'},
 		success: function(data) {
 			if(data == "1") {
-				snackBar("<div class='text-success'>successfully editted data</div>");
-				location.reload(600);
+				$('.other-info').find('.edit_btn')[0].innerText = "Edit";
+				snackBar("<div class='text-success'>successfully edited data</div>");
+				getClient();
+				showCivil(civil);
 			}else {
 				snackBar(data);
 			}
@@ -1585,6 +1698,61 @@ function deleteDeligation(id) {
 
 function loadMain() {
 	getClientsByPerson();
+	loadCurrentUser();
+}
+
+function loadCurrentUser() {
+	if(sessionStorage.getItem('name') !== null) {
+		$('#user').empty();
+		$('#user').append(`
+			${sessionStorage.getItem('name')}@<span class='badge badge-warning'>${sessionStorage.getItem('user_role')}</span>
+		`);
+	}
+	
+}
+
+function getCertificate() {
+	getIdea(sessionStorage.getItem('ideaId'));
+	getClient();
+	setTimeout(() => {
+		var name = "";
+		var identification = "";
+		var address = client.client_home_address+", "+client.client_city+", "+client.client_zip_code;
+		var ideaName = idea.idea_name;
+		var ideaCode = idea.idea_code;
+		var applicant = client.client_title+" "+ client.client_fname.slice(0,1)+". "+ client.client_lname;
+		var currentDate = moment(new Date()).format('D MMM YYYY');
+		
+		if(client.client_person == "Juristic") {
+			name = juristic.j_company_name;
+			identification = "Registration No. "+ juristic.j_registration_number;
+			$('#whoSigns').empty();
+			$('#whoSigns').append( `<option selected>${applicant}</option>`);
+			$.each(companyDirectors, function(key, member) {
+				var director = member.cm_title+" "+ member.cm_fname.slice(0,1)+". "+ member.cm_lname;
+				if(director !== applicant) {
+					$('#whoSigns').append( `<option>${director}</option>`);
+				} 
+			});
+			$('#changeWhoSigns').modal('show');
+
+			$('.name-of-owner').html(name);
+		}else {
+			name = client.client_title+" "+ client.client_fname+" "+ client.client_lname;
+			identification = "Id No. "+ natural.n_id_number;
+			$('.name-of-owner').html(applicant);
+			
+		}
+
+		$('.name').html(name);	
+		$('.identification').html(identification);
+		$('.address').html(address);
+		$('.idea-name').html(ideaName);
+		$('idea-code').html(ideaCode);
+		$('.applicant-sign .sign-name').html(applicant);
+		$('.sign-date').html(currentDate);
+		
+	}, 1500);	
 }
 
 function getClientsByMonth() {
@@ -1594,7 +1762,6 @@ function getClientsByMonth() {
 		dataType: 'json',
 		data: {dateFilter: dateFilter, person: person,  action: 'getClientsByMonth'}
 	}).then(function(clients) {
-		console.log(client);
 		clientFinalView(clients);
 	});
 }
@@ -1640,6 +1807,7 @@ function getShareHolder(id) {
 	});
 }
 function clientFinalView(clients) {
+	loadCurrentUser();
 	$('#view-all-clients').empty();
 	if(Object.entries(clients).length !== 0 && clients.constructor !== Object) {
 		$.each(clients, function(key, client) {
@@ -1725,8 +1893,6 @@ function getIdea(id) {
 	}).then(function(data) {
 		if(data.success) {
 			idea = data;
-		}else {
-			console.log(data);
 		}
 	});
 }
@@ -1776,8 +1942,6 @@ function getDeligation(id) {
 	}).then(function(data) {
 		if(data.success) {
 			deligation = data.deligation;
-		}else {
-			
 		}
 	});
 }
@@ -1789,8 +1953,7 @@ function getDocument(id) {
 		dataType: 'json',
 		data: {id: id, action: 'getDocument'}
 	}).then(function(data) {
-		console.log(data);
-		
+		doc = data;
 	});
 }
 
@@ -1846,7 +2009,6 @@ function getClient() {
 		dataType: 'json',
 		data: {id: id, action: 'getClient'}
 	}).then(function(data) {
-		console.log(data);
 		client = data.client;
 		showIdentification(client);
 		if(client.client_person === "Juristic") {
@@ -1929,12 +2091,15 @@ function showJuristic(client ,juristic, company_members, share_holders, docs, id
 		$('#comp-name').html(juristic.j_company_name);
 		$('#comp-reg-number').html(juristic.j_registration_number);
 		$('#comp-reg-date').html(moment(juristic.j_registration_date).format('Do MMM Y'));
+		companyDirectors = company_members;
+		
 		if(Object.entries(company_members).length !== 0 && company_members.constructor !== Object) {
 			showDirectors(company_members);
 			showDocuments(null, client, docs, ideas);
-			showIdeas(ideas);
+			$('.documents').show();
 		}else {
 			$('.documents').hide();
+			$('.ideas').hide();
 		}
 		showShareHolders(share_holders);
 		
@@ -1969,10 +2134,10 @@ function showDirectors(directors) {
 	directors.forEach(function(member) {
 		var director = `
 			<div class="ml-0">
-				${++count}. ${member.cm_fname} ${member.cm_lname}
+				${++count}. ${member.cm_fname} ${member.cm_lname}<br> ${member.cm_id_number}
 				<div>
 					<p hidden>${member.cm_id}</p>
-					<a class="mr-3 view" style="cursor: pointer;"><i class="fa fa-eye"></i></a> 
+					<a class="mr-3 view" style="cursor: pointer;"><i class="fa fa-edit"></i></a> 
 					<a style="cursor: pointer;" class="delete"><i class="fa fa-trash texttext-danger"></i></a>
 				</div>
 			</div>
@@ -2034,6 +2199,7 @@ function showNatural(client, natural, beneficiaries, civil, spouses, documents, 
 		}else if(natural.n_marital_status == "Married") {
 			if(natural.n_marriage_type == "Civil") {
 				showCivil(civil);
+				civil = civil;
 				if(civil !== null) {
 					showDocuments(natural, client, documents, ideas);
 				}else {
@@ -2133,7 +2299,7 @@ function showCivil(civil) {
 	$('#show-full-info').empty();
 	
 	if(civil !== null) {
-		$('#natural-title').after('<button class="btn edit_btn" id="edit_civil">Edit</button>');
+		$('#natural-title').after('<button class="btn edit_btn">Edit</button>');
 		var html = `
 			<div class="ml-3">
 				<div class="row mt-2">first name: ${civil.c_spouse_fname}</div>
@@ -2222,7 +2388,7 @@ function showDocuments(natural, client, docs, ideas) {
 	var count = 0;
 	var unverified = 0;
 	var duties = `
-		<a class="dropdown-item" target="_blank">view document</a>
+		<a class="dropdown-item">view document</a>
 		<a class="dropdown-item">Download</a>
 		<a class="dropdown-item">Delete</a>
 		<a class="dropdown-item">Edit</a>`;
@@ -2346,7 +2512,7 @@ function showIdeas(ideas) {
 									<p class="card-text">Idea name: ${idea.idea_name} <br> Idea trademark: ${idea.idea_trademark}</p>
 									<p class="card-text"><small class="text-muted">${idea.idea_date}</small></p>
 									<button class="btn btn-outline-success" id="more-info-idea">more info</button>
-									<a class="btn btn-outline-dark" target="_blank">Gerate certificate</a>
+									<a class="btn btn-outline-dark">Gerate certificate</a>
 								</div>
 							</div>
 						</div>
@@ -2358,6 +2524,14 @@ function showIdeas(ideas) {
 		$('#list-of-ideas').append("<div class='text-muted h2 text-center'>There are currently no ideas</div>")
 	}
 
+}
+
+function readPdf(docName) {
+	$.ajax({
+		method: 'POST',
+		url : controller,
+		data: {docName: docName, action: 'readPdf'}
+	});
 }
 
 //delete user/ worker
@@ -2579,7 +2753,12 @@ function snackBar(msg) {
 	x.className = "show";
 	// After 3 seconds, remove the show class from DIV
 	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-  }
+}
+
+function dateOnly(date) {
+	return moment(date).format('YYYY-MM-DD');
+}
+
 
 
 

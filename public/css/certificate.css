@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,500&display=swap');
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+}
+
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.page {
+    width: 26.2cm;
+    height: 37.1cm;
+    padding: 0;
+    margin: 10mm auto;
+    border: none;
+    border-radius: 0;
+    background-image: url('../img/certificate_bg.jpg');
+    background-repeat: no-repeat;
+    background-size: 26.2cm 37.1cm;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.7);
+    position: relative;
+}
+
+.content {
+    padding: 1cm;
+    border: none;
+  	height: 29.7cm;
+    padding-top: 480px;
+    outline: 0; 
+}
+
+.basic-details {
+	margin-bottom: 80px;
+}
+
+.description {
+	font-family: 'Roboto', sans-serif;
+	font-size: 30px;
+	width: 750px;
+    color: #afafaf;
+    font-style: italic;
+    font-weight: 300;
+	line-height: 32px;
+}
+
+.description span {
+	font-weight: 600;
+    color: #555;
+}
+
+.name {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	margin: 0;
+	font-size: 50px;
+
+}
+
+.sub-titile {
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+	text-transform: uppercase;
+	font-weight: 900;
+	letter-spacing: 2px;
+	margin: 0;
+	color: #218127;
+}
+
+.identification {
+	margin: 0;
+	font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+	font-size: 22px;
+    color: #555;
+}
+
+.address {
+	font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    color: #555;
+    font-size: 18px;
+}
+
+.content .signitures .sign-name {
+    margin: 0 !important;
+    font-family: 'Roboto', sans-serif
+    color: #000;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.content .signitures .signing {
+    margin: 0;
+    text-transform: uppercase;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: #afafaf;
+    letter-spacing: 2px;
+}
+
+.content .signitures .sign-date {
+    margin: 0;
+    text-transform: uppercase;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: #555;
+}
+
+.content .signitures .applicant-sign {
+    left: 75px;
+    bottom: 305px;
+    position: absolute;
+    text-align: left;
+}
+
+.content .signitures .kuno-diractor {
+    right: 62px;
+    bottom: 305px;
+    position: absolute;
+    text-align: left;
+}
+
+.content .signitures .sign-space {
+    display: flex;
+}
+
+.content .signitures .sign-space .signiture-1 {
+    width: 190px;
+    padding: 1.5em;
+    border-bottom: 2px solid #555;
+    margin-right: 21.5%;
+}
+
+.content .signitures .sign-space .signiture-2 {
+    width: 190px;
+    padding: 1.5em;
+    border-bottom: 2px solid #555;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@media print {
+    html, body {
+        width: 26.2cm;
+  		height: 37.1cm;
+        background-image: url('../img/certificate_bg.jpg');
+    	background-repeat: no-repeat;
+        background-size: 26.2cm 37.1cm;
+    }
+
+    .page {
+        margin: 0 !important;
+        background-image:initial;
+    	background-size: initial;
+        border-radius: initial;
+        width: 26.2cm;
+        height: 37.1cm;
+        box-shadow: initial;
+    }
+}
